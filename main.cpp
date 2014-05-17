@@ -1,22 +1,21 @@
-#include "mainwindow.h"
 #include <QApplication>
 #include <QFile>
 #include <QDebug>
 #include "midiinputhandler.h"
+#include "nordstage2.h"
+#include <QTimer>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QObject::connect(MidiInputHandler::singleton(),
-                     &MidiInputHandler::receivedMidiCommand,
-                     [](MidiInputHandler::MidiType type, quint8 channel, quint8 data1, quint8 data2) {
-       qDebug() << "type = " << type;
-       qDebug() << "channel = " << channel;
-       qDebug() << "data1 = " << data1;
-       qDebug() << "data2 = " << data2;
-       qDebug() << "==================";
-    });
+    NordStage2* s2 = new NordStage2();
+    Q_UNUSED(s2);
+
+    MidiInputHandler::singleton()->sendMidiControlCommand(0, 99, 0);
+    s2->setOrganEnabled(NordStage2::On);
+    s2->sineWaveDrawbar(2, 2, 10);
+
 
     return a.exec();
 }

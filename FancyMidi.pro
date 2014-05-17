@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,8 +15,13 @@ QMAKE_CXXFLAGS += -std=c++0x
 
 
 SOURCES += main.cpp\
-    midiinputhandler.cpp
+    midiinputhandler.cpp \
+    keyboard.cpp \
+    nordstage2.cpp \
+    nordstage2_organ.cpp \
+    nordstage2_effects.cpp
 
-HEADERS  +=  midiinputhandler.h
+HEADERS  +=  midiinputhandler.h \
+    keyboard.h \
+    nordstage2.h
 
-FORMS    += mainwindow.ui
