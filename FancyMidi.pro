@@ -19,7 +19,10 @@ SOURCES += main.cpp\
     keyboard.cpp \
     nordstage2.cpp \
     nordstage2_organ.cpp \
-    nordstage2_effects.cpp
+    nordstage2_effects.cpp \
+    nordstage2_piano.cpp \
+    nordstage2_synth.cpp \
+    nordstage2_special_effects.cpp
 
 HEADERS  +=  midiinputhandler.h \
     keyboard.h \

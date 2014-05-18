@@ -21,7 +21,7 @@ private:
     static quint8 getChannel(quint8 code);
     static MidiInputHandler::MidiType getType(quint8 code);
     static quint8 statusByte(MidiInputHandler::MidiType type, quint8 channel);
-    bool _verbose = false;
+    bool _verbose = true;
     bool connectMidiDevice_Private();
     bool disconnectMidiDevice_Private();
 

@@ -8,7 +8,7 @@ class Keyboard : public QObject
 {
     Q_OBJECT
 public:
-    Keyboard(QObject* parent = 0);
+    Keyboard(quint8 channel = 0, QObject* parent = 0);
     quint8 channel() const { return _channel; }
 
 public slots:
@@ -16,9 +16,10 @@ public slots:
 
 private:
     quint8 _channel = 0;
+    const MidiInputHandler* midi;
 
 protected:
-    const MidiInputHandler* midi;
+    void sendMidiControlCommand(quint8 data1, quint8 data2);
 
 };
 
