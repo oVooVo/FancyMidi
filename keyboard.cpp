@@ -3,6 +3,7 @@
 
 Keyboard::Keyboard(quint8 channel, QObject *parent) : QObject(parent)
 {
+    setChannel(channel);
     midi = MidiInputHandler::singleton();
 }
 

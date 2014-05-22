@@ -18,13 +18,19 @@ SOURCES += main.cpp\
     midiinputhandler.cpp \
     keyboard.cpp \
     nordstage2.cpp \
-    nordstage2_organ.cpp \
-    nordstage2_effects.cpp \
-    nordstage2_piano.cpp \
-    nordstage2_synth.cpp \
-    nordstage2_special_effects.cpp
+    Domain/domain.cpp \
+    Domain/discretedomain.cpp \
+    Domain/integerdomain.cpp \
+    Domain/doubledomain.cpp \
+    Domain/domains.cpp
 
 HEADERS  +=  midiinputhandler.h \
     keyboard.h \
-    nordstage2.h
+    nordstage2.h \
+    domain.h \
+    Domain/discretedomain.h \
+    Domain/continousdomain.h \
+    Domain/integerdomain.h \
+    Domain/doubledomain.h \
+    Domain/domains.h
 

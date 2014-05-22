@@ -18,7 +18,7 @@ private:
     quint8 _channel = 0;
     const MidiInputHandler* midi;
 
-protected:
+public:
     void sendMidiControlCommand(quint8 data1, quint8 data2);
 
 };

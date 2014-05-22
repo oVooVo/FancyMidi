@@ -15,6 +15,8 @@ MidiInputHandler::MidiInputHandler()
 
 bool MidiInputHandler::connectMidiDevice_Private()
 {
+    if (_phantom) return true;
+
     if (_notifier) delete _notifier;
 
     int fd = -1;
@@ -38,6 +40,7 @@ bool MidiInputHandler::connectMidiDevice_Private()
 
 bool MidiInputHandler::disconnectMidiDevice_Private()
 {
+    if (_phantom) return true;
     if (_notifier) {
         close(_notifier->socket());
         delete _notifier;
@@ -50,6 +53,7 @@ bool MidiInputHandler::disconnectMidiDevice_Private()
 
 void MidiInputHandler::readyRead()
 {
+    if (_phantom) return;
     quint8 buffer[3] = {0,0,0};
     read(_notifier->socket(), &buffer, 3);
     if (_verbose) {
@@ -138,9 +142,10 @@ const MidiInputHandler* MidiInputHandler::singleton()
 
 void MidiInputHandler::sendMidiCommand(MidiType type, quint8 channel, quint8 data1, quint8 data2) const
 {
-    if (_valid) {
+    if (_valid || _phantom) {
         quint8 buffer[3] = { statusByte(type, channel), data1, data2 };
-        write(_notifier->socket(), &buffer, 3);
+        if (!_phantom)
+            write(_notifier->socket(), &buffer, 3);
         if (_verbose) {
             qDebug() << "== SEND ==========";
             qDebug() << "type = " << getType(buffer[0]) << "(" << typeToString(getType(buffer[0])) << ")";
