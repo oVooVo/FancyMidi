@@ -21,6 +21,7 @@ private:
 public:
     void sendMidiControlCommand(quint8 data1, quint8 data2);
 
+
 };
 
 #endif // KEYBOARD_H

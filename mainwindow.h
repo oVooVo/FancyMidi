@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "Model/node.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +21,8 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+private slots:
+    void updateSettingTable(Node* node);
 };
 
 #endif // MAINWINDOW_H

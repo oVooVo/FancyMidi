@@ -42,8 +42,14 @@ SOURCES += main.cpp\
     View/portitem.cpp \
     Model/queueinputport.cpp \
     Model/project.cpp \
-    Model/Nodes/keyboardnode.cpp \
-    Model/simpleinputport.cpp
+    Model/simpleinputport.cpp \
+    Settings/selectsetting.cpp \
+    SettingWidgets/selectsettingwidget.cpp \
+    Model/Nodes/nordstage2node.cpp \
+    Settings/midicommandselectsetting.cpp \
+    SettingWidgets/midicommandselectsettingwidget.cpp \
+    Settings/integersetting.cpp \
+    SettingWidgets/integersettingwidget.cpp
 
 HEADERS  +=  midiinputhandler.h \
     keyboard.h \
@@ -73,9 +79,19 @@ HEADERS  +=  midiinputhandler.h \
     View/portitem.h \
     View/queueinputport.h \
     Model/project.h \
-    Model/Nodes/keyboardnode.h \
-    Model/simpleinputport.h
+    Model/simpleinputport.h \
+    Settings/selectsetting.h \
+    SettingWidgets/selectsettingwidget.h \
+    Model/Nodes/nordstage2node.h \
+    Settings/midicommandselectsetting.h \
+    SettingWidgets/midicommandselectsettingwidget.h \
+    Settings/integersetting.h \
+    SettingWidgets/integersettingwidget.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    SettingWidgets/selectsettingwidget.ui \
+    SettingWidgets/midicommandselectsettingwidget.ui \
+    SettingWidgets/integersettingwidget.ui
+
 

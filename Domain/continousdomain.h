@@ -51,7 +51,6 @@ public:
         if (_value != value) {
             qWarning() << "Expected value to be between" << min() << "and" << max() << ".";
         }
-        keyboard()->sendMidiControlCommand(midicode(), encode());
     }
 
     bool setCode(quint8 code)

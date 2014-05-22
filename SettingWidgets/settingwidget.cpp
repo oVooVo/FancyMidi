@@ -3,6 +3,10 @@
 #include <QDebug>
 #include <QBrush>
 #include "mainwindow.h"
+#include "../Settings/midicommandselectsetting.h"
+#include "midicommandselectsettingwidget.h"
+#include "../Settings/integersetting.h"
+#include "integersettingwidget.h"
 
 SettingWidget::SettingWidget(Setting *setting, QWidget* parent) : QWidget(parent)
 {
@@ -27,19 +31,12 @@ void SettingWidget::paintEvent(QPaintEvent *)
 
 SettingWidget* SettingWidget::createNewSettingWidget(Setting *setting, QWidget *parent)
 {
-    /*
-	if (setting->inherits("IntegerSetting")) {
-		return new IntegerSettingWidget(qobject_cast<IntegerSetting*>(setting), parent);
-	} else if (setting->inherits("SelectSetting")) {
-		return new SelectSettingWidget(qobject_cast<SelectSetting*>(setting), parent);
-    } else if (setting->inherits("BoolSetting")) {
-		return new BoolSettingWidget(qobject_cast<BoolSetting*>(setting), parent);
-    } else if (setting->inherits("ResolutionPathSetting")) {
-        return new ResolutionPathSettingWidget(qobject_cast<ResolutionPathSetting*>(setting), parent);
-    } else if (setting->inherits("ColorSetting")) {
-        return new ColorSettingWidget(qobject_cast<ColorSetting*>(setting), parent);
+    //todo use register-mechanism from nodes
+    if (setting->inherits("MidiCommandSelectSetting")) {
+        return new MidiCommandSelectSettingWidget(qobject_cast<MidiCommandSelectSetting*>(setting), parent);
+    } else if (setting->inherits("IntegerSetting")) {
+        return new IntegerSettingWidget(qobject_cast<IntegerSetting*>(setting), parent);
     }
-    */
 	return 0;
 }
 
