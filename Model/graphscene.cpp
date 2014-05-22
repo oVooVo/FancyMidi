@@ -108,6 +108,7 @@ void GraphScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         Node *node = Node::createInstance(text);
         node->setPosition(event->scenePos().toPoint());
         node->setParent(_model);
+        node->polish();
         emit showSettings(node);
     }
     QGraphicsScene::dropEvent(event);
@@ -167,7 +168,7 @@ void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         QGraphicsItem* gi = itemAt(event->scenePos(), t_unused);
         PortItem* pi = (PortItem*) gi;
         if (gi && gi->type() == PortItem::Type
-                && pi->port() && pi->port()->isData() == _temporaryConnection->portItem()->port()->isData()
+                && pi->port() && pi->port()->type() == _temporaryConnection->portItem()->port()->type()
                 && pi->port()->isInput() != _temporaryConnection->portItem()->port()->isInput()) {
             _temporaryConnection->setBlack();
         } else {

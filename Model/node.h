@@ -154,6 +154,13 @@ public:
      */
     void setSize(QSizeF size);
 
+    virtual QString category() const { return "NoCategory"; }
+
+    /**
+     * @brief must be called as the last function of child constructor. Sends polish-event (= construction done)
+     */
+    void polish();
+
 protected:
     /**
      * @brief _inputs the input ports of this node.
@@ -166,11 +173,6 @@ protected:
     QList<OutputPort*> _outputs;
 
     void childEvent(QChildEvent* event);
-
-    /**
-     * @brief must be called as the last function of child constructor. Sends polish-event (= construction done)
-     */
-    void polish();
 
     /**
      * @brief _creatorMap this map contains all nodes.

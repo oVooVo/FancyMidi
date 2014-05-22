@@ -33,14 +33,11 @@ SOURCES += main.cpp\
     View/graphview.cpp \
     View/nodeitem.cpp \
     Model/abstractgraphscene.cpp \
-    Model/output.cpp \
-    Model/queuednode.cpp \
     Settings/setting.cpp \
     SettingWidgets/settingwidget.cpp \
     View/temporaryconnection.cpp \
     View/connectionitem.cpp \
     View/portitem.cpp \
-    Model/queueinputport.cpp \
     Model/project.cpp \
     Model/simpleinputport.cpp \
     Settings/selectsetting.cpp \
@@ -49,7 +46,9 @@ SOURCES += main.cpp\
     Settings/midicommandselectsetting.cpp \
     SettingWidgets/midicommandselectsettingwidget.cpp \
     Settings/integersetting.cpp \
-    SettingWidgets/integersettingwidget.cpp
+    SettingWidgets/integersettingwidget.cpp \
+    View/nodetree.cpp \
+    Model/Nodes/triggernode.cpp
 
 HEADERS  +=  midiinputhandler.h \
     keyboard.h \
@@ -70,8 +69,6 @@ HEADERS  +=  midiinputhandler.h \
     View/graphview.h \
     View/nodeitem.h \
     Model/abstractgraphscene.h \
-    Model/output.h \
-    Model/queuednode.h \
     Settings/setting.h \
     SettingWidgets/settingwidget.h \
     View/temporaryconnection.h \
@@ -86,7 +83,9 @@ HEADERS  +=  midiinputhandler.h \
     Settings/midicommandselectsetting.h \
     SettingWidgets/midicommandselectsettingwidget.h \
     Settings/integersetting.h \
-    SettingWidgets/integersettingwidget.h
+    SettingWidgets/integersettingwidget.h \
+    View/nodetree.h \
+    Model/Nodes/triggernode.h
 
 FORMS += \
     mainwindow.ui \

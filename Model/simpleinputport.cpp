@@ -5,9 +5,10 @@
 #include "port.h"
 #include <QDebug>
 
-SimpleInputPort::SimpleInputPort(Node* node, QString name, QString infoText, bool isData): InputPort(node, name, infoText, isData)
+SimpleInputPort::SimpleInputPort(Node* node, QString name, QString infoText, Type type): InputPort(node, name, infoText, type)
 {
 }
+
 void SimpleInputPort::pushPacket(QSharedPointer<Packet> packet)
 {
 	// TODO: fix this, filter are not the only type!

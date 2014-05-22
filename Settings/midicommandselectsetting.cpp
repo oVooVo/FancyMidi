@@ -130,7 +130,6 @@ Domain* MidiCommandSelectSetting::domain() const
 
 Domain::Type MidiCommandSelectSetting::domainType() const
 {
-    qDebug() << _currentCategory << _currentProperty;
     return domain()->type();
 }
 
@@ -169,7 +168,6 @@ void MidiCommandSelectSetting::setCategory(int i)
 
 void MidiCommandSelectSetting::setProperty(int i)
 {
-    qDebug() << "property = " << i << 0 << properties().length();
     Q_ASSERT(i >= 0 && i < properties().length());
     if (i == _currentProperty) return;
 

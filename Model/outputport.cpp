@@ -5,7 +5,7 @@
 #include "Model/project.h"
 
 
-OutputPort::OutputPort(Node* node, QString name, QString infoText, bool isData) : Port(node, name, infoText, isData)
+OutputPort::OutputPort(Node* node, QString name, QString infoText, Type type) : Port(node, name, infoText, type)
 {
 
 }
@@ -17,9 +17,11 @@ OutputPort::~OutputPort()
 	}
 }
 
-const QSet<InputPort*> OutputPort::getTargets() {
+const QSet<InputPort*> OutputPort::getTargets()
+{
     return _targets;
 }
+
 void OutputPort::pushPacket(QSharedPointer<Packet> packet) {
     // Das Packet wird verworfen wenn keine Verbindung besteht.
     if(getNode()->getProject() && getNode()->getProject()->isComplete())
@@ -47,7 +49,7 @@ void OutputPort::pushPacket(QSharedPointer<Packet> packet) {
 }
 
 bool OutputPort::connect(Port* port) {
-    if(port->isInput() && port->isData() == isData()) {
+    if(port->isInput() && port->type() == type()) {
         if(_targets.contains((InputPort*)port)) {
             return false;
         } else 
@@ -71,6 +73,7 @@ bool OutputPort::disconnect(InputPort* port) {
     }
 }
 
-bool OutputPort::isInput() {
+bool OutputPort::isInput() const
+{
     return false;
 }

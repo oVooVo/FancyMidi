@@ -4,17 +4,21 @@
 #include "node.h"
 #include "port.h"
 
-InputPort::InputPort(Node* node, QString name, QString infoText, bool isData): Port(node, name, infoText, isData)
+InputPort::InputPort(Node* node, QString name, QString infoText, Type type): Port(node, name, infoText, type)
 {
 	_source = NULL;
 }
-InputPort::~InputPort() {
+
+InputPort::~InputPort()
+{
     disconnect();
 }
+
 bool InputPort::isModifying()
 {
 	return getNode()->isModifying(this);
 }
+
 bool InputPort::connect(Port* port)
 {
 	if(!port)
@@ -33,7 +37,7 @@ bool InputPort::connect(Port* port)
 	}
 	else    // connect
 	{
-        if(port->isInput() || port == _source || port->isData() != isData())
+        if (port->isInput() || port == _source || port->type() != type())
 			return false;
 		else
 		{
@@ -48,12 +52,14 @@ bool InputPort::disconnect()
 {
 	return connect(NULL);
 }
-bool InputPort::isInput()
+
+bool InputPort::isInput() const
 {
 	return true;
 }
 
-OutputPort* InputPort::getSource() {
+OutputPort* InputPort::getSource() const
+{
     return _source;
 }
 

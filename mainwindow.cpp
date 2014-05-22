@@ -5,6 +5,7 @@
 #include "Model/graphscene.h"
 #include "Model/Nodes/nordstage2node.h"
 #include "SettingWidgets/settingwidget.h"
+#include "View/graphview.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,11 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
     Project* project = new Project();
-    GraphScene* scene = new GraphScene(project, this);
-    new NordStage2Node(QPoint(), project);
-
+    GraphScene* scene = new GraphScene(project, this, this);
     ui->graphicsView->setScene(scene);
     connect(scene, SIGNAL(showSettings(Node*)), this, SLOT(updateSettingTable(Node*)));
 }

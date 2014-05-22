@@ -35,7 +35,19 @@
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2"/>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="NodeTree" name="treeWidget">
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QDockWidget" name="attributeDockWidget">
    <property name="toolTip">
@@ -85,10 +97,10 @@
            </size>
           </property>
           <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOn</enum>
+           <enum>Qt::ScrollBarAsNeeded</enum>
           </property>
           <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
+           <enum>Qt::ScrollBarAsNeeded</enum>
           </property>
           <property name="widgetResizable">
            <bool>true</bool>
@@ -98,7 +110,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>171</width>
+             <width>239</width>
              <height>394</height>
             </rect>
            </property>
@@ -256,6 +268,11 @@
    <class>GraphView</class>
    <extends>QGraphicsView</extends>
    <header>View/graphview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>NodeTree</class>
+   <extends>QTreeWidget</extends>
+   <header>View/nodetree.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

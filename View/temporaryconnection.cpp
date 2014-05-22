@@ -4,9 +4,8 @@
 TemporaryConnection::TemporaryConnection(PortItem* portItem, QGraphicsScene* scene, QGraphicsItem* parent) :
     QGraphicsPathItem(parent)
 {
-    scene->addItem(this);
+    if (!parent) scene->addItem(this);
     _portItem = portItem;
-
     setPen(QPen(Qt::lightGray, 2));
     setBrush(Qt::NoBrush);
     setZValue(-1);

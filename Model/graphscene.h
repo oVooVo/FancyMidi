@@ -62,7 +62,7 @@ signals:
 private:
     bool eventFilter(QObject *watched, QEvent *event);
     void dropEvent(QGraphicsSceneDragDropEvent *event);
-    void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
+    void dragMoveEvent(QGraphicsSceneDragDropEvent *);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

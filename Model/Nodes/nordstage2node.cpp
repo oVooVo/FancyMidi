@@ -5,11 +5,13 @@
 #include <QDebug>
 #include "nordstage2.h"
 
+REGISTER_DEFN_NODETYPE(NordStage2Node);
+
 
 NordStage2Node::NordStage2Node(QPoint position, Project *parent) :
     Node(position, parent, "NordStage2")
 {
-    _inputs += new SimpleInputPort(this, "", "set the specified value");
+    _inputs += new SimpleInputPort(this, "", "set the specified value", Port::Trigger);
 
     _midiSetting = new MidiCommandSelectSetting(this, "Midi Command", "Sets the midi command that is fired when the trigger input is triggered");
     _intSetting = new IntegerSetting(this, "Channel", "Midi channel", 0, 15, 0, 1, 0);
@@ -17,8 +19,6 @@ NordStage2Node::NordStage2Node(QPoint position, Project *parent) :
         emit channelChanged(_intSetting->value());
     });
     connect(_midiSetting, SIGNAL(sendMidi()), this, SLOT(sendMidi()));
-
-    polish();
 }
 
 void NordStage2Node::sendMidi()

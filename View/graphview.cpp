@@ -5,7 +5,7 @@
 
 #include <QDebug>
 
-GraphView::GraphView(QWidget* parent = 0) : QGraphicsView(0, parent)
+GraphView::GraphView(QWidget* parent = 0) : QGraphicsView(parent)
 {
     _pan = false;
     _rubberBandKeyPressed = false;

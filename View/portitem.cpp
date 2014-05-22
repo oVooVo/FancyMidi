@@ -10,6 +10,7 @@
 PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *parent) :
     QGraphicsPathItem(parent)
 {
+    if (!parent) scene->addItem(this);
     _label = new QGraphicsTextItem(this);
     _name = name;
     _label->setPlainText(name);
@@ -24,17 +25,19 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
     _port = port;
 
     setPen(QPen(Qt::black, 1.5));
-    if (_port && _port->isData()) {
-        setBrush(Qt::darkBlue);
-    } else if (_port && !_port->isData()) {
-        setBrush(Qt::darkGreen);
-    } else {
-        setBrush(Qt::white); //no port, illegal, should never happen
+
+    if (_port) {
+        switch (_port->type()) {
+        case Port::Trigger:
+            setBrush(Qt::darkBlue);
+            break;
+        case Port::Other:
+        default:
+            setBrush(Qt::green);
+            break;
+        }
     }
-
-
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
-
     _portFlags = 0;
 
 }

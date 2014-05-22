@@ -38,11 +38,11 @@ void Project::childEvent(QChildEvent *event)
         Node* node = qobject_cast<Node *>(event->child());
         if(node != NULL) {
             _nodes += node;
-            Output* output = qobject_cast<Output *>(event->child());
+            /*Output* output = qobject_cast<Output *>(event->child());
             if(output != NULL) {
                 _outputs += output;
             }
-            /*Generator* generator = qobject_cast<Generator *>(event->child());
+            Generator* generator = qobject_cast<Generator *>(event->child());
             if(generator != NULL) {
                 _generators += generator;
             }
@@ -52,8 +52,10 @@ void Project::childEvent(QChildEvent *event)
     } else if (event->removed()) {
         if(_nodes.contains((Node*)event->child()))
             _nodes -= (Node*)event->child();
+        /*
         if(_outputs.contains((Output*)event->child()))
             _outputs -= (Output*)event->child();
+            */
         /*
         if(_generators.contains((Generator*)event->child())) {
 			_generators -= (Generator*)event->child();
@@ -77,12 +79,13 @@ bool Project::isComplete()
 	if(!_hasCalculatedData) { // We define a empty project as completed project.
         return true;
 	}
-
+/*
     foreach(Output *dpo, _outputs)    {
         if (!dpo->isComplete() && dpo->getState() == Node::GOOD) {
             return false;
 		}
     }
+    */
     return true;
 }
 
@@ -289,6 +292,7 @@ void Project::popularizeNodesChange(QList<InputPort *> inputs)
 
 int Project::count() {
 	// Exact count
+    /*
 	int count = 0;
 	foreach(Output* output, _outputs) {
 		if(output->isComplete())
@@ -301,6 +305,8 @@ int Project::count() {
 		if(output->getState() == Node::GOOD && !output->isComplete())
 			count = qMin(count, output->count());
 	return count;
+    */
+    return 0;
 }
 
 void Project::beginUpdate() {

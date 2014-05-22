@@ -10,7 +10,7 @@
 ConnectionItem::ConnectionItem(PortItem *outputPort, PortItem *inputPort, bool selectable, QGraphicsScene* scene, QGraphicsPathItem *parent) :
     QGraphicsPathItem(parent)
 {
-    scene->addItem(this);
+    if (!parent) scene->addItem(this);
     _inputPort = inputPort;
     _outputPort = outputPort;
 

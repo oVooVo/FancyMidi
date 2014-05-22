@@ -12,9 +12,12 @@ public:
     NordStage2Node(QPoint position, Project *parent);
     int channel() const { return _intSetting->value(); }
 
+    QString category() const { return "Keyboard"; }
+
 private:
     IntegerSetting* _intSetting;
     MidiCommandSelectSetting* _midiSetting;
+    REGISTER_DECL_NODETYPE(NordStage2Node);
 
 public slots:
     void sendMidi();

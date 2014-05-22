@@ -15,7 +15,7 @@
 NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene* scene, QGraphicsPathItem* parent) :
     QGraphicsPathItem(parent)
 {
-    scene->addItem(this);
+    if (!parent) scene->addItem(this);
     setToolTip(node->getInfoText());
 	_node = node;
 	_resizeable = resizeable;
@@ -27,7 +27,6 @@ NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene*
 	QPainterPath p;
 	p.addRoundedRect(0, 0, 100, 30, 5, 5);
 	setPos(node->getPosition());
-	setPath(p);
 	if (selectable) {
 		setFlag(QGraphicsItem::ItemIsMovable);
 		setFlag(QGraphicsItem::ItemIsSelectable);
@@ -59,6 +58,7 @@ NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene*
 		p.addRect(width-_resizeHandlerSize, height-_resizeHandlerSize, _resizeHandlerSize, _resizeHandlerSize);
         setSize(node->getSize());
     }
+    setPath(p.translated(-width/2, -height/2));
 }
 
 NodeItem::~NodeItem()
@@ -103,7 +103,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 	}
 	painter->setPen(pen);
 
-	painter->drawPath(path());
+    painter->drawPath(path());
 	if (_resizeable) {
         /** handle display output */
 	}
@@ -129,7 +129,7 @@ void NodeItem::addPort(Port* port, const QString &name, bool isOutput, int flags
 	QPainterPath p;
 	p.addRoundedRect(0, 0, width, height, 5, 5);
 
-	int y = vertMargin + portItem->radius();
+    int y = vertMargin + portItem->radius() - height/2;
 
     foreach(QGraphicsItem *port_, QGraphicsPathItem::childItems()) {
 		if (port_->type() != PortItem::Type)
@@ -137,9 +137,9 @@ void NodeItem::addPort(Port* port, const QString &name, bool isOutput, int flags
 
 		PortItem *portItem = (PortItem*) port_;
 		if (portItem->isOutput())
-			portItem->setPos(width + portItem->radius(), y);
+            portItem->setPos(width, y);
 		else
-			portItem->setPos(-portItem->radius(), y);
+            portItem->setPos(-portItem->radius() - width/2, y);
 		y += h;
 	}
 
@@ -279,7 +279,6 @@ bool NodeItem::isResizeable() const
 {
 	return _resizeable;
 }
-
 
 
 

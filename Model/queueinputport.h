@@ -18,7 +18,7 @@ public:
      * @param name The name of the port
      * @param infoText The description of the port
      */
-    QueueInputPort(Node* node, QString name, QString infoText = "");
+    QueueInputPort(Node* node, QString name, QString infoText, Type type);
     /**
      * @brief pushPacket Notifies the associated node that a packet arose
      * @param packet The new packet

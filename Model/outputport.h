@@ -17,7 +17,7 @@ public:
      * @param name The name of the output port
      * @param infoText Text for the information about the output port
      */
-    OutputPort(Node* node, QString name, QString infoText, bool isData = false);
+    OutputPort(Node* node, QString name, QString infoText, Type type);
     /**
      * @brief getTargets Returns a list of connected input ports
      * @return Returns a list of connected input ports
@@ -47,9 +47,10 @@ public:
      * @brief isInput Whether this is a input port
      * @return Whether this is a input port
      */
-    bool isInput();
+    bool isInput() const;
 
 private:
+public://TODO
     QSet<InputPort*> _targets;
 };
 
