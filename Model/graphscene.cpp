@@ -1,0 +1,339 @@
+#include "graphscene.h"
+
+#include <QKeyEvent>
+#include <QGraphicsSceneDragDropEvent>
+#include <QGraphicsSceneMouseEvent>
+#include <QApplication>
+#include <QPointF>
+#include <QTimer>
+#include <QMimeData>
+
+#include "port.h"
+#include "View/connectionitem.h"
+#include "mainwindow.h"
+
+#include <QDebug>
+
+#define SCENE_SIZE 1000000
+
+GraphScene::GraphScene(Project *project, MainWindow* mainWindow, QObject *parent) :
+    AbstractGraphScene(project, mainWindow, parent, true)
+{
+    _locked = false;
+    _contentRect = new QGraphicsRectItem();
+    _contentRect->setRect(-SCENE_SIZE/2, -SCENE_SIZE/2, SCENE_SIZE, SCENE_SIZE);
+    addItem(_contentRect);
+	_contentRect->setZValue(-100);
+    if (_model) {
+        _model->installEventFilter(this);   //to recognize child add, child remove and polish event
+    }
+    _temporaryConnection = 0;
+}
+
+bool GraphScene::eventFilter(QObject *watched, QEvent *event)
+{
+    if (!_locked && event->type() == QEvent::KeyPress) {
+        int key = ((QKeyEvent*) event)->key();
+        if (16777223 == key || 16777219 == key) { //entf, backspace
+            _mainWindow->stop();    //TODO
+            QList<NodeItem*> nodeItemsToDelete;
+            QList<InputPort*> disconnectedInputports; //the relation inputport --> connection is unambiguous
+            foreach (QGraphicsItem* gi, selectedItems())
+            {
+                if (gi->type() == NodeItem::Type) {
+                    nodeItemsToDelete.append(((NodeItem*)gi));
+                } else if (gi->type() == ConnectionItem::Type) {
+                    disconnectedInputports.append((InputPort*)((ConnectionItem*)gi)->inputPort()->port());
+                }
+            }
+
+            foreach (InputPort* inputPort, disconnectedInputports) {
+                foreach (NodeItem* ni, nodeItemsToDelete)
+                {
+                    if (ni->getNode() == inputPort->getNode()) {
+                        disconnectedInputports.removeOne(inputPort);
+                        break;
+                    }
+                }
+            }
+			_model->beginUpdate();
+			foreach (InputPort* inputPort, disconnectedInputports) {
+				inputPort->disconnect();
+			}
+            foreach (NodeItem* n, nodeItemsToDelete) {
+                delete n->getNode();
+            }
+            _model->endUpdate();
+            _model->popularizeModelChange();
+            _model->popularizeNodesChange(disconnectedInputports);
+            redraw();
+        } else if (16777249 == key) {   //strg
+            _strgPressed = true;
+        } else if (65 == key && _strgPressed) { //A
+            foreach (QGraphicsItem* gi, items()) {
+                if (gi->type() == NodeItem::Type) {
+                    gi->setSelected(true);
+                } else {
+                    gi->setSelected(false);
+                }
+            }
+        } else if (67 == key && _strgPressed) { //C
+            copy();
+        } else if (84 == key && _strgPressed) { //T
+            foreach (QGraphicsItem* gi, items()) {
+                if (gi->type() == ConnectionItem::Type) {
+                    gi->setSelected(true);
+                } else {
+                    gi->setSelected(false);
+                }
+            }
+        } else if (!_locked && 86 == key && _strgPressed) { //V
+            paste();
+        }
+    }
+    if (event->type() == QEvent::KeyRelease) {
+        int key = ((QKeyEvent*) event)->key();
+        if (16777249 == key) {   //strg
+            _strgPressed = false;
+        }
+    }
+    return QGraphicsScene::eventFilter(watched, event);
+}
+
+void GraphScene::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+    if (!_locked) {
+        _mainWindow->stop();
+        QString text = event->mimeData()->text();
+        Node *node = Node::createInstance(text);
+        node->setPosition(event->scenePos().toPoint());
+        node->setParent(_model);
+        emit showSettings(node);
+    }
+    QGraphicsScene::dropEvent(event);
+}
+
+void GraphScene::dragMoveEvent(QGraphicsSceneDragDropEvent *)
+{
+    //do nothing, but nothing else!
+}
+
+void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
+{
+    bool forwardMousePress = true;
+    if (e->button() == Qt::LeftButton) {
+
+        NodeItem* clicked = nodeItemAt(e->scenePos());
+        if (clicked && clicked->getNode()) {
+            emit showSettings(clicked->getNode());
+        } else {
+            emit showSettings(0);       //showSetting when node or nodeitem is zero too!
+        }
+
+        if (clicked) {
+            foreach (QGraphicsItem* gi, items()) {
+                NodeItem* ni = dynamic_cast<NodeItem*>(gi);
+                if (ni && ni != clicked) {
+                    ni->stackBefore(clicked);
+                }
+            }
+        }
+        //bring selected on top
+        foreach (QGraphicsItem* gi, selectedItems()) {
+            foreach (QGraphicsItem* before, items()) {
+                if (before->type() == NodeItem::Type && !selectedItems().contains(before) && before != clicked) {
+                    before->stackBefore(gi);
+                }
+            }
+        }
+    }
+    if (e->button() == Qt::LeftButton) {
+        QTransform t_unused;
+        PortItem* portItem = dynamic_cast<PortItem*>(itemAt(e->scenePos(), t_unused));
+        if (!_locked && portItem) {
+            forwardMousePress = false;
+            TemporaryConnection* temporaryConnection = new TemporaryConnection(portItem, this);
+            _temporaryConnection = temporaryConnection;
+        }
+    }
+    if (forwardMousePress)
+        QGraphicsScene::mousePressEvent(e);
+}
+
+void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (_temporaryConnection) {
+        QTransform t_unused;
+        QGraphicsItem* gi = itemAt(event->scenePos(), t_unused);
+        PortItem* pi = (PortItem*) gi;
+        if (gi && gi->type() == PortItem::Type
+                && pi->port() && pi->port()->isData() == _temporaryConnection->portItem()->port()->isData()
+                && pi->port()->isInput() != _temporaryConnection->portItem()->port()->isInput()) {
+            _temporaryConnection->setBlack();
+        } else {
+            _temporaryConnection->setGrey();
+        }
+        _temporaryConnection->updatePath(event->scenePos());
+    }
+    QGraphicsScene::mouseMoveEvent(event);
+}
+
+void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        QTransform t_unused;
+        QGraphicsItem* gi = itemAt(event->scenePos(), t_unused);
+        PortItem* endPort = 0;
+        if (gi) {
+            endPort = dynamic_cast<PortItem*>(gi);
+        }
+        if (_temporaryConnection) {
+            PortItem* startPort = 0;
+            if (endPort) {
+                startPort = _temporaryConnection->portItem();
+            }
+            delete _temporaryConnection;
+            _temporaryConnection = 0;
+            if (startPort && endPort && endPort->port() && endPort->port()->isInput() != startPort->port()->isInput()) {
+                _mainWindow->stop();
+                startPort->port()->connect(endPort->port());
+                if (startPort->nodeItem() == endPort->nodeItem())
+                    return; // ignore connection from same item
+                if (startPort->port()->isInput()) {
+                    _model->popularizeNodesChange(QList<InputPort*>() << (InputPort*) startPort->port());
+                } else {
+                    _model->popularizeNodesChange(QList<InputPort*>() << (InputPort*) endPort->port());
+                }
+                _model->selfCheck();
+            }
+        }
+    }
+    QGraphicsScene::mouseMoveEvent(event);
+}
+
+void GraphScene::copy()
+{
+    _copyPasteNodeList.clear();
+    _copy.clear();
+    QDataStream copyStream(&_copy, QIODevice::WriteOnly);
+
+    foreach (QGraphicsItem* gi, selectedItems()) {
+        if (gi->type() == NodeItem::Type) {
+            if (((NodeItem*) gi)->getNode()) {
+                _copyPasteNodeList.append(((NodeItem*) gi)->getNode());
+            }
+        }
+    }
+    copyStream << _copyPasteNodeList;
+    int count = 0;
+    for(int i = 0; i < _copyPasteNodeList.count(); i++) {
+        for(int p = 0; p < _copyPasteNodeList[i]->getOutputs().count(); p++) {
+            foreach (InputPort* inputPort, _copyPasteNodeList[i]->getOutputs()[p]->getTargets()) {
+                if (_copyPasteNodeList.contains(inputPort->getNode())) {
+                    count++;
+                }
+            }
+        }
+    }
+    copyStream << count;
+    for (int nodeIndex = 0; nodeIndex < _copyPasteNodeList.count(); nodeIndex++) {
+        for (int inputPortIndex = 0; inputPortIndex < _copyPasteNodeList[nodeIndex]->getInputs().count(); inputPortIndex++) {
+            OutputPort* outputPort = _copyPasteNodeList[nodeIndex]->getInputs()[inputPortIndex]->getSource();
+            if (outputPort && _copyPasteNodeList.contains(outputPort->getNode())) {
+                copyStream << nodeIndex;                                                //target node
+                copyStream << inputPortIndex;                                           //target port
+                copyStream << _copyPasteNodeList.indexOf(outputPort->getNode());        //source node
+                copyStream << outputPort->getNode()->getOutputs().indexOf(outputPort);  //source port
+            }
+        }
+    }
+}
+
+void GraphScene::paste()
+{
+    if (!_copy.isEmpty()) {
+        _mainWindow->stop();
+        QList<InputPort*> newInputPorts;
+        _pastedNodes.clear();
+
+        _model->beginUpdate();
+        QDataStream istream(&_copy, QIODevice::ReadOnly);
+        istream >> _pastedNodes;
+
+        for(int i = 0; i < _pastedNodes.count(); i++) {
+           _pastedNodes[i]->setParent(this->model());
+           _pastedNodes[i]->setPosition(_pastedNodes[i]->getPosition() + QPoint(20, 20));
+        }
+
+        int count;
+        istream >> count;
+        for(int c = 0; c < count; c++) {
+           int targetNodeIndex, targetPortIndex, sourceNodeIndex, sourcePortIndex;
+           istream >> targetNodeIndex >> targetPortIndex >> sourceNodeIndex >> sourcePortIndex;
+           _pastedNodes[targetNodeIndex]->getInputs()[targetPortIndex]->connect(_pastedNodes[sourceNodeIndex]->getOutputs()[sourcePortIndex]);
+           newInputPorts += _pastedNodes[targetNodeIndex]->getInputs()[targetPortIndex];
+
+        }
+        _model->endUpdate();
+
+        QTimer::singleShot(0, this, SLOT(selectPastedNodes()));
+        _model->popularizeModelChange();
+        _model->popularizeNodesChange(newInputPorts);
+    }
+
+}
+
+void GraphScene::selectPastedNodes()
+{
+    foreach (QGraphicsItem* gi, items()) {
+        if (gi->type() == NodeItem::Type && _pastedNodes.contains(((NodeItem*) gi)->getNode())) {
+            foreach (QGraphicsItem* before, items()) {
+                if (before->type() == NodeItem::Type && !_pastedNodes.contains(((NodeItem*) before)->getNode()))
+                    before->stackBefore(gi);
+            }
+            gi->setSelected(true);
+        } else {
+            gi->setSelected(false);
+        }
+    }
+}
+
+void GraphScene::showFrame(int id) {
+	foreach(NodeItem* ni, _displayOutputNodeItems) {
+		ni->showFrame(id);
+	}
+}
+
+void GraphScene::lock()
+{
+    _locked = true;
+
+}
+
+void GraphScene::unlock()
+{
+    _locked = false;
+}
+
+QPointF GraphScene::getCenter() const
+{
+    QList<QGraphicsItem*> itemList = items();
+    itemList.removeOne(_contentRect);
+
+    if (itemList.isEmpty()) return QPointF(0,0);
+
+    QRectF boundingRect = QRectF(itemList.first()->scenePos(), QSizeF(0,0));
+    foreach (QGraphicsItem* gi, items()) {
+        if (gi->type() != NodeItem::Type) continue;
+
+        boundingRect |= ((NodeItem*)gi)->myBoundingRect();
+    }
+    return boundingRect.center();
+}
+
+void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene::mouseDoubleClickEvent(event);
+}
+
+

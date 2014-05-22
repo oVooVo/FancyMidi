@@ -7,7 +7,7 @@
 #include "Domain/domain.h"
 #include "keyboard.h"
 
-class NordStage2 : Keyboard
+class NordStage2 : public Keyboard
 {
 public:
     NordStage2(int channel = 0, QObject *parent = 0);

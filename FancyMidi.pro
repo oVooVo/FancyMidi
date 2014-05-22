@@ -22,7 +22,28 @@ SOURCES += main.cpp\
     Domain/discretedomain.cpp \
     Domain/integerdomain.cpp \
     Domain/doubledomain.cpp \
-    Domain/domains.cpp
+    Domain/domains.cpp \
+    mainwindow.cpp \
+    Model/node.cpp \
+    Model/port.cpp \
+    Model/inputport.cpp \
+    Model/outputport.cpp \
+    Model/graphscene.cpp \
+    Model/packet.cpp \
+    View/graphview.cpp \
+    View/nodeitem.cpp \
+    Model/abstractgraphscene.cpp \
+    Model/output.cpp \
+    Model/queuednode.cpp \
+    Settings/setting.cpp \
+    SettingWidgets/settingwidget.cpp \
+    View/temporaryconnection.cpp \
+    View/connectionitem.cpp \
+    View/portitem.cpp \
+    Model/queueinputport.cpp \
+    Model/project.cpp \
+    Model/Nodes/keyboardnode.cpp \
+    Model/simpleinputport.cpp
 
 HEADERS  +=  midiinputhandler.h \
     keyboard.h \
@@ -32,5 +53,29 @@ HEADERS  +=  midiinputhandler.h \
     Domain/continousdomain.h \
     Domain/integerdomain.h \
     Domain/doubledomain.h \
-    Domain/domains.h
+    Domain/domains.h \
+    mainwindow.h \
+    Model/node.h \
+    Model/port.h \
+    Model/inputport.h \
+    Model/outputport.h \
+    Model/graphscene.h \
+    Model/packet.h \
+    View/graphview.h \
+    View/nodeitem.h \
+    Model/abstractgraphscene.h \
+    Model/output.h \
+    Model/queuednode.h \
+    Settings/setting.h \
+    SettingWidgets/settingwidget.h \
+    View/temporaryconnection.h \
+    View/connectionitem.h \
+    View/portitem.h \
+    View/queueinputport.h \
+    Model/project.h \
+    Model/Nodes/keyboardnode.h \
+    Model/simpleinputport.h
+
+FORMS += \
+    mainwindow.ui
 

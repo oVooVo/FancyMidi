@@ -157,19 +157,5 @@ NordStage2::Triple NordStage2::createProperties()
     reg(Domains::ReverbSizeDomain(96, "Reverb Size"));
     reg(Domains::StatusDomain(97, "Reverb Enabled"));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return Triple(codes, properties, domains);
 }
