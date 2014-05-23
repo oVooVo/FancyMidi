@@ -22,38 +22,12 @@ const QSet<InputPort*> OutputPort::getTargets()
     return _targets;
 }
 
-void OutputPort::pushPacket(QSharedPointer<Packet> packet) {
-    // Das Packet wird verworfen wenn keine Verbindung besteht.
-    if(getNode()->getProject() && getNode()->getProject()->isComplete())
-		return;
-	if(_targets.isEmpty()) {
-		packet.clear();
-	}
-
-    QVector<InputPort*> modifier;
-    QVector<InputPort*> notmodifier;
-	foreach(InputPort * p, _targets)
-        p->isModifying() ? modifier.append(p) : notmodifier.append(p);
-
-    // Alle bis auf den ersten Modifizierer erhalten eine Kopie des Packets
-    for(int i = 1; i < modifier.count(); i++)
-        modifier[i]->pushPacket(packet->copy());
-
-    // Wenn es keine Nicht-Modifizierer gibt erhält der erste Modifizierer das Orginal- und sonst ein Kopiepacket
-    if(!modifier.isEmpty())
-        modifier.first()->pushPacket(notmodifier.isEmpty() ? packet : packet->copy());
-
-    // Die Nicht-Modifizierer erhalten alle das Orginalpacket
-    foreach(InputPort *port, notmodifier)
-        port->pushPacket(packet);
-}
 
 bool OutputPort::connect(Port* port) {
     if(port->isInput() && port->type() == type()) {
         if(_targets.contains((InputPort*)port)) {
             return false;
-        } else 
-        {
+        } else {
             _targets.insert((InputPort*)port);
             ((InputPort*)port)->connect(this);
             return true;
@@ -63,8 +37,9 @@ bool OutputPort::connect(Port* port) {
         return false;
     }
 }
+
 bool OutputPort::disconnect(InputPort* port) {
-    if(_targets.contains(port)) {
+    if (_targets.contains(port)) {
         _targets.remove(port);
         port->disconnect();
         return true;
@@ -76,4 +51,12 @@ bool OutputPort::disconnect(InputPort* port) {
 bool OutputPort::isInput() const
 {
     return false;
+}
+
+void OutputPort::send(void *data)
+{
+    emit sendData(data);
+    for (InputPort* ip : _targets) {
+        ip->receive(data);
+    }
 }

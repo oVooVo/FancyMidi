@@ -25,7 +25,6 @@ NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene*
 
 	/* define the way this item becomes painted */
 	QPainterPath p;
-	p.addRoundedRect(0, 0, 100, 30, 5, 5);
 	setPos(node->getPosition());
 	if (selectable) {
 		setFlag(QGraphicsItem::ItemIsMovable);
@@ -49,7 +48,7 @@ NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene*
     }
     /**************************************/
 
-	setFlag(ItemSendsGeometryChanges); //tell me position changes
+    setFlag(ItemSendsGeometryChanges); //tell me position changes
 	_resize = false;
 	_pwidth = width;
 	_pheight = height;
@@ -58,6 +57,7 @@ NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene*
 		p.addRect(width-_resizeHandlerSize, height-_resizeHandlerSize, _resizeHandlerSize, _resizeHandlerSize);
         setSize(node->getSize());
     }
+    p.addRoundedRect(0, 0, width, height, 5, 5);
     setPath(p.translated(-width/2, -height/2));
 }
 
@@ -137,7 +137,7 @@ void NodeItem::addPort(Port* port, const QString &name, bool isOutput, int flags
 
 		PortItem *portItem = (PortItem*) port_;
 		if (portItem->isOutput())
-            portItem->setPos(width, y);
+            portItem->setPos(width/2 + portItem->radius(), y);
 		else
             portItem->setPos(-portItem->radius() - width/2, y);
 		y += h;

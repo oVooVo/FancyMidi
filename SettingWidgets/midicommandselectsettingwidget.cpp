@@ -4,14 +4,17 @@
 #include "Domain/doubledomain.h"
 #include "Domain/integerdomain.h"
 
-MidiCommandSelectSettingWidget::MidiCommandSelectSettingWidget(MidiCommandSelectSetting* setting, QWidget *parent) :
-    SettingWidget(setting , parent),
+REGISTER_DEFN_SETTINGWIDGETTYPE(MidiCommandSelectSettingWidget);
+
+MidiCommandSelectSettingWidget::MidiCommandSelectSettingWidget(Setting* set, QWidget *parent) :
+    SettingWidget(set , parent),
     ui(new Ui::MidiCommandSelectSettingWidget)
 {
+    Q_ASSERT(set->metaObject()->className() == MidiCommandSelectSetting::staticMetaObject.className());
     _initMode = true;
     ui->setupUi(this);
 
-    ui->category->addItems(setting->categories());
+    ui->category->addItems(setting<MidiCommandSelectSetting>()->categories());
 
     connect(ui->category, SIGNAL(currentIndexChanged(int)),
             this, SLOT(updatePropertyBox()));
@@ -20,12 +23,18 @@ MidiCommandSelectSettingWidget::MidiCommandSelectSettingWidget(MidiCommandSelect
 
     ui->category->setCurrentIndex(0);
 
-    connect(ui->category, SIGNAL(currentIndexChanged(int)), setting, SLOT(setCategory(int)));
-    connect(ui->property, SIGNAL(currentIndexChanged(int)), setting, SLOT(setProperty(int)));
-    connect(ui->doubleSpinBox, SIGNAL(valueChanged(double)), setting, SLOT(setDouble(double)));
-    connect(ui->spinBox, SIGNAL(valueChanged(int)), setting, SLOT(setInt(int)));
-    connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), setting, SLOT(setIndex(int)));
-    connect(ui->pushButton, SIGNAL(clicked()), setting, SIGNAL(sendMidi()));
+    connect(ui->category, SIGNAL(currentIndexChanged(int)),
+            setting<MidiCommandSelectSetting>(), SLOT(setCategory(int)));
+    connect(ui->property, SIGNAL(currentIndexChanged(int)),
+            setting<MidiCommandSelectSetting>(), SLOT(setProperty(int)));
+    connect(ui->doubleSpinBox, SIGNAL(valueChanged(double)),
+            setting<MidiCommandSelectSetting>(), SLOT(setDouble(double)));
+    connect(ui->spinBox, SIGNAL(valueChanged(int)),
+            setting<MidiCommandSelectSetting>(), SLOT(setInt(int)));
+    connect(ui->comboBox, SIGNAL(currentIndexChanged(int)),
+            setting<MidiCommandSelectSetting>(), SLOT(setIndex(int)));
+    connect(ui->pushButton, SIGNAL(clicked()),
+            setting<MidiCommandSelectSetting>(), SIGNAL(sendMidi()));
     reset();
 }
 
@@ -41,39 +50,39 @@ void MidiCommandSelectSettingWidget::updatePropertyBox()
 
 void MidiCommandSelectSettingWidget::reset()
 {
-    MidiCommandSelectSetting* mcss = (MidiCommandSelectSetting*) _setting;
-
     ui->comboBox->blockSignals(true);
     ui->spinBox->blockSignals(true);
     ui->doubleSpinBox->blockSignals(true);
     ui->property->blockSignals(true);
     ui->category->blockSignals(true);
     ui->property->clear();      // we dont want to let property combobox emit its index changed to -1.
-    ui->property->addItems(((MidiCommandSelectSetting*) _setting)->properties());
+    ui->property->addItems(setting<MidiCommandSelectSetting>()->properties());
 
 
-    switch (mcss->domainType()) {
+    switch (setting<MidiCommandSelectSetting>()->domainType()) {
     case Domain::Discrete:
         ui->spinBox->hide();
         ui->doubleSpinBox->hide();
         ui->comboBox->show();
         ui->comboBox->clear();
-        ui->comboBox->addItems(mcss->items());
-        ui->comboBox->setCurrentIndex(mcss->index());
+        ui->comboBox->addItems(setting<MidiCommandSelectSetting>()->items());
+        ui->comboBox->setCurrentIndex(setting<MidiCommandSelectSetting>()->index());
         break;
     case Domain::Double:
         ui->spinBox->hide();
         ui->doubleSpinBox->show();
         ui->comboBox->hide();
-        ui->doubleSpinBox->setRange(mcss->min(), mcss->max());
-        ui->doubleSpinBox->setValue(mcss->value());
+        ui->doubleSpinBox->setRange(setting<MidiCommandSelectSetting>()->min(),
+                                    setting<MidiCommandSelectSetting>()->max());
+        ui->doubleSpinBox->setValue(setting<MidiCommandSelectSetting>()->value());
         break;
     case Domain::Integer:
         ui->spinBox->show();
         ui->doubleSpinBox->hide();
         ui->comboBox->hide();
-        ui->spinBox->setRange(mcss->min(), mcss->max());
-        ui->spinBox->setValue(mcss->value());
+        ui->spinBox->setRange(setting<MidiCommandSelectSetting>()->min(),
+                              setting<MidiCommandSelectSetting>()->max());
+        ui->spinBox->setValue(setting<MidiCommandSelectSetting>()->value());
         break;
     }
     ui->property->blockSignals(false);
@@ -82,7 +91,7 @@ void MidiCommandSelectSettingWidget::reset()
     ui->spinBox->blockSignals(false);
     ui->doubleSpinBox->blockSignals(false);
 
-    ui->category->setCurrentIndex(mcss->currentCategory());
-    ui->property->setCurrentIndex(mcss->currentProperty());
+    ui->category->setCurrentIndex(setting<MidiCommandSelectSetting>()->currentCategory());
+    ui->property->setCurrentIndex(setting<MidiCommandSelectSetting>()->currentProperty());
 
 }

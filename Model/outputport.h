@@ -8,8 +8,9 @@
  * @brief The OutputPort class is a outgoing connection from a node
  * @see Port
  */
-class OutputPort:public Port
+class OutputPort : public Port
 {
+    Q_OBJECT
 public:
     /**
      * @brief OutputPort Creates a OutputPort for a specific node
@@ -25,12 +26,7 @@ public:
     ~OutputPort();
 
     const QSet<InputPort*> getTargets();
-    /**
-     * @brief pushPacket Pushes the packet to all connected port
-     * @param packet The packet to be pushed
-     * @warning Copies of the packet might be created if necessary
-     */
-    void pushPacket(QSharedPointer<Packet> packet);
+
     /**
      * @brief connect Whether this port is connected with the given port
      * @param port The given port
@@ -48,6 +44,11 @@ public:
      * @return Whether this is a input port
      */
     bool isInput() const;
+
+    void send(void*data);
+
+signals:
+    void sendData(void* data);
 
 private:
 public://TODO

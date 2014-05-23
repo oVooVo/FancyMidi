@@ -12,9 +12,10 @@ class MidiCommandSelectSettingWidget;
 class MidiCommandSelectSettingWidget : public SettingWidget
 {
     Q_OBJECT
+    REGISTER_DECL_SETTINGWIDGETTYPE(MidiCommandSelectSettingWidget);
 
 public:
-    explicit MidiCommandSelectSettingWidget(MidiCommandSelectSetting* setting, QWidget *parent = 0);
+    explicit MidiCommandSelectSettingWidget(Setting *setting, QWidget *parent = 0);
     ~MidiCommandSelectSettingWidget();
 
 public slots:

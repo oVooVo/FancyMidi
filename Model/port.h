@@ -7,10 +7,11 @@
 /**
  * @brief The Port class is a abstract class to have common method shared between input and output port
  */
-class Port
+class Port : public QObject
 {
+    Q_OBJECT
 public:
-    enum Type { Trigger, Other };
+    enum Type { Trigger, Bool, Other };
     /**
      * @brief Port Creates a port for a specific node
      * @param node The specific node
@@ -19,11 +20,7 @@ public:
      */
     Port(Node* node, QString name, QString infoText, Type type);
     virtual ~Port();
-    /**
-     * @brief pushPacket Sends the packet to the connected input port
-     * @param packet The given packet
-     */
-    virtual void pushPacket(QSharedPointer<Packet> packet) = 0;
+
     /**
      * @brief connect Whether this port is connected to the given one
      * @param port The given port

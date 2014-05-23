@@ -39,7 +39,6 @@ SOURCES += main.cpp\
     View/connectionitem.cpp \
     View/portitem.cpp \
     Model/project.cpp \
-    Model/simpleinputport.cpp \
     Settings/selectsetting.cpp \
     SettingWidgets/selectsettingwidget.cpp \
     Model/Nodes/nordstage2node.cpp \
@@ -48,7 +47,9 @@ SOURCES += main.cpp\
     Settings/integersetting.cpp \
     SettingWidgets/integersettingwidget.cpp \
     View/nodetree.cpp \
-    Model/Nodes/triggernode.cpp
+    Model/Nodes/triggernode.cpp \
+    Settings/doublesetting.cpp \
+    SettingWidgets/doublesettingwidget.cpp
 
 HEADERS  +=  midiinputhandler.h \
     keyboard.h \
@@ -76,7 +77,6 @@ HEADERS  +=  midiinputhandler.h \
     View/portitem.h \
     View/queueinputport.h \
     Model/project.h \
-    Model/simpleinputport.h \
     Settings/selectsetting.h \
     SettingWidgets/selectsettingwidget.h \
     Model/Nodes/nordstage2node.h \
@@ -85,12 +85,15 @@ HEADERS  +=  midiinputhandler.h \
     Settings/integersetting.h \
     SettingWidgets/integersettingwidget.h \
     View/nodetree.h \
-    Model/Nodes/triggernode.h
+    Model/Nodes/triggernode.h \
+    Settings/doublesetting.h \
+    SettingWidgets/doublesettingwidget.h
 
 FORMS += \
     mainwindow.ui \
     SettingWidgets/selectsettingwidget.ui \
     SettingWidgets/midicommandselectsettingwidget.ui \
-    SettingWidgets/integersettingwidget.ui
+    SettingWidgets/integersettingwidget.ui \
+    SettingWidgets/doublesettingwidget.ui
 
 

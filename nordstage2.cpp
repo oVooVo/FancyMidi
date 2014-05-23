@@ -147,7 +147,7 @@ NordStage2::Triple NordStage2::createProperties()
     reg(Domains::Domain_m15_15(84, "Amp.Simulation Bass Equalizer"));
     reg(Domains::Domain_m15_15(85, "Amp.Simulation Mid Equalizer"));
     reg(Domains::Domain_m15_15(86, "Amp.Simulation Treble Equalizer"));
-    reg(Domains::Domain_200_8k(6, "Amp.Simulation Bass Equalizer"));
+    reg(Domains::Domain_200_8k(6, "Amp.Simulation Mid Range"));
     reg(Domains::StatusDomain(87, "Amp.Simulation Enabled"));
     reg(Domains::EffectSourceDomain(88, "Rotor.Destination"));
     reg(Domains::Domain_m10_10(89, "Rotor.Drive"));

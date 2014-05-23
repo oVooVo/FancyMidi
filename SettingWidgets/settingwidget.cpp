@@ -29,28 +29,35 @@ void SettingWidget::paintEvent(QPaintEvent *)
 	}
 }
 
-SettingWidget* SettingWidget::createNewSettingWidget(Setting *setting, QWidget *parent)
-{
-    //todo use register-mechanism from nodes
-    if (setting->inherits("MidiCommandSelectSetting")) {
-        return new MidiCommandSelectSettingWidget(qobject_cast<MidiCommandSelectSetting*>(setting), parent);
-    } else if (setting->inherits("IntegerSetting")) {
-        return new IntegerSettingWidget(qobject_cast<IntegerSetting*>(setting), parent);
-    }
-	return 0;
-}
+SETTINGWIDGET_CREATOR_MAP_TYPE *SettingWidget::_creatorMap = 0;
 
-void SettingWidget::stop()
+SettingWidget* SettingWidget::createNewSettingWidget(Setting* setting, QWidget* parent)
 {
-    qDebug() << "Stopp in SettingWidget. _initMode: " << _initMode;
-    if (_initMode && !parent()) return;      //do not stop when calling stop due first paint of this widget
-    QObject* p = parent();
-    while (p && !p->inherits("MainWindow"))
-    {
-        p = p->parent();
+    QString classname = setting->metaObject()->className();
+
+    // Ensure that each Attribute has a corresponding AttributeWidget.
+    // AttributeWidget must have same classname as Attribute -"Attribute" + "Widget"
+    // for example, "TransformationAttribute" -> "TransformationWidget"
+    // what a hack!!! :)
+
+    const QRegExp attribute_s = QRegExp("Setting$");
+    const QString widget_s = "Widget";
+
+    Q_ASSERT_X(classname.contains(attribute_s), "SettingWidget::createWidget",
+               QString("classname should contain").arg(attribute_s.pattern()).toStdString().c_str());
+
+    classname = classname.append(widget_s);
+
+    SettingWidget* widget = 0;
+    SETTINGWIDGET_CREATOR_MAP_TYPE::Iterator it = _creatorMap->find(classname);
+    if (it != _creatorMap->end()) {
+        widget = (it.value())(setting, parent);
     }
-    if (p->inherits("MainWindow")) {
-        ((MainWindow*) p)->stop();
+
+    if (!widget) {
+        qWarning() << "Warning: Classname " << classname << "not found.";
     }
+
+    return widget;
 }
 

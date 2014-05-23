@@ -2,6 +2,7 @@
 
 #include <QGraphicsPathItem>
 #include "Model/port.h"
+#include <QTimer>
 
 class AbstractGraphScene;
 class NodeItem;
@@ -123,6 +124,14 @@ private:
     QVector<ConnectionItem*> _connections;
     int _portFlags;
     Port* _port;
+
+    // controls the animation
+    QTimer _timer;
+    int _time = 0;
+    int _duration = 300;
+    double time() const { return (double) _time / _duration; }
+    void adjustColor();
+    QColor _brushColor;
 
 };
 

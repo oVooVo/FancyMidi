@@ -9,9 +9,9 @@
  * @brief The InputPort class is a in going connection to a node
  * @see Port
  */
-class InputPort:
-	public Port
+class InputPort : public Port
 {
+    Q_OBJECT
 public:
     /**
      * @brief InputPort Creates a InputPort for a specific node
@@ -21,18 +21,7 @@ public:
      */
     InputPort(Node* node, QString name, QString infoText, Type type);
     ~InputPort();
-    /**
-     * @brief isModifying Whether the associated node or a following one is modifying the packet
-     * @return Whether the associated node or a following one is modifying the packet
-     */
-    virtual bool isModifying();
 
-    //virtual void pushFrame(QSharedPointer<FramePacket> frame);
-    /**
-     * @brief pushPacket The node receives the given packet
-     * @param packet The given packet
-     */
-    virtual void pushPacket(QSharedPointer<Packet> packet) = 0;
     /**
      * @brief connect Connect this input port with an output port
      * @param port The output port to connect to
@@ -55,6 +44,13 @@ public:
      * @return the OutputPort this port is connected with.
      */
     OutputPort* getSource() const;
+
+
+    void receive(void* data);
+
+signals:
+    void receivedData(void* data);
+
 
 protected:
     /**

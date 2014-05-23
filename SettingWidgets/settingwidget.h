@@ -5,6 +5,14 @@
 #include <QLabel>
 #include <QPainter>
 #include <QHBoxLayout>
+#include <QMap>
+
+
+#define SETTINGWIDGET_CREATOR_MAP_TYPE QMap<QString, SettingWidget* (*)(Setting* setting, QWidget* parent)>
+template<typename T> SettingWidget *createSettingWidget(Setting* setting, QWidget* parent) {
+    return new T(setting, parent);
+}
+
 
 /**
  * @brief The SettingWidget class is a widget representing the Setting class
@@ -31,11 +39,6 @@ public:
 
 public slots:
     /**
-     * @brief stop tries to stop the project.
-     */
-    void stop();
-
-    /**
      * @brief reset resets the widget after it's setting object became changed.
      */
     virtual void reset() = 0;
@@ -56,6 +59,36 @@ protected:
      * @brief _setting the setting associated with this SettingWidget.
      */
     Setting* _setting;
+
+public:
+    template<typename T> T* setting() const { return (T*) _setting; }
+
+private:
+    static SETTINGWIDGET_CREATOR_MAP_TYPE *_creatorMap;
+
+    //allows to keep _creatorMap private since _creatorMap is an implementation detail.
+    template<typename T> friend class SettingWidgetRegister;
+
 };
 
+
+template<typename T>
+struct SettingWidgetRegister
+{
+    SettingWidgetRegister(QString className)
+    {
+        if (!SettingWidget::_creatorMap) //create new _creatorMap if there wasnt one.
+            SettingWidget::_creatorMap = new SETTINGWIDGET_CREATOR_MAP_TYPE();
+        // insert constructor of registered type with classname-key.
+        SettingWidget::_creatorMap->insert(className, &createSettingWidget<T>);
+    }
+};
+
+
+#define REGISTER_DECL_SETTINGWIDGETTYPE(CLASSNAME) \
+private: \
+static SettingWidgetRegister<CLASSNAME> reg
+
+#define REGISTER_DEFN_SETTINGWIDGETTYPE(CLASSNAME) \
+SettingWidgetRegister<CLASSNAME> CLASSNAME::reg(#CLASSNAME)
 

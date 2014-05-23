@@ -82,15 +82,6 @@ public:
     const QList<OutputPort*> getOutputs();
 
     /**
-     * @brief isModifying Whether this node is modifying a package based on a given input port
-     * @param port The input port
-     * @return Returns whether this node is modifying a package. Returns false if port is not a port of this node.
-     * @note this methode supposes that only the first inputPort of each node is modifying. Overwrite this if your
-     *      Node does sth different. The only exceptions are Output-Nodes, whose Inputs never modify.
-     */
-    virtual bool isModifying(InputPort* port);
-
-    /**
      * @brief getSettings Returns the settings from this node
      * @return Returns the settings
      */

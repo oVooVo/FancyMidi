@@ -65,8 +65,10 @@ signals:
      * @brief changed is emitted when any value of this setting changes.
      */
     void changed();
+
 protected:
     const Node* constNode() const { return (const Node*) parent(); }
+
 private:
     Node* node();
     Q_DISABLE_COPY(Setting)

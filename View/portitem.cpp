@@ -4,6 +4,7 @@
 #include "Model/abstractgraphscene.h"
 #include "nodeitem.h"
 #include "connectionitem.h"
+#include <qmath.h>
 
 #include <QDebug>
 
@@ -27,19 +28,44 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
     setPen(QPen(Qt::black, 1.5));
 
     if (_port) {
+        //set color;
         switch (_port->type()) {
         case Port::Trigger:
-            setBrush(Qt::darkBlue);
+            _brushColor = QColor(Qt::darkBlue);
+            break;
+        case Port::Bool:
+            _brushColor = QColor(Qt::darkGreen);
             break;
         case Port::Other:
         default:
-            setBrush(Qt::green);
+            _brushColor = QColor(Qt::green);
             break;
+        }
+
+        setBrush(_brushColor);
+
+        //connect animation stuff
+        QObject::connect(&_timer, &QTimer::timeout, [this, scene]() {
+            _time++;
+            if (_time >= _duration) {
+                _time = 0;
+                _timer.stop();
+            }
+            adjustColor();
+        });
+
+        if (_port->isInput()) {
+            QObject::connect((InputPort*) _port, &InputPort::receivedData, [this]() {
+                _timer.start(1);
+            });
+        } else {
+            QObject::connect((OutputPort*) _port, &OutputPort::sendData, [this]() {
+                _timer.start(1);
+            });
         }
     }
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
     _portFlags = 0;
-
 }
 
 PortItem::~PortItem()
@@ -127,4 +153,13 @@ void PortItem::removeConnectionItem(ConnectionItem* connectionItem)
             _connections.remove(i);
         }
     }
+}
+
+void PortItem::adjustColor()
+{
+    double value = time() * qPow(1 - time(), 4);
+    value /= 0.08192;
+    // value is between 0, 1;
+    setBrush(_brushColor.lighter(100 + 300 * value));
+    update();
 }

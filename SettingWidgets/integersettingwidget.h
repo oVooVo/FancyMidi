@@ -14,6 +14,7 @@
 class IntegerSettingWidget : public SettingWidget, private Ui::IntegerSettingWidget
 {
 	Q_OBJECT
+    REGISTER_DECL_SETTINGWIDGETTYPE(IntegerSettingWidget);
 
 public:
 	/**
@@ -24,13 +25,10 @@ public:
 	 * @param defaultValue The default value
 	 * @param stepSize The step size
 	 */
-    IntegerSettingWidget(IntegerSetting *setting, QWidget* parent = 0);
-
-private:
-    IntegerSetting* _setting;
+    IntegerSettingWidget(Setting *set, QWidget* parent = 0);
 
 private slots:
-    void forwardValue(int value);
+    //void forwardValue(int value);
     void reset();
 };
 

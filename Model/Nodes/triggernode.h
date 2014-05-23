@@ -4,6 +4,7 @@
 #include "../node.h"
 
 #include <QTimer>
+#include "Settings/integersetting.h"
 
 class TriggerNode : public Node
 {
@@ -12,10 +13,11 @@ public:
     TriggerNode(QPoint position, Project* parent);
     QString category() const { return "Generator"; }
 
-    QTimer timer;
+    QTimer _timer;
 
 private:
     REGISTER_DECL_NODETYPE(TriggerNode);
+    IntegerSetting* _timeOutSetting;
 };
 
 #endif // TRIGGERNODE_H

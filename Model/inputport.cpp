@@ -14,33 +14,21 @@ InputPort::~InputPort()
     disconnect();
 }
 
-bool InputPort::isModifying()
-{
-	return getNode()->isModifying(this);
-}
-
 bool InputPort::connect(Port* port)
 {
-	if(!port)
-	{    // disconnect
-		if(_source)
-        {
+    if(!port) {    // disconnect
+		if(_source) {
 			_source->disconnect(this);
             _source = NULL;
 			
 			return true;
-		}
-		else
-		{
+        } else {
 			return false;
 		}
-	}
-	else    // connect
-	{
+    } else {    // connect
         if (port->isInput() || port == _source || port->type() != type())
 			return false;
-		else
-		{
+        else {
 			disconnect();
 
 			_source = (OutputPort*)port;
@@ -48,6 +36,7 @@ bool InputPort::connect(Port* port)
 		}
 	}
 }
+
 bool InputPort::disconnect()
 {
 	return connect(NULL);
@@ -62,6 +51,12 @@ OutputPort* InputPort::getSource() const
 {
     return _source;
 }
+
+void InputPort::receive(void *data)
+{
+    emit receivedData(data);
+}
+
 
 
 

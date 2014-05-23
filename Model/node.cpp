@@ -12,10 +12,6 @@
 
 QMap<QString, Node* (*)(QPoint, Project*)> *Node::_creatorMap = 0;
 
-/// <summary>
-/// Initializes a new instance of the <see cref="Node" /> class.
-/// </summary>
-/// <param name="position">The position.</param>
 Node::Node(QPoint position, Project* parent, QString name, QString infoText, QSizeF size)
 {
     setParent(parent);
@@ -68,10 +64,6 @@ void Node::setPosition(QPoint position)
         getProject()->popularizeNodesChange();
 }
 
-/// <summary>
-/// Gets the position.
-/// </summary>
-/// <returns></returns>
 QPoint Node::getPosition() const
 {
 	return _position;
@@ -100,21 +92,6 @@ void Node::polish()
 {
     if(parent())
         QCoreApplication::sendEvent(parent(), new QChildEvent(QEvent::ChildPolished, this));
-
-// TODO: 32 bytes in 1 blocks are definitely lost in loss record 3,761 of 11,810
-//    in Node::polish() in node.cpp:161
-//    1: operator new(unsigned long) in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
-//    2: Node::polish() in <a href="file:///home/ksiks/Workspace/PSE/svn_fuceekay/main/implementierungsphase/video2k/video2k-build-Desktop-Debug/../video2k/node.cpp:161" >node.cpp:161</a>
-//    3: DisplayOutput::DisplayOutput(QPoint, Project*) in <a href="file:///home/ksiks/Workspace/PSE/svn_fuceekay/main/implementierungsphase/video2k/video2k-build-Desktop-Debug/../video2k/displayoutput.cpp:9" >displayoutput.cpp:9</a>
-//    4: NodeTest::run() in <a href="file:///home/ksiks/Workspace/PSE/svn_fuceekay/main/implementierungsphase/video2k/video2k-build-Desktop-Debug/../video2k/nodetest.cpp:87" >nodetest.cpp:87</a>
-//    5: NodeTest::qt_static_metacall(QObject*, QMetaObject::Call, int, void**) in <a href="file:///home/ksiks/Workspace/PSE/svn_fuceekay/main/implementierungsphase/video2k/video2k-build-Desktop-Debug/moc_nodetest.cpp:63" >/home/ksiks/Workspace/PSE/svn_fuceekay/main/implementierungsphase/video2k/video2k-build-Desktop-Debug/moc_nodetest.cpp:63</a>
-//    6: QMetaMethod::invoke(QObject*, Qt::ConnectionType, QGenericReturnArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument) const in /usr/lib/libQtCore.so.4.8.4
-//    7: QMetaObject::invokeMethod(QObject*, char const*, Qt::ConnectionType, QGenericReturnArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument, QGenericArgument) in /usr/lib/libQtCore.so.4.8.4
-//    8: /usr/lib/libQtTest.so.4.8.4
-//    9: QTest::qExec(QObject*, int, char**) in /usr/lib/libQtTest.so.4.8.4
-//    10: QTestUnit::QTestUnit() in <a href="file:///home/ksiks/Workspace/PSE/svn_fuceekay/main/implementierungsphase/video2k/video2k-build-Desktop-Debug/../video2k/qtestunit.cpp:117" >qtestunit.cpp:117</a>
-//    11: main in <a href="file:///home/ksiks/Workspace/PSE/svn_fuceekay/main/implementierungsphase/video2k/video2k-build-Desktop-Debug/../video2k/main.cpp:13" >main.cpp:13</a>
-
 }
 
 void Node::childEvent(QChildEvent *event)
@@ -194,8 +171,7 @@ void Node::setSettings(QVector<Setting *> settings)
 
     _settings = settings;
 
-    foreach(Setting *setting, _settings)
-    {
+    for (Setting *setting : _settings) {
         //qDebug() << setting->getName() << " "<< _settings.size();
         setting->setParent(this);
     }
@@ -221,9 +197,8 @@ void Node::setSize(QSizeF size)
         getProject()->popularizeNodesChange();
 }
 
-bool Node::isModifying(InputPort *port)
-{
-    if (_inputs.size() == 0 || inherits("Output"))
-        return false;
-    return port == _inputs.first();
-}
+
+
+
+
+
