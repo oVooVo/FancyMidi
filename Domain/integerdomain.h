@@ -7,14 +7,14 @@
 class IntegerDomain : public ContinousDomain<int>
 {
 public:
-    IntegerDomain(quint8 midicode, QString name,
+    IntegerDomain(MidiKey midiKey, QString name,
                   int min, int max, Encoder(int) encoder, Decoder(int) decoder,
                   Keyboard* keyboard = 0)
-        : ContinousDomain(midicode, name, min, max, encoder, decoder, keyboard) {}
-    IntegerDomain(quint8 midicode, QString name,
+        : ContinousDomain(midiKey, name, min, max, encoder, decoder, keyboard) {}
+    IntegerDomain(MidiKey midiKey, QString name,
                   int min, int max, int value, Encoder(int) encoder, Decoder(int) decoder,
                   Keyboard* keyboard = 0)
-        : ContinousDomain(midicode, name, min, max, value, encoder, decoder, keyboard) {}
+        : ContinousDomain(midiKey, name, min, max, value, encoder, decoder, keyboard) {}
     Type type() const { return Integer; }
 
     Domain* copy(Keyboard *keyboard) const;

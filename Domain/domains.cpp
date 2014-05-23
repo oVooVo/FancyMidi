@@ -293,88 +293,88 @@ auto decode = [](quint8, bool& ok) {
 #define TR(X) QObject::tr(X)
 
 // discrete
-Domain* Domains::PresetDomain(quint8 midicode, QString name) {
-    return new DiscreteDomain(midicode, name, SL(TR("Preset I") << TR("Preset II"))); }
-Domain* Domains::StatusDomain(quint8 midicode, QString name) {
-    return new DiscreteDomain(midicode, name, SL(TR("on") << TR("off"))); }
-Domain* Domains::OrganModelDomain(quint8 midicode, QString name) {
-    return new DiscreteDomain(midicode, name, SL(TR("B3") << TR("Vox") << TR("Farfisa"))); }
-Domain* Domains::OrganVibratoTypeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Chorus 1") << TR("Vibrato 1") << TR("Chorus 2") << TR("Vibrato 2") << TR("Chorus 3") << TR("Vibrato 3"))); }
-Domain* Domains::PianoTypeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Grand") << TR("Upright") << TR("EPiano 1") << TR("EPiano 2") << TR("Clavinet") << TR("Harpsichord"))); }
-Domain* Domains::ClavinetEq1Domain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("No Equalizer") << TR("Treble") << TR("Brilliant") << TR("Brilliant Treble"))); }
-Domain* Domains::ClavinetEq2Domain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("No Equalizer") << TR("Soft") << TR("Medium") << TR("Soft Medium"))); }
-Domain* Domains::PianoAcousticsDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("No Acoustics") << TR("String Resonance") << TR("Long Resonance") << TR("Long String Resonance"))); }
-Domain* Domains::PianoDynamicsDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Dynamic 0") << TR("Dynamic 1") << TR("Dynamic 2") << TR("Dynamic 3"))); }
-Domain* Domains::SynthArpeggioPatterDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Up") << TR("Down") << TR("UpDown") << TR("Random"))); }
-Domain* Domains::SynthVoiceModeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("No Glide") << TR("Legato") << TR("Mono"))); }
-Domain* Domains::SynthUnisonoDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("No Unisono") << TR("Unisono 1") << TR("Unisono 2") << TR("Unisono 3") << TR("Multi Unisono 1")
+Domain* Domains::PresetDomain(MidiKey midiKey, QString name) {
+    return new DiscreteDomain(midiKey, name, SL(TR("Preset I") << TR("Preset II"))); }
+Domain* Domains::StatusDomain(MidiKey midiKey, QString name) {
+    return new DiscreteDomain(midiKey, name, SL(TR("off") << TR("on"))); }
+Domain* Domains::OrganModelDomain(MidiKey midiKey, QString name) {
+    return new DiscreteDomain(midiKey, name, SL(TR("B3") << TR("Vox") << TR("Farfisa"))); }
+Domain* Domains::OrganVibratoTypeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Chorus 1") << TR("Vibrato 1") << TR("Chorus 2") << TR("Vibrato 2") << TR("Chorus 3") << TR("Vibrato 3"))); }
+Domain* Domains::PianoTypeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Grand") << TR("Upright") << TR("EPiano 1") << TR("EPiano 2") << TR("Clavinet") << TR("Harpsichord"))); }
+Domain* Domains::ClavinetEq1Domain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("No Equalizer") << TR("Treble") << TR("Brilliant") << TR("Brilliant Treble"))); }
+Domain* Domains::ClavinetEq2Domain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("No Equalizer") << TR("Soft") << TR("Medium") << TR("Soft Medium"))); }
+Domain* Domains::PianoAcousticsDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("No Acoustics") << TR("String Resonance") << TR("Long Resonance") << TR("Long String Resonance"))); }
+Domain* Domains::PianoDynamicsDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Dynamic 0") << TR("Dynamic 1") << TR("Dynamic 2") << TR("Dynamic 3"))); }
+Domain* Domains::SynthArpeggioPatterDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Up") << TR("Down") << TR("UpDown") << TR("Random"))); }
+Domain* Domains::SynthVoiceModeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("No Glide") << TR("Legato") << TR("Mono"))); }
+Domain* Domains::SynthUnisonoDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("No Unisono") << TR("Unisono 1") << TR("Unisono 2") << TR("Unisono 3") << TR("Multi Unisono 1")
         << TR("Multi Unisono 2") << TR("Multi Unisono 3"))); }
-Domain* Domains::SynthVibratoModeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("No Vibrato") << TR("Delay 1") << TR("Delay 2") << TR("Delay 3") << TR("Aftertouch") << TR("Wheel"))); }
-Domain* Domains::SynthWaveFormDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Square") << TR("Sawtooth") << TR("Triangle") << TR("Random"))); }
-Domain* Domains::SynthOscillatorModeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Square") << TR("Sawtooth") << TR("Triangle") << TR("Random"))); }
-Domain* Domains::SynthFilterTypeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Low Pass 12") << TR("Low Pass 24") << TR("High Pass") << TR("Notch") << TR("Band"))); }
-Domain* Domains::Effect1TypeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Auto Pan") << TR("Tremolo") << TR("RingModulation") << TR("WaWa") << TR("AWha 1") << TR("AWha 2"))); }
-Domain* Domains::Effect2TypeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL (TR("Phaser 1") << TR("Phaser 2") << TR("Flanger") << TR("Vibe") << TR("Chorus 1") << TR("Chorus 2"))); }
-Domain* Domains::EffectSourceDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Organ") << TR("Piano") << TR("Synth"))); }
-Domain* Domains::RotorSpeedDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Slow") << TR("Fast"))); }
-Domain* Domains::ReverbSizeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Room 1") << TR("Room 2") << TR("Stage 1") << TR("Stage 2") << TR("Hall 1") << TR("Hall 2"))); }
-Domain* Domains::AmpSimTypeDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Small") << TR("JC") << TR("Twin"))); }
-Domain* Domains::SlotDomain(quint8 midicode, QString name) { return new DiscreteDomain(
-    midicode, name, SL(TR("Slot A") << TR("Slot B"))); }
+Domain* Domains::SynthVibratoModeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("No Vibrato") << TR("Delay 1") << TR("Delay 2") << TR("Delay 3") << TR("Aftertouch") << TR("Wheel"))); }
+Domain* Domains::SynthWaveFormDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Square") << TR("Sawtooth") << TR("Triangle") << TR("Random"))); }
+Domain* Domains::SynthOscillatorModeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Square") << TR("Sawtooth") << TR("Triangle") << TR("Random"))); }
+Domain* Domains::SynthFilterTypeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Low Pass 12") << TR("Low Pass 24") << TR("High Pass") << TR("Notch") << TR("Band"))); }
+Domain* Domains::Effect1TypeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Auto Pan") << TR("Tremolo") << TR("RingModulation") << TR("WaWa") << TR("AWha 1") << TR("AWha 2"))); }
+Domain* Domains::Effect2TypeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL (TR("Phaser 1") << TR("Phaser 2") << TR("Flanger") << TR("Vibe") << TR("Chorus 1") << TR("Chorus 2"))); }
+Domain* Domains::EffectSourceDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Organ") << TR("Piano") << TR("Synth"))); }
+Domain* Domains::RotorSpeedDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Slow") << TR("Fast"))); }
+Domain* Domains::ReverbSizeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Room 1") << TR("Room 2") << TR("Stage 1") << TR("Stage 2") << TR("Hall 1") << TR("Hall 2"))); }
+Domain* Domains::AmpSimTypeDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Small") << TR("JC") << TR("Twin"))); }
+Domain* Domains::SlotDomain(MidiKey midiKey, QString name) { return new DiscreteDomain(
+    midiKey, name, SL(TR("Slot A") << TR("Slot B"))); }
 
 
 //double
-Domain* Domains::Domain_0_1(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, 0, 1, encode_0_1, decode); }
-Domain* Domains::Domain_0_10(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, 0, 10, encode_0_10, decode); }
-Domain* Domains::Domain_m10_10(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, -10, 10, encode_m10_10, decode); }
-Domain* Domains::Domain_m15_15(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, -15, 15, encode_m15_15, decode); }
-Domain* Domains::Domain_03_45k(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, 0.3, 45000, encodeAttack, decode); }
-Domain* Domains::Domain_5_45k(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, 5, 45000, encodeDecayOrRelease, decode); }
-Domain* Domains::Domain_20_21k(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, 20, 21000, encodeMidFreq, decode); }
-Domain* Domains::Domain_200_8k(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, 200, 8000, encodeHighFreq, decode); }
-Domain* Domains::Domain_003_523(quint8 midicode, QString name) {
-        return new DoubleDomain(midicode, name, 0.03, 523, encodeLowFreq, decode); }
+Domain* Domains::Domain_0_1(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, 0, 1, encode_0_1, decode); }
+Domain* Domains::Domain_0_10(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, 0, 10, encode_0_10, decode); }
+Domain* Domains::Domain_m10_10(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, -10, 10, encode_m10_10, decode); }
+Domain* Domains::Domain_m15_15(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, -15, 15, encode_m15_15, decode); }
+Domain* Domains::Domain_03_45k(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, 0.3, 45000, encodeAttack, decode); }
+Domain* Domains::Domain_5_45k(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, 5, 45000, encodeDecayOrRelease, decode); }
+Domain* Domains::Domain_20_21k(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, 20, 21000, encodeMidFreq, decode); }
+Domain* Domains::Domain_200_8k(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, 200, 8000, encodeHighFreq, decode); }
+Domain* Domains::Domain_003_523(MidiKey midiKey, QString name) {
+        return new DoubleDomain(midiKey, name, 0.03, 523, encodeLowFreq, decode); }
 
 
 //integer
-Domain* Domains::Domain_m7_6(quint8 midicode, QString name) {
-        return new IntegerDomain(midicode, name, -7, 6, encodeOctaveShift, decode); }
-Domain* Domains::Domain_0_127(quint8 midicode, QString name) {
-        return new IntegerDomain(midicode, name, 0, 127, encodeId, decode); }
-Domain* Domains::Domain_1_52(quint8 midicode, QString name) {
-        return new IntegerDomain(midicode, name, 1, 52, encodePianoModel, decode); }
-Domain* Domains::Domain_0_4(quint8 midicode, QString name) {
-        return new IntegerDomain(midicode, name, 0, 4, encodeDetune, decode); }
-Domain* Domains::Domain_80_128x32(quint8 midicode, QString name) {
-        return new IntegerDomain(midicode, name, 80, 128*32, encodeRate, decode); }
-Domain* Domains::Domains::Domain_1_128(quint8 midicode, QString name) {
-        return new IntegerDomain(midicode, name, 1, 128, encodeIdm1, decode); }
+Domain* Domains::Domain_m7_6(MidiKey midiKey, QString name) {
+        return new IntegerDomain(midiKey, name, -7, 6, encodeOctaveShift, decode); }
+Domain* Domains::Domain_0_127(MidiKey midiKey, QString name) {
+        return new IntegerDomain(midiKey, name, 0, 127, encodeId, decode); }
+Domain* Domains::Domain_1_52(MidiKey midiKey, QString name) {
+        return new IntegerDomain(midiKey, name, 1, 52, encodePianoModel, decode); }
+Domain* Domains::Domain_0_4(MidiKey midiKey, QString name) {
+        return new IntegerDomain(midiKey, name, 0, 4, encodeDetune, decode); }
+Domain* Domains::Domain_80_128x32(MidiKey midiKey, QString name) {
+        return new IntegerDomain(midiKey, name, 80, 128*32, encodeRate, decode); }
+Domain* Domains::Domains::Domain_1_128(MidiKey midiKey, QString name) {
+        return new IntegerDomain(midiKey, name, 1, 128, encodeIdm1, decode); }
 
 

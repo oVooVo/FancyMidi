@@ -14,7 +14,7 @@ MidiCommandSelectSettingWidget::MidiCommandSelectSettingWidget(Setting* set, QWi
     _initMode = true;
     ui->setupUi(this);
 
-    ui->category->addItems(NordStage2::categories());
+    ui->category->addItems(setting<MidiCommandSelectSetting>()->categories());
 
     _initMode = false;
 
@@ -48,7 +48,7 @@ void MidiCommandSelectSettingWidget::updatePropertyBox()
 {
     ui->property->blockSignals(true);
     ui->property->clear();      // we dont want to let property combobox emit its index changed to -1.
-    ui->property->addItems(NordStage2::properties(setting<MidiCommandSelectSetting>()->currentCategory()));
+    ui->property->addItems(setting<MidiCommandSelectSetting>()->properties());
     ui->property->setCurrentIndex(setting<MidiCommandSelectSetting>()->currentProperty());
     ui->property->blockSignals(false);
 }

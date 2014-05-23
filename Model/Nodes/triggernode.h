@@ -13,11 +13,13 @@ public:
     TriggerNode(QPoint position, Project* parent);
     QString category() const { return "Generator"; }
 
-    QTimer _timer;
 
 private:
     REGISTER_DECL_NODETYPE(TriggerNode);
-    IntegerSetting* _timeOutSetting;
+    QTimer _timer;
+    int _time = 0;
+    IntegerSetting* _durationSetting;
+    IntegerSetting* _intervallSetting;
 };
 
 #endif // TRIGGERNODE_H

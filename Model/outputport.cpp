@@ -53,7 +53,7 @@ bool OutputPort::isInput() const
     return false;
 }
 
-void OutputPort::send(void *data)
+void OutputPort::send(QVariant data)
 {
     emit sendData(data);
     for (InputPort* ip : _targets) {

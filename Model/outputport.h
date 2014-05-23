@@ -3,6 +3,7 @@
 #include <QSet>
 #include "port.h"
 #include "inputport.h"
+#include <QVariant>
 
 /**
  * @brief The OutputPort class is a outgoing connection from a node
@@ -45,10 +46,10 @@ public:
      */
     bool isInput() const;
 
-    void send(void*data);
+    void send(QVariant data = QVariant());
 
 signals:
-    void sendData(void* data);
+    void sendData(QVariant data);
 
 private:
 public://TODO

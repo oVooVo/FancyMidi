@@ -1,23 +1,21 @@
 #ifndef NORDSTAGE2NODE_H
 #define NORDSTAGE2NODE_H
 
-#include "../node.h"
+#include "../Nodes/midichannelnode.h"
 #include "Settings/integersetting.h"
 #include "Settings/midicommandselectsetting.h"
 
-class NordStage2Node: public Node
+class NordStage2ControlOut : public MidiChannelNode
 {
     Q_OBJECT
 public:
-    NordStage2Node(QPoint position, Project *parent);
-    int channel() const { return _intSetting->value(); }
-
-    QString category() const { return "Keyboard"; }
+    NordStage2ControlOut(QPoint position, Project *parent);
+    QString category() const { return "Midi Out"; }
 
 private:
-    IntegerSetting* _intSetting;
     MidiCommandSelectSetting* _midiSetting;
-    REGISTER_DECL_NODETYPE(NordStage2Node);
+    REGISTER_DECL_NODETYPE(NordStage2ControlOut);
+
 
 public slots:
     void sendMidi();

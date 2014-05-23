@@ -44,7 +44,10 @@ SettingWidget* SettingWidget::createNewSettingWidget(Setting* setting, QWidget* 
     const QString widget_s = "Widget";
 
     Q_ASSERT_X(classname.contains(attribute_s), "SettingWidget::createWidget",
-               QString("classname should contain").arg(attribute_s.pattern()).toStdString().c_str());
+               QString("classname should contain %1, [%2]")
+               .arg(attribute_s.pattern())
+               .arg(classname).toStdString().c_str());
+
 
     classname = classname.append(widget_s);
 

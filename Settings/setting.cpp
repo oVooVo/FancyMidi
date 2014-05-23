@@ -17,7 +17,6 @@ Setting::Setting(Node *parent, QString name, QString tooltip):
 
 Setting::~Setting()
 {
-	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "destructor", "called from a thread other than the main thread");
 }
 
 bool Setting::isValid() const
@@ -36,7 +35,6 @@ const QString Setting::tooltip() const
 
 void Setting::setValid(bool valid)
 {
-	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "setValid", "called from a thread other than the main thread");
     if (valid != _isValid) {
         _isValid = valid;
         if (node() && node()->getProject()) {
@@ -108,9 +106,6 @@ Node* Setting::node() {
 
 void Setting::emitChanged()
 {
-    if (node() && node()->parent()) {
-        ((Project*) node()->parent())->stop();
-    }
     if(node() && node()->getProject())
         node()->getProject()->setSaved(false);
     emit changed();

@@ -140,41 +140,6 @@ void Project::run()
     */
 }
 
-void Project::start()
-{
-    if (!_hasCalculatedData) {
-        _abort = false;
-        _emergencyStopped = false;
-        _hasCalculatedData = true; // soon ;-)
-        _checkSufficientMemoryUpToDate = false;
-        int idealTCount = (QThread::idealThreadCount() > 0) ? QThread::idealThreadCount() : 1;
-        //int idealTCount = 1;
-        for (int i = 0; i < idealTCount; ++i)
-        {
-            GeneratorThread *t = new GeneratorThread(this);
-            t->setAutoDelete(true);
-            QThreadPool::globalInstance()->start(t);
-        }
-    }
-}
-
-void Project::stop()
-{
-	qDebug() << "stop called";
-    if (_hasCalculatedData) {
-        _hasCalculatedData = false; // This will couse the run method to stop.
-        QThreadPool::globalInstance()->waitForDone();
-		clear();
-    }
-    selfCheck();
-}
-
-
-void Project::play()
-{
-    start();
-}
-
 QFileInfo *Project::projectPath() const
 {
     return _projectPath;
@@ -266,7 +231,7 @@ void Project::setStartupProject()
 
 void Project::popularizeModelChange()
 {
-    Q_ASSERT_X(isStopped(), "popularizeModelChange", "Project");
+    //Q_ASSERT_X(isStopped(), "popularizeModelChange", "Project");
     if (_isSaved) {
         _isSaved = false;
         emit isSaveStatusChanged(false);
@@ -279,7 +244,7 @@ void Project::popularizeModelChange()
 void Project::popularizeNodesChange(QList<InputPort *> inputs)
 {
     if (!inputs.isEmpty())  { //  !inputs.isEmpty() <=> connection deleted/created
-        Q_ASSERT_X(isStopped(), "popularizeNodesChange", "Project");
+        //Q_ASSERT_X(isStopped(), "popularizeNodesChange", "Project");
     }
     if (_isSaved) {
         _isSaved = false;
@@ -345,10 +310,6 @@ void Project::selfCheck() {
     //dfs2();abstractgraphscene
 }
 
-bool Project::isStopped()
-{
-    return !_hasCalculatedData;
-}
 /*
 void Project::dfs1() {
 	QHash<Port*, int> visited;

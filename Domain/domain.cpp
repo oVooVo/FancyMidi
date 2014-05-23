@@ -6,9 +6,9 @@
 
 //TODO Piano dynamic is now integer domain from Dynamic0 to Dynamic3
 
-Domain::Domain(quint8 midicode, QString name, Keyboard *keyboard)
+Domain::Domain(MidiKey midiKey, QString name, Keyboard *keyboard)
 {
     _keyboard = keyboard;
     _name = name;
-    _midicode = midicode;
+    _midiKey = midiKey;
 }

@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QObject>
 #include "Model/node.h"
+#include "Model/port.h"
 
 class SettingWidget;
 
@@ -54,6 +55,8 @@ public:
      * @brief emitChanged emits a changed signal and stops the project.
      */
     void emitChanged();
+
+    virtual void connectPort(Port* port) { Q_UNUSED(port); }
 
 signals:
     /**

@@ -2,5 +2,5 @@
 
 Domain* DoubleDomain::copy(Keyboard* keyboard) const
 {
-    return new DoubleDomain(midicode(), name(), min(), max(), value(), _encoder, _decoder, keyboard);
+    return new DoubleDomain(midiKey(), name(), min(), max(), value(), _encoder, _decoder, keyboard);
 }

@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QFile>
 #include <QDebug>
-#include "midiinputhandler.h"
+#include "midihandler.h"
 #include "nordstage2.h"
 #include <QTimer>
 #include "mainwindow.h"

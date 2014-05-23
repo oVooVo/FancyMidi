@@ -11,7 +11,7 @@ class Port : public QObject
 {
     Q_OBJECT
 public:
-    enum Type { Trigger, Bool, Other };
+    enum Type { Trigger, Scalar, Other };
     /**
      * @brief Port Creates a port for a specific node
      * @param node The specific node

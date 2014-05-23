@@ -2,7 +2,7 @@
 #define KEYBOARD_H
 
 #include <QObject>
-#include "midiinputhandler.h"
+#include "midihandler.h"
 
 class Keyboard : public QObject
 {
@@ -14,14 +14,11 @@ public:
 public slots:
     void setChannel(quint8 channel);
 
+    void sendMidiCommand(MidiKey key, quint8 data);
+
 private:
     quint8 _channel = 0;
-    const MidiInputHandler* midi;
-
-public:
-    void sendMidiControlCommand(quint8 data1, quint8 data2);
-
-
+    const MidiHandler* midi;
 };
 
 #endif // KEYBOARD_H

@@ -33,8 +33,8 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
         case Port::Trigger:
             _brushColor = QColor(Qt::darkBlue);
             break;
-        case Port::Bool:
-            _brushColor = QColor(Qt::darkGreen);
+        case Port::Scalar:
+            _brushColor = QColor(Qt::darkRed);
             break;
         case Port::Other:
         default:

@@ -47,15 +47,22 @@ void IntegerSetting::setValue(int value)
 	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "setValue", "called from a thread other than the main thread");
 	value = qMax(value, _minValue);
 	value = qMin(value, _maxValue);
-	if ((value - _defaultValue)%_stepSize != 0)	//not a correct value
-	{
+    if ((value - _defaultValue)%_stepSize != 0) {	//not a correct value
         emitChanged();
-
-	} else if (_value != value)
-	{
+    } else if (_value != value) {
 		_value = value;
         emitChanged();
 	}
+}
+
+void IntegerSetting::connectPort(Port *port)
+{
+    if (port->isInput()) {
+        connect((InputPort*) port, &InputPort::receivedData, [this](QVariant data) {
+            if (!data.canConvert(QVariant::Int)) return;
+            setValue(data.value<int>());
+        });
+    }
 }
 
 QDataStream &operator<<(QDataStream &out, const IntegerSetting *integerSetting)

@@ -1,8 +1,8 @@
 #include "discretedomain.h"
 #include <QDebug>
 
-DiscreteDomain::DiscreteDomain(quint8 midicode, QString name, QStringList values, Keyboard* keyboard)
-    : Domain(midicode, name, keyboard)
+DiscreteDomain::DiscreteDomain(MidiKey midiKey, QString name, QStringList values, Keyboard* keyboard)
+    : Domain(midiKey, name, keyboard)
 {
     _values = values;
 }
@@ -94,5 +94,5 @@ bool DiscreteDomain::setCode(quint8 code)
 
 Domain* DiscreteDomain::copy(Keyboard* keyboard) const
 {
-    return new DiscreteDomain(midicode(), name(), values(), keyboard);
+    return new DiscreteDomain(midiKey(), name(), values(), keyboard);
 }

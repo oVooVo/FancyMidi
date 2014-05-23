@@ -58,6 +58,8 @@ public:
     */
     int stepSize() const;
 
+    void connectPort(Port* port);
+
 public slots:
     /**
      * @brief setValue sets the value of this setting to the given value.

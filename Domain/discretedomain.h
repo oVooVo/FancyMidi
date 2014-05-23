@@ -9,7 +9,7 @@
 class DiscreteDomain : public Domain
 {
 public:
-    DiscreteDomain(quint8 midicode, QString name, QStringList values, Keyboard* keyboard = 0);
+    DiscreteDomain(MidiKey midiKey, QString name, QStringList values, Keyboard* keyboard = 0);
     QStringList values() const { return _values; }
     Type type() const { return Discrete; }
 
@@ -17,6 +17,7 @@ public:
     int index() const { return _index; }
 
     quint8 encode() const { bool unused; return toCode(_index, unused); }
+    int decode(quint8 code) const { bool unused; return toIndex(code, unused); }
     bool setCode(quint8 code);
 
     Domain* copy(Keyboard* keyboard) const;

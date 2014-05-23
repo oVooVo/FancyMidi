@@ -31,7 +31,7 @@ bool InputPort::connect(Port* port)
         else {
 			disconnect();
 
-			_source = (OutputPort*)port;
+            _source = (OutputPort*) port;
 			return port->connect(this);
 		}
 	}
@@ -52,7 +52,7 @@ OutputPort* InputPort::getSource() const
     return _source;
 }
 
-void InputPort::receive(void *data)
+void InputPort::receive(QVariant data)
 {
     emit receivedData(data);
 }

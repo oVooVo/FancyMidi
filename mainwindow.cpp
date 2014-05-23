@@ -3,7 +3,6 @@
 #include "nordstage2.h"
 
 #include "Model/graphscene.h"
-#include "Model/Nodes/nordstage2node.h"
 #include "SettingWidgets/settingwidget.h"
 #include "View/graphview.h"
 

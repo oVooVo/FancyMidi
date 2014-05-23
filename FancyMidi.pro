@@ -15,7 +15,6 @@ QMAKE_CXXFLAGS += -std=c++0x
 
 
 SOURCES += main.cpp\
-    midiinputhandler.cpp \
     keyboard.cpp \
     nordstage2.cpp \
     Domain/domain.cpp \
@@ -41,7 +40,6 @@ SOURCES += main.cpp\
     Model/project.cpp \
     Settings/selectsetting.cpp \
     SettingWidgets/selectsettingwidget.cpp \
-    Model/Nodes/nordstage2node.cpp \
     Settings/midicommandselectsetting.cpp \
     SettingWidgets/midicommandselectsettingwidget.cpp \
     Settings/integersetting.cpp \
@@ -49,9 +47,17 @@ SOURCES += main.cpp\
     View/nodetree.cpp \
     Model/Nodes/triggernode.cpp \
     Settings/doublesetting.cpp \
-    SettingWidgets/doublesettingwidget.cpp
+    SettingWidgets/doublesettingwidget.cpp \
+    Model/Nodes/nordstage2input.cpp \
+    SettingWidgets/midifiltersettingwidget.cpp \
+    Settings/midifiltersetting.cpp \
+    midihandler.cpp \
+    midikey.cpp \
+    Model/Nodes/nordstage2controlout.cpp \
+    Model/Nodes/nordstage2noteout.cpp \
+    Model/Nodes/midichannelnode.cpp \
 
-HEADERS  +=  midiinputhandler.h \
+HEADERS  +=  \
     keyboard.h \
     nordstage2.h \
     domain.h \
@@ -79,7 +85,6 @@ HEADERS  +=  midiinputhandler.h \
     Model/project.h \
     Settings/selectsetting.h \
     SettingWidgets/selectsettingwidget.h \
-    Model/Nodes/nordstage2node.h \
     Settings/midicommandselectsetting.h \
     SettingWidgets/midicommandselectsettingwidget.h \
     Settings/integersetting.h \
@@ -87,13 +92,22 @@ HEADERS  +=  midiinputhandler.h \
     View/nodetree.h \
     Model/Nodes/triggernode.h \
     Settings/doublesetting.h \
-    SettingWidgets/doublesettingwidget.h
+    SettingWidgets/doublesettingwidget.h \
+    Model/Nodes/nordstage2input.h \
+    Settings/midifiltersetting.h \
+    SettingWidgets/midifiltersettingwidget.h \
+    midihandler.h \
+    midikey.h \
+    Model/Nodes/nordstage2controlout.h \
+    Model/Nodes/nordstage2noteout.h \
+    Model/Nodes/midichannelnode.h
 
 FORMS += \
     mainwindow.ui \
     SettingWidgets/selectsettingwidget.ui \
     SettingWidgets/midicommandselectsettingwidget.ui \
     SettingWidgets/integersettingwidget.ui \
-    SettingWidgets/doublesettingwidget.ui
+    SettingWidgets/doublesettingwidget.ui \
+    SettingWidgets/midifiltersettingwidget.ui \
 
 

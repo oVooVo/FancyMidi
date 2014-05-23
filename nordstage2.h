@@ -9,38 +9,51 @@
 
 class NordStage2 : public Keyboard
 {
+    Q_OBJECT
     NordStage2(int channel = 0, QObject *parent = 0);
 public:
     ~NordStage2();
     Domain* getDomain(QString key);
     static QStringList getKeys();
-    QMap<quint8, Domain*> domains() const { return _domains; }
+    QMap<MidiKey, Domain*> domains() const { return _domains; }
 
 private:
-    QMap<quint8, Domain*> _domains;
+    QMap<MidiKey, Domain*> _domains;
 
 private:
     struct Triple {
-        Triple(QMap<QString, quint8> codes, QMap<quint8, QString> names, QMap<quint8, Domain*> domains) {
+        Triple(QMap<QString, MidiKey> codes, QMap<MidiKey, QString> names, QMap<MidiKey, Domain*> domains) {
             this->codes = codes;
             this->names = names;
             this->domains = domains;
         }
-        QMap<QString, quint8> codes;
-        QMap<quint8, QString> names;
-        QMap<quint8, Domain*> domains;
+        QMap<QString, MidiKey> codes;
+        QMap<MidiKey, QString> names;
+        QMap<MidiKey, Domain*> domains;
     } typedef Triple;
     static Triple createProperties();
     static NordStage2* CHANNELS[16];
 
 public:
-    static const QMap<QString, quint8> CODES;
-    static const QMap<quint8, QString> NAMES;
-    static const QMap<quint8, Domain*> DOMAINS;
+    static const QMap<QString, MidiKey> CODES;
+    static const QMap<MidiKey, QString> NAMES;
+    static const QMap<MidiKey, Domain*> DOMAINS;
     static const QMap<QString, QStringList> PROPERTIES;
     static QMap<QString,QStringList> calculateProperties();
 
     static NordStage2* channel(int i);
+    static QStringList categories();
+    static QStringList properties(int category);
+    static int propertyIndex(MidiKey key);
+    static int categoryIndex(MidiKey key);
+
+
+private:
+    void installReceiver(int myChannel);
+
+signals:
+    void midiInput(int channel, MidiKey key, QVariant value);
+
 };
 
 #endif // NORDSTAGE2GEN_H

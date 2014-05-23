@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QSharedPointer>
 #include "node.h"
 #include "packet.h"
 #include "port.h"
+#include <QVariant>
 
 /**
  * @brief The InputPort class is a in going connection to a node
@@ -45,11 +45,11 @@ public:
      */
     OutputPort* getSource() const;
 
+    void receive(QVariant data);
 
-    void receive(void* data);
 
 signals:
-    void receivedData(void* data);
+    void receivedData(QVariant data);
 
 
 protected:

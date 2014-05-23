@@ -45,12 +45,6 @@ public:
     bool isSaved() const;
 
     /**
-     * @brief isStopped returns whether this project's calculation has stopped.
-     * @return whether this project's calculation has stopped.
-     */
-    bool isStopped();
-
-    /**
      * @brief nodes returns all nodes associated with this project.
      * @return all nodes associated with this project.
      */
@@ -128,15 +122,6 @@ public:
     void abort();
 
 public slots:
-    /**
-     * @brief start starts the calculation of the project
-     */
-    void start();
-
-    /**
-     * @brief play starts the visualization.
-     */
-    void play();
 
     /**
      * @brief popularizeModelChange popularizes model changes.

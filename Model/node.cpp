@@ -110,8 +110,7 @@ void Node::childEvent(QChildEvent *event)
 
 Node *Node::createInstance(QString className)
 {
-    if (!_creatorMap)
-    {
+    if (!_creatorMap) {
         _creatorMap = new QMap<QString, Node* (*)(QPoint, Project*)>();
     }
 

@@ -2,18 +2,17 @@
 #include <QThread>
 #include <QApplication>
 #include <QDebug>
-#include "../Model/Nodes/nordstage2node.h"
 #include "nordstage2.h"
 
-MidiCommandSelectSetting::MidiCommandSelectSetting(NordStage2Node *parent, QString name, QString tooltip):
+MidiCommandSelectSetting::MidiCommandSelectSetting(Node *parent, QString name, QString tooltip):
     Setting(parent, name, tooltip)
 {
     Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(),
                "constructor", "called from a thread other than the main thread");
-    setValid(true);
     _currentCategory = 0;
 
     connect(parent, SIGNAL(channelChanged(int)), this, SIGNAL(changed()));
+    setValid(true);
 }
 
 MidiCommandSelectSetting::~MidiCommandSelectSetting()
@@ -96,24 +95,35 @@ QStringList MidiCommandSelectSetting::items() const
 
 void MidiCommandSelectSetting::setCategoryIndex(int i)
 {
-    Q_ASSERT(i >= 0 && i < categories().length());
-    if (i == _currentCategory) return;
+    if (i == _currentCategory)
+        return;
 
-    _currentCategory = i;
+    _currentCategory = qBound(0, i, NordStage2::categories().length() - 1);
+    _currentProperty = 0;
+
     emitChanged();
 }
 
 void MidiCommandSelectSetting::setPropertyIndex(int i)
 {
-    Q_ASSERT(i >= 0 && i < properties().length());
     if (i == _currentProperty)
         return;
 
-    _currentProperty = i;
+    _currentProperty = qBound(0, i, NordStage2::properties(_currentCategory).length() - 1);
     emitChanged();
 }
 
-quint8 MidiCommandSelectSetting::midicode() const
+void MidiCommandSelectSetting::setChannel(int i)
+{
+    if (i == _currentChannel)
+        return;
+
+    _currentChannel = qBound(0, i, 15);
+    emit changed();
+}
+
+
+MidiKey MidiCommandSelectSetting::midiKey() const
 {
     Q_ASSERT(NordStage2::CODES.contains(key()));
 
@@ -123,9 +133,7 @@ quint8 MidiCommandSelectSetting::midicode() const
 
 Domain* MidiCommandSelectSetting::domain() const
 {
-    const NordStage2Node* n = (const NordStage2Node*) constNode();
-    Q_ASSERT(NordStage2::channel(n->channel())->domains().keys().contains(midicode()));
-    return NordStage2::channel(n->channel())->domains()[midicode()];
+    return NordStage2::channel(channel())->domains()[midiKey()];
 }
 
 Domain::Type MidiCommandSelectSetting::domainType() const
@@ -152,36 +160,4 @@ int MidiCommandSelectSetting::index() const
     Q_ASSERT(domainType() == Domain::Discrete);
 
     return ((DiscreteDomain*) domain())->index();
-}
-
-void MidiCommandSelectSetting::setCategory(int i)
-{
-    Q_ASSERT(i >= 0 && i < categories().length());
-    if (i == _currentCategory) return;
-
-    _currentCategory = i;
-
-    if (_currentProperty >= properties().length())
-        _currentProperty = 0;
-    emitChanged();
-}
-
-void MidiCommandSelectSetting::setProperty(int i)
-{
-    Q_ASSERT(i >= 0 && i < properties().length());
-    if (i == _currentProperty) return;
-
-    _currentProperty = i;
-    emitChanged();
-}
-
-
-QStringList MidiCommandSelectSetting::categories() const
-{
-    return NordStage2::PROPERTIES.keys();
-}
-
-QStringList MidiCommandSelectSetting::properties() const
-{
-    return NordStage2::PROPERTIES[NordStage2::PROPERTIES.keys()[_currentCategory]];
 }

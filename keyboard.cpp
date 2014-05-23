@@ -4,7 +4,7 @@
 Keyboard::Keyboard(quint8 channel, QObject *parent) : QObject(parent)
 {
     setChannel(channel);
-    midi = MidiInputHandler::singleton();
+    midi = MidiHandler::singleton();
 }
 
 void Keyboard::setChannel(quint8 channel)
@@ -16,7 +16,8 @@ void Keyboard::setChannel(quint8 channel)
     _channel = channel;
 }
 
-void Keyboard::sendMidiControlCommand(quint8 data1, quint8 data2)
+void Keyboard::sendMidiCommand(MidiKey key, quint8 data)
 {
-    midi->sendMidiCommand(MidiInputHandler::ControlChange, channel(), data1, data2);
+    MidiHandler::singleton()->sendMidiCommand(key, channel(), data);
 }
+

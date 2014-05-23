@@ -14,8 +14,8 @@ template<typename T>
 class ContinousDomain : public Domain
 {
 public:
-    ContinousDomain(quint8 midicode, QString name, T min, T max, Encoder(T) encoder, Decoder(T) decoder, Keyboard* keyboard)
-        : Domain(midicode, name, keyboard)
+    ContinousDomain(MidiKey midiKey, QString name, T min, T max, Encoder(T) encoder, Decoder(T) decoder, Keyboard* keyboard)
+        : Domain(midiKey, name, keyboard)
     {
         _encoder = encoder;
         _decoder = decoder;
@@ -25,8 +25,8 @@ public:
         _value = _min;
     }
 
-    ContinousDomain(quint8 midicode, QString name, T min, T max, T value, Encoder(T) encoder, Decoder(T) decoder, Keyboard* keyboard)
-        : Domain(midicode, name, keyboard)
+    ContinousDomain(MidiKey midiKey, QString name, T min, T max, T value, Encoder(T) encoder, Decoder(T) decoder, Keyboard* keyboard)
+        : Domain(midiKey, name, keyboard)
     {
         _encoder = encoder;
         _decoder = decoder;
@@ -64,6 +64,12 @@ public:
     {
         bool unused;
         return _encoder(_value, unused);
+    }
+
+    T decode(quint8 code) const
+    {
+        bool unused;
+        return _decoder(code, unused);
     }
 
 private:
