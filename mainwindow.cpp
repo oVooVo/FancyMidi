@@ -35,7 +35,7 @@ void MainWindow::updateSettingTable(Node* node)
     } else {
         ui->noNodeSelectedHint->hide();
         ui->nodePropertyHead->show();
-        ui->nodeName->setText(node->getName());
+        ui->nodeName->setText(node->name());
         ui->nodeInfoText->setText(node->getInfoText());
         foreach (Setting* s, node->settings()) {
             SettingWidget* settingWidget = SettingWidget::createNewSettingWidget(s, ui->settingFrame);

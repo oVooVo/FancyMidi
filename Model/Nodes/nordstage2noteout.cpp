@@ -4,9 +4,10 @@
 
 REGISTER_DEFN_NODETYPE(NordStage2NoteOut);
 
-NordStage2NoteOut::NordStage2NoteOut(QPoint position, Project* parent) :
-    MidiChannelNode(position, parent, "NordStage2 Note Out")
+NordStage2NoteOut::NordStage2NoteOut(QDataStream &stream)
+    : MidiChannelNode(stream)
 {
+    setName("Note Out");
     addPort(new InputPort(this, "Note on", "", Port::Trigger));
     addPort(new InputPort(this, "Note off", "", Port::Trigger));
     addPort(new InputPort(this, "Note", "", Port::Scalar));
@@ -25,7 +26,6 @@ NordStage2NoteOut::NordStage2NoteOut(QPoint position, Project* parent) :
 
     setting<IntegerSetting>("Note")->connectPort(inputPort("Note"));
     setting<IntegerSetting>("Velocity")->connectPort(inputPort("Velocity"));
-
 }
 
 void NordStage2NoteOut::sendNoteOff(quint8 note, quint8 velocity)
@@ -43,3 +43,5 @@ void NordStage2NoteOut::sendNoteOn(quint8 note, quint8 velocity)
         NordStage2::channel(channel())->sendMidiCommand(key, velocity);
     }
 }
+
+

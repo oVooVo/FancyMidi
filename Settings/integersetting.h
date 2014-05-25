@@ -3,6 +3,7 @@
 #include <QString>
 #include "scalarsetting.h"
 #include "../Model/node.h"
+#include <QDataStream>
 
 /**
  * @brief The IntegerSetting class is the model of handling integer based preferences
@@ -28,7 +29,8 @@ public:
     IntegerSetting(Node *parent, QString name, QString tooltip, int minValue, int maxValue, int defaultValue, int currentValue);
     ~IntegerSetting();
     IntegerSetting(Node *parent, QString name, QString tooltip, int defaultValue, int currentValue);
+    IntegerSetting(QDataStream& stream);
+
+    REGISTER_DECL_SETTINGTYPE(IntegerSetting);
 
 };
-QDataStream &operator<<(QDataStream &out, const IntegerSetting *setting);
-QDataStream &operator>>(QDataStream &in, IntegerSetting *&setting);

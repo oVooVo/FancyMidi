@@ -5,6 +5,7 @@
 #include "Settings/setting.h"
 #include "Domain/domain.h"
 #include <QDebug>
+#include <QDataStream>
 
 
 
@@ -13,6 +14,8 @@ class MidiFilterSetting : public Setting
     Q_OBJECT
 public:
     MidiFilterSetting(Node *parent, QString name, QString tooltip);
+    MidiFilterSetting(QDataStream& stream);
+    void writeToStream(QDataStream &stream) const;
     ~MidiFilterSetting();
 
     int categoryIndex() const { return _categoryIndex; }
@@ -45,6 +48,8 @@ private:
     bool _filterProperty = false;
     bool _filterType = false;
     bool _filterCategory = false;
+
+    REGISTER_DECL_SETTINGTYPE(MidiFilterSetting);
 
 
 };

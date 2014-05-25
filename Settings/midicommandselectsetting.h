@@ -6,12 +6,15 @@
 #include "Domain/domain.h"
 #include <QDebug>
 #include "nordstage2.h"
+#include <QDataStream>
 
 class MidiCommandSelectSetting : public Setting
 {
     Q_OBJECT
 public:
     MidiCommandSelectSetting(Node *parent, QString name, QString tooltip);
+    MidiCommandSelectSetting(QDataStream& stream);
+    void writeToStream(QDataStream &stream) const;
     ~MidiCommandSelectSetting();
 
 
@@ -54,7 +57,7 @@ private:
 signals:
     void sendMidi();
 
-
+    REGISTER_DECL_SETTINGTYPE(MidiCommandSelectSetting);
 };
 
 #endif // MIDICOMMANDSELECTSETTING_H

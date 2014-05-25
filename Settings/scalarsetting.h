@@ -22,7 +22,6 @@ public:
         _min = min;
         _max = max;
         _hasBounds = true;
-        setValid(true);
     }
 
     ScalarSetting(Node *parent, QString name, QString tooltip,
@@ -32,9 +31,18 @@ public:
         _default = defaultValue;
         _value = currentValue;
         _hasBounds = false;
-        setValid(true);
     }
 
+    ScalarSetting(QDataStream& stream) : Setting(stream)
+    {
+        stream >> _default >> _value >> _min >> _max >> _hasBounds;
+    }
+
+    void writeToStream(QDataStream &stream) const
+    {
+        Setting::writeToStream(stream);
+        stream << _default << _value << _min << _max << _hasBounds;
+    }
 
     T value() const { return _value; }
     T min() const { return _min; }
@@ -77,6 +85,7 @@ private:
     T _max = 0;
     T _default;
     bool _hasBounds;
+
 };
 
 #endif // SCALARSETTING_H

@@ -19,7 +19,6 @@ AbstractGraphScene::AbstractGraphScene(Project* project, MainWindow *mainWindow,
 
 void AbstractGraphScene::redraw()
 {
-    _model->selfCheck();
     //_mainWindow->adjustControlsAreEnabled();
     if(_isUpdating || !_model) return;
     beginUpdate();
@@ -111,11 +110,6 @@ void AbstractGraphScene::lightRedraw(QList<InputPort *> inputs)
                 //optimize this using break here maybe... //TODO?
             }
         }
-    }
-    if (!inputs.isEmpty()) {    // inputs.isEmpty() <=> nur nodes wurden verschoben
-                                //!inputs.isEmpty() <=> connection hinzugefügt/entfernt
-        _model->selfCheck();
-        //_mainWindow->adjustControlsAreEnabled();
     }
     endUpdate();
 }

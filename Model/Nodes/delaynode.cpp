@@ -3,9 +3,10 @@
 
 REGISTER_DEFN_NODETYPE(DelayNode);
 
-DelayNode::DelayNode(QPoint point, Project* parent)
-    : EnableableNode(point, parent, "Delay", "")
+DelayNode::DelayNode(QDataStream& stream)
+    : EnableableNode(stream)
 {
+    setName("Delay");
     addPort(new InputPort(this, "Delay", "", Port::Scalar));
     addPort(new InputPort(this, "Input", "", Port::Scalar));
     addPort(new OutputPort(this, "Output", "", Port::Scalar));

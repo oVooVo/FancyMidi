@@ -22,6 +22,9 @@ public:
      * @param values Contains all things to be chosen from (String and a int)
      */
     SelectSetting(Node *parent, QString name, QString infoText, int currentIndex, QList<QString> values, int defaultValue);
+    SelectSetting(QDataStream &stream);
+    virtual void writeToStream(QDataStream& stream) const;
+
 
     ~SelectSetting();
 
@@ -55,9 +58,6 @@ private:
     QList<QString> _values;
     int _currentIndex;
     int _defaultIndex;
+
+    REGISTER_DECL_SETTINGTYPE(SelectSetting);
 };
-
-QDataStream &operator<<(QDataStream &out, const SelectSetting *setting);
-QDataStream &operator>>(QDataStream &in, SelectSetting *&setting);
-
-

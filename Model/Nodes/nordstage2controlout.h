@@ -9,7 +9,7 @@ class NordStage2ControlOut : public MidiChannelNode
 {
     Q_OBJECT
 public:
-    NordStage2ControlOut(QPoint position, Project *parent);
+    NordStage2ControlOut(QDataStream& stream);
     QString category() const { return "Midi Out"; }
 
 private:
@@ -18,9 +18,6 @@ private:
 
 public slots:
     void sendMidi();
-
-signals:
-    void channelChanged(int channel);
 
 
 };

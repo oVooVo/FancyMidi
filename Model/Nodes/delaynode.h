@@ -8,7 +8,7 @@ class DelayNode : public EnableableNode
 {
     Q_OBJECT
 public:
-    DelayNode(QPoint point, Project* parent);
+    DelayNode(QDataStream& stream);
 
     REGISTER_DECL_NODETYPE(DelayNode);
 };

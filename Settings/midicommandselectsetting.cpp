@@ -4,16 +4,31 @@
 #include <QDebug>
 #include "nordstage2.h"
 
-MidiCommandSelectSetting::MidiCommandSelectSetting(Node *parent, QString name, QString tooltip):
-    Setting(parent, name, tooltip)
+//TODO MidiCommandSelectSetting needs midi channel inside.
+
+REGISTER_DEFN_SETTINGTYPE(MidiCommandSelectSetting);
+
+MidiCommandSelectSetting::MidiCommandSelectSetting(Node *parent, QString name, QString tooltip)
+    : Setting(parent, name, tooltip)
 {
     Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(),
                "constructor", "called from a thread other than the main thread");
     _currentCategory = 0;
 
-    connect(parent, SIGNAL(channelChanged(int)), this, SIGNAL(changed()));
-    setValid(true);
     updateDomain();
+}
+
+MidiCommandSelectSetting::MidiCommandSelectSetting(QDataStream &stream)
+    : Setting(stream)
+{
+    stream >> _currentCategory >> _currentProperty >> _currentChannel;
+    updateDomain();
+}
+
+void MidiCommandSelectSetting::writeToStream(QDataStream &stream) const
+{
+    Setting::writeToStream(stream);
+    stream << _currentCategory << _currentProperty << _currentChannel;
 }
 
 void MidiCommandSelectSetting::updateDomain()
@@ -21,23 +36,15 @@ void MidiCommandSelectSetting::updateDomain()
     if (_domain)
         delete _domain;
 
-    _domain = NordStage2::DOMAINS[midiKey()]->copy(NordStage2::channel(channel()));
+    _domain = NordStage2::DOMAINS[midiKey()]->copy(NordStage2::channel(0));
 }
+
+
 
 MidiCommandSelectSetting::~MidiCommandSelectSetting()
 {
     Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(),
                "destructor", "called from a thread other than the main thread");
-}
-
-QDataStream &operator<<(QDataStream &out, const MidiCommandSelectSetting *selectSetting)
-{
-    return out;
-}
-
-QDataStream &operator>>(QDataStream &in, MidiCommandSelectSetting *&setting)
-{
-    return in;
 }
 
 void MidiCommandSelectSetting::setDouble(double d)

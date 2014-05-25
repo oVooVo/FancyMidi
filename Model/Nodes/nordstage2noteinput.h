@@ -8,13 +8,14 @@ class NordStage2NoteInput : public MidiChannelNode
 {
     Q_OBJECT
 public:
-    NordStage2NoteInput(QPoint position, Project* parent);
-    REGISTER_DECL_NODETYPE(NordStage2NoteInput);
+    NordStage2NoteInput(QDataStream& stream);
+
 
     QString category() const { return "Input"; }
 
 private slots:
     void receiveMidiCommand(int channel, MidiKey key, QVariant data);
+    REGISTER_DECL_NODETYPE(NordStage2NoteInput);
 };
 
 #endif // NORDSTAGE2NOTEINPUT_H

@@ -9,7 +9,7 @@ class NordStage2NoteOut : public MidiChannelNode
 {
     Q_OBJECT
 public:
-    NordStage2NoteOut(QPoint position, Project *parent);
+    NordStage2NoteOut(QDataStream &stream);
     QString category() const { return "Midi Out"; }
 
 

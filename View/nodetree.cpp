@@ -10,7 +10,7 @@
 
 bool lessThan(Node const *n1, Node const *n2)
 {
-    return n1->getName() < n2->getName();
+    return n1->name() < n2->name();
 }
 
 NodeTree::NodeTree(QWidget* parent) : QTreeWidget(parent)
@@ -32,7 +32,7 @@ NodeTree::NodeTree(QWidget* parent) : QTreeWidget(parent)
         QList<Node*> cnodes = nodes[category];
         qSort(cnodes.begin(), cnodes.end(), lessThan);
         for (Node* node : cnodes) {
-            QTreeWidgetItem* subitem = new QTreeWidgetItem(QStringList(node->getName()));
+            QTreeWidgetItem* subitem = new QTreeWidgetItem(QStringList(node->name()));
             _nodes.insert(subitem, node->metaObject()->className());
             categoryItem->addChild(subitem);
             delete node;

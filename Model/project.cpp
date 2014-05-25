@@ -28,8 +28,6 @@ Project::Project(QFileInfo *filepath, QObject *parent) : QObject(parent)
     _isSaved = true;
     _update = false;
     _isStartupProject = false;
-    _emergencyStopped = false;
-    _checkSufficientMemoryUpToDate = false;
 }
 
 void Project::childEvent(QChildEvent *event)
@@ -62,82 +60,6 @@ void Project::childEvent(QChildEvent *event)
         }*/
         popularizeModelChange();
     }
-}
-
-bool Project::isComplete()
-{
-    if (_abort) return true;
-    if (checkSufficientMemory() && !sufficientMemory()) {
-        _memoryTestMutex.lock();
-        if (!_emergencyStopped) {
-            emit exception(QString(tr("Insufficient Memory. Emergency stop.")));
-            _emergencyStopped = true;
-        }
-        _memoryTestMutex.unlock();
-        return true;
-    }
-	if(!_hasCalculatedData) { // We define a empty project as completed project.
-        return true;
-	}
-/*
-    foreach(Output *dpo, _outputs)    {
-        if (!dpo->isComplete() && dpo->getState() == Node::GOOD) {
-            return false;
-		}
-    }
-    */
-    return true;
-}
-
-bool Project::sufficientMemory()
-{
-    unsigned long limit = 1024 * 1024 * 200; // 200 MB
-    unsigned long free = 0;
-
-#ifdef __linux__
-    //qDebug() << "you are running linux!";
-    static struct sysinfo info;
-    sysinfo(&info);
-    free = info.mem_unit * (info.freeram);
-#elif _WIN32
-    //qDebug() << "you are running Windows!";
-    /*MEMORYSTATUSEX status;
-    status.dwLength = sizeof(status);
-    GlobalMemoryStatusEx(&status);
-	free = status.ullAvailVirtual;*/
-	return true;
-#else
-    //qDebug() << "Warning: OS not supported. No memorycheck available.";
-    return true;
-#endif
-
-    if (free < limit) {
-        //qDebug() << "free space: " << free/1024/1024 << "MB, limit: " << limit/1024/1024 << "MB, false";
-        return false;
-    } else {
-        //qDebug() << "free space: " << free/1024/1024 << "MB, limit: " << limit/1024/1024 << "MB, true";
-        return true;
-    }
-}
-
-void Project::run()
-{/*
-    //qDebug() << "run";
-    while (!isComplete())
-        foreach (Generator *g, _generators)
-			try {
-				g->run();
-			} catch(Exception e) {
-				_memoryTestMutex.lock();
-				if (!_emergencyStopped) {
-					emit exception(QString(tr("Insufficient Memory. Emergency stop.")));
-					_emergencyStopped = true;
-					_abort = true;
-				}
-				_memoryTestMutex.unlock();
-			}
-	qDebug() << "Thread done";
-    */
 }
 
 QFileInfo *Project::projectPath() const
@@ -219,7 +141,6 @@ QDataStream &operator >> (QDataStream &istream, Project *&project)
         if(nodes[i] && nodes[sourceNodeIndex])
             nodes[i]->getInputs()[p]->connect(nodes[sourceNodeIndex]->getOutputs()[sourceNodePortIndex]);
     }
-    project->selfCheck();
     project->setSaved(true);
     return istream;
 }
@@ -286,28 +207,6 @@ void Project::clear() {
     qDebug() << "clear";
 	foreach(Node* node, _nodes)
 		node->clear();
-}
-
-bool Project::isValid() const
-{
-    foreach (Node* node, _nodes)
-		if (node->getState() == Node::RED)
-            return false;
-    return true;
-}
-
-void Project::selfCheck() {
-	// Prepare
-	foreach(Node* n, _nodes) {
-		n->setState(Node::DEAD);
-		n->selfCheck();
-	}
-
-	// Cycle detection
-    //dfs1();
-
-	// Reachable nodes
-    //dfs2();abstractgraphscene
 }
 
 /*
@@ -391,20 +290,4 @@ QSet<Port*> Project::targets(Port* port) {
 	return port->isInput() ? targets(((InputPort*)port)->getNode()) : targets((OutputPort*)port);
 }*/
 
-bool Project::checkSufficientMemory()
-{
-    if (!_checkSufficientMemoryUpToDate) {
-        _checkSufficientMemoryUpToDate = true;
-        QSettings settings;
-        settings.beginGroup("MainWindow");
-        _checkSufficientMemory = settings.value("MemoryCheck", true).toBool();
-        settings.endGroup();
-    }
-    return _checkSufficientMemory;
-}
-
-void Project::abort()
-{
-    _abort = true;
-}
 

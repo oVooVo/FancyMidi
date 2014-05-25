@@ -3,8 +3,8 @@
 #include "keyboard.h"
 #include <QDebug>
 
-MidiChannelNode::MidiChannelNode(QPoint position, Project* parent, QString name, QString tooltip)
-    : EnableableNode(position, parent, name, tooltip)
+MidiChannelNode::MidiChannelNode(QDataStream& stream)
+    : EnableableNode(stream)
 {
     addPort(new InputPort(this, "Channel", "midi channel", Port::Scalar));
     addSetting(new IntegerSetting(this, "Channel", "", 0, Keyboard::NUM_MIDI_CHANNELS - 1, 0, 0));

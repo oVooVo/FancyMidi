@@ -4,9 +4,10 @@
 
 REGISTER_DEFN_NODETYPE(PersistentNode);
 
-PersistentNode::PersistentNode(QPoint position, Project *parent)
-    : EnableableNode(position, parent, "Persistent")
+PersistentNode::PersistentNode(QDataStream &stream)
+    : EnableableNode(stream)
 {
+    setName("Persistent");
     addPort(new InputPort(this, "On", "", Port::Trigger));
     addPort(new InputPort(this, "Off", "", Port::Trigger));
     addPort(new OutputPort(this, "Value", "", Port::Scalar));

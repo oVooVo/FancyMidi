@@ -7,7 +7,7 @@ class NordStage2Input : public EnableableNode
 {
     Q_OBJECT
 public:
-    NordStage2Input(QPoint position, Project *parent);
+    NordStage2Input(QDataStream& stream);
 
     QString category() const { return "Input"; }
 

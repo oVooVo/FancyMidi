@@ -6,14 +6,26 @@
 
 #include "Model/project.h"
 
+QMap<QString, Setting* (*)(QDataStream&)> *Setting::_creatorMap = 0;
+
+
 Setting::Setting(Node *parent, QString name, QString tooltip):
 	QObject(parent)
 {
-	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "constructor", "called from a thread other than the main thread");
 	_name = name;
     _tooltip = tooltip;
-    _isValid = false;
 }
+
+Setting::Setting(QDataStream& stream)
+{
+    stream >> _name >> _tooltip >> _isValid;
+}
+
+void Setting::writeToStream(QDataStream& stream) const
+{
+    stream << _name << _tooltip << _isValid;
+}
+
 
 Setting::~Setting()
 {
@@ -21,13 +33,14 @@ Setting::~Setting()
 
 bool Setting::isValid() const
 {
-    return _isValid;
+    return true;
 }
 
 const QString Setting::name() const
 {
 	return _name;
 }
+
 const QString Setting::tooltip() const
 {
     return _tooltip;
@@ -46,57 +59,36 @@ void Setting::setValid(bool valid)
 
 QDataStream &operator<<(QDataStream &out, const Setting *setting)
 {
-/*
-	if (setting->inherits("IntegerSetting"))
-	{
-		out << (const IntegerSetting *&) setting;
-
-    } else if (setting->inherits("ResolutionPathSetting"))
-	{
-        out << (const ResolutionPathSetting *&) setting;
-
-	} else if (setting->inherits("SelectSetting"))
-	{
-		out << (const SelectSetting *&) setting;
-
-	} else if (setting->inherits("BoolSetting"))
-	{
-		out << (const BoolSetting *&) setting;
-	} else if (setting->inherits("ColorSetting"))
-	{
-		out << (const ColorSetting *&) setting;
-	}
-*/
-	return out;
+    out << QString(setting->metaObject()->className());
+    qDebug() << "write " << QString(setting->metaObject()->className());
+    setting->writeToStream(out);
+    return out;
 }
 
 QDataStream &operator>>(QDataStream &in, Setting *&setting)
 {
-/*
-	QString className;
-	in >> className;
+    QString classname;
+    in >> classname;
+    qDebug() << "read " << classname;
+    setting = Setting::createInstance(classname, in);
+    return in;
+}
 
-	if (className == QString("IntegerSetting"))
-	{
-		in >> (IntegerSetting *&) setting;
+Setting *Setting::createInstance(QString className, QDataStream &stream)
+{
+    if (!_creatorMap) {
+        _creatorMap = new QMap<QString, Setting* (*)(QDataStream&)>();
+    }
 
-    } else if (className == QString("ResolutionPathSetting"))
-	{
-        in >> (ResolutionPathSetting *&) setting;
+    QMap<QString, Setting* (*)(QDataStream&)>::iterator it = _creatorMap->find(className);
 
-	} else if (className == QString("SelectSetting"))
-	{
-		in >> (SelectSetting *&) setting;
+    qDebug() << _creatorMap->contains(className);
 
-	} else if (className == QString("BoolSetting"))
-	{
-		in >> (BoolSetting *&) setting;
-	} else if (className == QString("ColorSetting"))
-	{
-		in >> (ColorSetting *&) setting;
-	}
-    */
-	return in;
+    qDebug() << className;
+    qDebug() << *_creatorMap;
+    Q_ASSERT(it != _creatorMap->end());
+
+    return (it.value())(stream);
 }
 
 Node* Setting::node() {

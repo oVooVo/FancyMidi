@@ -20,7 +20,7 @@ class Port;
  */
 
 class Node;
-template<typename T> Node *createT(QPoint position, Project *parent) { return new T(position, parent); }
+template<typename T> Node *createNode(QDataStream& stream) { return new T(stream); }
 
 class Node:	public QObject
 {
@@ -28,12 +28,6 @@ class Node:	public QObject
 	Q_OBJECT
 
 public:
-    /**
-     * @brief The STATE enum represents the state of a node. GOOD means everything okay, ERROR means there is an error, eg.
-     *      wrong configurated Setting and DEAD means the node has directly or indirectly no successor or predecessor.
-     */
-    enum STATE {GOOD, RED, DEAD};
-
     /**
      * @brief setSettings adds given settings.
      * @param settings the settings of this node.
@@ -50,13 +44,10 @@ public:
      * @note only DisplayOutput has a size.
      */
     explicit Node(QPoint position, Project* parent, QString name, QString infoText = "", QSizeF size = QSizeF(0,0));
+    explicit Node(QDataStream& stream);
+    virtual void writeToStream(QDataStream& stream) const;
 
     virtual ~Node();
-
-    /**
-     * @brief selfCheck Checks whether the node is in a valid state
-     */
-    void selfCheck();
 
     /**
      * @brief setPosition Sets the position of the node
@@ -98,7 +89,7 @@ public:
      * @brief getName Returns the name of the node
      * @return Returns the name of the node
      */
-    QString getName() const;
+    QString name() const;
 
     /**
      * @brief getInfoText Returns a text describing this node
@@ -107,23 +98,12 @@ public:
     QString getInfoText() const;
 
     /**
-     * @brief getState returns the state of this node.
-     * @return the state of this node.
-     */
-    STATE getState();
-
-    /**
-     * @brief setState Sets the state of this node.
-     * @param state The state to set this one to.
-     */
-    void setState(STATE state);
-
-    /**
      * @brief createInstance creates a new instance of a node with given classname.
      * @param className the new node's type.
      * @return a new instance of a node with given classname.
      */
-    static Node *createInstance(QString className);
+    static Node *createInstance(QString className); // for drag & drop
+    static Node *createInstance(QString className, QDataStream &stream);    // for deserialization
 
     /**
      * @brief getModuleClassNames returns all registred class names.
@@ -164,17 +144,13 @@ protected:
 
         return (T*) _settings[key];
     }
+    void setName(QString name);
 
 
     /**
      * @brief _creatorMap this map contains all nodes.
      */
-    static QMap<QString, Node* (*)(QPoint, Project*)> *_creatorMap;
-
-    /**
-     * @brief _state contains the status of this node.
-     */
-    STATE _state;
+    static QMap<QString, Node* (*)(QDataStream&)> *_creatorMap;
 
     void setBlock(bool block);
     bool block() const { return _block; }
@@ -196,8 +172,8 @@ struct NodeRegister : Node
 	NodeRegister(QString className) : Node(QPoint(), 0, QString(""), QString(""))
 	{
 		if (!_creatorMap)
-            _creatorMap = new QMap<QString, Node* (*)(QPoint, Project*)>();
-        _creatorMap->insert(className, &createT<T>);
+            _creatorMap = new QMap<QString, Node* (*)(QDataStream&)>();
+        _creatorMap->insert(className, &createNode<T>);
 	}
 };
 

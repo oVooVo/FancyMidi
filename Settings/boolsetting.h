@@ -18,26 +18,12 @@ public:
 	 * @param defaultValue the default value of this setting.
 	 */
 	BoolSetting(Node *parent, QString name, QString tooltip, bool defaultValue, bool currentValue);
+    BoolSetting(QDataStream& stream);
 
     /**
      * @brief ~BoolSetting destroys this BoolSetting.
      */
     virtual ~BoolSetting() {}
 
-	/**
-	 * @brief value returns the  default value of this setting
-	 * @return the default value of this setting. Is either true or false.
-	 */
-	bool defaultValue() const;
-
-public slots:
-    void setValue(bool value) { ScalarSetting<bool>::setValue(value); }
-
-private:
-	bool _defaultValue;
+    REGISTER_DECL_SETTINGTYPE(BoolSetting);
 };
-
-QDataStream &operator<<(QDataStream &out, const BoolSetting *setting);
-QDataStream &operator>>(QDataStream &in, BoolSetting *&setting);
-
-

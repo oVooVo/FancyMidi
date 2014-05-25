@@ -104,7 +104,7 @@ void GraphScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (!_locked) {
         _mainWindow->stop();
-        QString text = event->mimeData()->text();
+        QString text = event->mimeData()->text();        
         Node *node = Node::createInstance(text);
         node->setPosition(event->scenePos().toPoint());
         node->setParent(_model);
@@ -205,7 +205,6 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 } else {
                     _model->popularizeNodesChange(QList<InputPort*>() << (InputPort*) endPort->port());
                 }
-                _model->selfCheck();
             }
         }
     }
@@ -221,6 +220,7 @@ void GraphScene::copy()
     foreach (QGraphicsItem* gi, selectedItems()) {
         if (gi->type() == NodeItem::Type) {
             if (((NodeItem*) gi)->getNode()) {
+                qDebug() << ((NodeItem*) gi)->getNode();
                 _copyPasteNodeList.append(((NodeItem*) gi)->getNode());
             }
         }
@@ -262,8 +262,10 @@ void GraphScene::paste()
         istream >> _pastedNodes;
 
         for(int i = 0; i < _pastedNodes.count(); i++) {
+            qDebug() << "paste " << _pastedNodes[i];
            _pastedNodes[i]->setParent(this->model());
            _pastedNodes[i]->setPosition(_pastedNodes[i]->getPosition() + QPoint(20, 20));
+           _pastedNodes[i]->polish();
         }
 
         int count;

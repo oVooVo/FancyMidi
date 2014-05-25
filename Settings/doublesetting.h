@@ -13,10 +13,11 @@ public:
 
     DoubleSetting(Node *parent, QString name, QString tooltip,
                   double defaultValue, double currentValue);
-    ~DoubleSetting();
-};
 
-QDataStream &operator<<(QDataStream &out, const DoubleSetting *DoubleSetting);
-QDataStream &operator>>(QDataStream &in, DoubleSetting *&setting);
+    DoubleSetting(QDataStream& stream);
+    ~DoubleSetting();
+
+    REGISTER_DECL_SETTINGTYPE(DoubleSetting);
+};
 
 #endif // DOUBLESETTING_H

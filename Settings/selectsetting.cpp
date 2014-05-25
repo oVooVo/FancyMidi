@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QDebug>
 
+REGISTER_DEFN_SETTINGTYPE(SelectSetting);
+
 SelectSetting::SelectSetting(Node *parent, QString name, QString tooltip, int currentIndex,
                              QList<QString> values, int defaultIndex)
     : Setting(parent, name, tooltip)
@@ -10,7 +12,18 @@ SelectSetting::SelectSetting(Node *parent, QString name, QString tooltip, int cu
 	_values = values;
 	_currentIndex = currentIndex;
 	_defaultIndex = defaultIndex;
-	setValid(true);
+}
+
+SelectSetting::SelectSetting(QDataStream& stream)
+    : Setting(stream)
+{
+    stream >> _values >> _currentIndex >> _defaultIndex;
+}
+
+void SelectSetting::writeToStream(QDataStream &stream) const
+{
+    Setting::writeToStream(stream);
+    stream << _values << _currentIndex << _defaultIndex;
 }
 
 SelectSetting::~SelectSetting()
@@ -39,33 +52,4 @@ void SelectSetting::setCurrentIndex(int index)
         _currentIndex = index;
         emitChanged();
     }
-}
-
-QDataStream &operator<<(QDataStream &out, const SelectSetting *selectSetting)
-{
-	out << QString("SelectSetting");
-    out << selectSetting->name() << selectSetting->tooltip() <<
-           qint32(selectSetting->currentIndex())
-		<< selectSetting->values() << qint32(selectSetting->defaultIndex());
-    return out;
-}
-
-QDataStream &operator>>(QDataStream &in, SelectSetting *&setting)
-{
-	QString name;
-	QString tooltip;
-	qint32 currentEntry;
-	qint32 defaultEntry;
-	QList<QString> values;
-
-	in >> name;
-    if (name == QString("SelectSetting")) {
-		in >> name ;
-    }
-
-	in >> tooltip >> currentEntry >> values >> defaultEntry;
-
-	setting = new SelectSetting(NULL, name, tooltip, currentEntry, values, defaultEntry);
-
-	return in;
 }

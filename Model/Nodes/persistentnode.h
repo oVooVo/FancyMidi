@@ -10,7 +10,7 @@ class PersistentNode : public EnableableNode
     Q_OBJECT
     REGISTER_DECL_NODETYPE(PersistentNode);
 public:
-    PersistentNode(QPoint position, Project* parent);
+    PersistentNode(QDataStream& stream);
 
 private:
     BoolSetting* _boolSetting;

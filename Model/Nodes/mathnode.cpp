@@ -5,9 +5,10 @@
 
 REGISTER_DEFN_NODETYPE(MathNode);
 
-MathNode::MathNode(QPoint position, Project *parent)
-    : EnableableNode(position, parent, "Math")
+MathNode::MathNode(QDataStream& stream)
+    : EnableableNode(stream)
 {
+    setName("Math");
     addPort(new InputPort(this, "A", "", Port::Scalar));
     addPort(new InputPort(this, "B", "", Port::Scalar));
     addPort(new OutputPort(this, "Result", "", Port::Scalar));
@@ -23,7 +24,6 @@ MathNode::MathNode(QPoint position, Project *parent)
 
     connect(setting<DoubleSetting>("A"), SIGNAL(changed()), this, SLOT(calculate()));
     connect(setting<DoubleSetting>("B"), SIGNAL(changed()), this, SLOT(calculate()));
-
 }
 
 void MathNode::calculate()

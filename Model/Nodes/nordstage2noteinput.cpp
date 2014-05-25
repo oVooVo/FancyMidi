@@ -4,9 +4,10 @@
 
 REGISTER_DEFN_NODETYPE(NordStage2NoteInput);
 
-NordStage2NoteInput::NordStage2NoteInput(QPoint position, Project* parent)
-    : MidiChannelNode(position, parent, "Note Input")
+NordStage2NoteInput::NordStage2NoteInput(QDataStream &stream)
+    : MidiChannelNode(stream)
 {
+    setName("Note Input");
     addPort(new OutputPort(this, "Note On", "", Port::Trigger));
     addPort(new OutputPort(this, "Note Off", "", Port::Trigger));
     addPort(new OutputPort(this, "Velocity", "", Port::Scalar));

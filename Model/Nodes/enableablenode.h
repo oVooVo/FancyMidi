@@ -7,7 +7,7 @@
 class EnableableNode : public Node
 {
 public:
-    EnableableNode(QPoint point, Project* parent, QString name, QString infotext = "");
+    EnableableNode(QDataStream& stream);
 
 };
 

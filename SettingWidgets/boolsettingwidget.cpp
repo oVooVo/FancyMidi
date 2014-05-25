@@ -16,7 +16,9 @@ BoolSettingWidget::BoolSettingWidget(Setting *set, QWidget *parent) : SettingWid
     _checkBox->setText(set->tooltip());
     _checkBox->setChecked(setting<BoolSetting>()->value());
     _checkBox->setToolTip(set->tooltip());
-    connect(_checkBox, SIGNAL(toggled(bool)), setting<BoolSetting>(), SLOT(setValue(bool)));
+    connect(_checkBox, &QCheckBox::toggled, [this](bool on) {
+        setting<BoolSetting>()->setValue(on);
+    });
 
     connect(helpIcon, SIGNAL(pressed()), _toolTip, SLOT(show()));
     connect(helpIcon, SIGNAL(released()), _toolTip, SLOT(hide()));

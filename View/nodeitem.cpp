@@ -39,7 +39,7 @@ NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene*
 
 
     /********* add ports ******************/
-    addNamePort(node->getName());
+    addNamePort(node->name());
     for (int i = 0; i < _node->getInputs().size(); i++) {
         addInputPort(_node->getInputs().at(i));
     }
@@ -75,33 +75,15 @@ Node* NodeItem::getNode()
 
 void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-	QPen pen;
-	if (_node->getState() == Node::GOOD) {
-		pen.setColor(Qt::black);
-		pen.setWidth(1);
-		if (isSelected()) {
-			painter->setBrush(QColor(255, 255, 0, 210));
-		} else {
-			painter->setBrush(QColor(255, 255, 255, 210));
-		}
-	} else if (_node->getState() == Node::DEAD) {
-		pen.setColor(Qt::darkGray);
-		pen.setWidth(2);
-		if (isSelected()) {
-			painter->setBrush(QColor(255, 255, 0, 210));
-		} else {
-			painter->setBrush(QColor(180, 180, 180, 210));
-		}
-	} else if (_node->getState() == Node::RED) {
-		pen.setColor(Qt::darkRed);
-		pen.setWidth(2);
-		if (isSelected()) {
-			painter->setBrush(QColor(255, 255, 0, 210));
-		} else {
-			painter->setBrush(QColor(255, 100, 100, 210));
-		}
-	}
-	painter->setPen(pen);
+    QPen pen;
+    pen.setColor(Qt::darkGray);
+    pen.setWidth(2);
+    if (isSelected()) {
+        painter->setBrush(QColor(255, 255, 0, 210));
+    } else {
+        painter->setBrush(QColor(180, 180, 180, 210));
+    }
+    painter->setPen(pen);
 
     painter->drawPath(path());
 	if (_resizeable) {

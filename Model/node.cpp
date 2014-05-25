@@ -10,7 +10,7 @@
 #include <QCoreApplication>
 #include "Settings/setting.h"
 
-QMap<QString, Node* (*)(QPoint, Project*)> *Node::_creatorMap = 0;
+QMap<QString, Node* (*)(QDataStream&)> *Node::_creatorMap = 0;
 
 Node::Node(QPoint position, Project* parent, QString name, QString infoText, QSizeF size)
 {
@@ -19,7 +19,18 @@ Node::Node(QPoint position, Project* parent, QString name, QString infoText, QSi
     _size = size;
     _name = name;
     _infoText = infoText;
-    _state = GOOD;
+}
+
+Node::Node(QDataStream &stream)
+{
+    QList<Setting*> settings;
+    stream >> _position >> _size >> _name >> _infoText >> settings;
+    setSettings(settings);
+}
+
+void Node::writeToStream(QDataStream &stream) const
+{
+    stream << _position << _size << _name << _infoText << _settings.values();
 }
 
 Node::~Node()
@@ -35,23 +46,6 @@ const QList<OutputPort*> Node::getOutputs()
 const QList<InputPort*> Node::getInputs()
 {
     return _inputs.values();
-}
-
-void Node::selfCheck()
-{
-	foreach (Setting* setting, _settings)
-        if(!setting->isValid())
-            _state = RED;
-}
-
-Node::STATE Node::getState()
-{
-    return _state;
-}
-
-void Node::setState(STATE state)
-{
-    _state = state;
 }
 
 void Node::setPosition(QPoint position)
@@ -76,7 +70,7 @@ Project* Node::getProject() {
     return qobject_cast<Project *>(parent());
 }
 
-QString Node::getName() const
+QString Node::name() const
 {
     return _name;
 }
@@ -92,52 +86,27 @@ void Node::polish()
         QCoreApplication::sendEvent(parent(), new QChildEvent(QEvent::ChildPolished, this));
 }
 
-Node *Node::createInstance(QString className)
+Node *Node::createInstance(QString className, QDataStream& stream)
 {
     if (!_creatorMap) {
-        _creatorMap = new QMap<QString, Node* (*)(QPoint, Project*)>();
+        _creatorMap = new QMap<QString, Node* (*)(QDataStream&)>();
     }
 
-    QMap<QString, Node* (*)(QPoint, Project*)>::iterator it = _creatorMap->find(className);
-    if (it == _creatorMap->end())
-        return 0;
+    QMap<QString, Node* (*)(QDataStream&)>::iterator it = _creatorMap->find(className);
 
-    return (it.value())(QPoint(), 0);
+    Q_ASSERT(it != _creatorMap->end());
+
+    return (it.value())(stream);
 }
 
-QDataStream &operator << (QDataStream &ostream, const Node *node)
+Node *Node::createInstance(QString className)
 {
-    //qDebug() << "operator <<: metaObject class name: " << node->metaObject()->className();
-    QString className = QString(node->metaObject()->className());
-    ostream << className << node->getPosition() << node->getSize() << node->settings();
-    return ostream;
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::ReadWrite);
+    stream << QPoint() << QSize() << QString() << QString() << QList<Setting*>();
+    return createInstance(className, stream);
 }
 
-QDataStream &operator >> (QDataStream &istream, Node *&node)
-{
-    QString className;
-    QPoint position;
-    QSizeF size;
-    QList<Setting*> settings;
-
-    istream >> className;
-    if(className.isEmpty()) {
-        node = 0;
-        return istream;
-    }
-    istream >> position;
-    istream >> size;
-    istream >> settings;
-
-    node = Node::createInstance(className);
-    node->setPosition(position);
-    node->setSize(size);
-
-    //qDebug() << "operator <<: metaObject class name: " << node->metaObject()->className();
-
-    node->setSettings(settings);
-    return istream;
-}
 
 QList<QString> Node::getModuleClassNames() {
     QSet<QString> re;
@@ -148,12 +117,11 @@ QList<QString> Node::getModuleClassNames() {
 	qSort(list);
     return list;
 }
+
 void Node::setSettings(QList<Setting *> settings)
 {
     _settings.clear();
-
     for (Setting *setting : settings) {
-        //qDebug() << setting->getName() << " "<< _settings.size();
         _settings.insert(setting->name(), setting);
         setting->setParent(this);
     }
@@ -192,8 +160,13 @@ void Node::addPort(Port *port)
 
 void Node::addSetting(Setting *setting)
 {
-    Q_ASSERT(!_settings.contains(setting->name()));
-    _settings.insert(setting->name(), setting);
+    qDebug() << "try to add " << setting->name();
+    qDebug() << _settings;
+    if (_settings.contains(setting->name())) {
+        delete setting; //setting already exists (e.g. created from deserialization).
+    } else {
+        _settings.insert(setting->name(), setting);
+    }
 }
 
 void Node::setBlock(bool block)
@@ -216,6 +189,25 @@ OutputPort* Node::outputPort(QString key) const
     return _outputs[key];
 }
 
+void Node::setName(QString name)
+{
+    _name = name;
+}
+
+QDataStream &operator << (QDataStream &ostream, const Node *node)
+{
+    ostream << QString(node->metaObject()->className());
+    node->writeToStream(ostream);
+    return ostream;
+}
+
+QDataStream &operator >> (QDataStream &istream, Node *&node)
+{
+    QString classname;
+    istream >> classname;
+    node = Node::createInstance(classname, istream);
+    return istream;
+}
 
 
 

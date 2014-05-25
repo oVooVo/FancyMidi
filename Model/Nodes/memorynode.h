@@ -8,6 +8,7 @@ class MemoryNode : public Node
     Q_OBJECT
 public:
     MemoryNode(QPoint position, Project* parent);
+    MemoryNode(QDataStream& stream);
 
 private:
     QMap<int, QVariant> _data;

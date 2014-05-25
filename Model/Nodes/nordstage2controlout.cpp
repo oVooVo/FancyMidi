@@ -7,10 +7,10 @@
 
 REGISTER_DEFN_NODETYPE(NordStage2ControlOut);
 
-
-NordStage2ControlOut::NordStage2ControlOut(QPoint position, Project *parent) :
-    MidiChannelNode(position, parent, "NordStage2 Control Out")
+NordStage2ControlOut::NordStage2ControlOut(QDataStream& stream) :
+    MidiChannelNode(stream)
 {
+    setName("Control Out");
     addPort(new InputPort(this, "Trigger", "set the specified value", Port::Trigger));
     addPort(new InputPort(this, "Category", "category", Port::Scalar));
     addPort(new InputPort(this, "Property", "property", Port::Scalar));
@@ -53,7 +53,7 @@ NordStage2ControlOut::NordStage2ControlOut(QPoint position, Project *parent) :
 
 void NordStage2ControlOut::sendMidi()
 {
-    NordStage2::channel(setting<MidiCommandSelectSetting>("Midi Command")->channel())->
+    NordStage2::channel(setting<IntegerSetting>("Channel")->value())->
             sendMidiCommand(
                 setting<MidiCommandSelectSetting>("Midi Command")->domain()->midiKey(),
                 setting<MidiCommandSelectSetting>("Midi Command")->domain()->encode()

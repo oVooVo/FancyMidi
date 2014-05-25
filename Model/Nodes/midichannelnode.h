@@ -7,7 +7,7 @@
 class MidiChannelNode : public EnableableNode
 {
 public:
-    MidiChannelNode(QPoint position, Project* parent, QString name, QString tooltip = "");
+    MidiChannelNode(QDataStream& stream);
     void setChannel(int channel);
     int channel() const { return setting<IntegerSetting>("Channel")->value(); }
 };

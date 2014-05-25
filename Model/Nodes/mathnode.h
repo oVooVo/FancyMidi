@@ -7,7 +7,7 @@ class MathNode : public EnableableNode
 {
     Q_OBJECT
 public:
-    MathNode(QPoint position, Project* parent);
+    MathNode(QDataStream& stream);
 
     REGISTER_DECL_NODETYPE(MathNode);
 

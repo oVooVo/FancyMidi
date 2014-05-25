@@ -6,8 +6,13 @@
 #include <QObject>
 #include "Model/node.h"
 #include "Model/port.h"
+#include <QByteArray>
 
 class SettingWidget;
+
+
+class Setting;
+template<typename T> Setting *createSetting(QDataStream& data) { return new T(data); }
 
 /**
  * @brief The Setting class is the abstract model of handling preferences
@@ -25,6 +30,7 @@ public:
      * @param infoText The given description
      */
     Setting(Node *parent, QString name, QString tooltip);
+    Setting(QDataStream &stream); //for deserializaztion //TODO make protected or private!
 
     ~Setting();
 
@@ -58,6 +64,7 @@ public:
 
     virtual void connectPort(Port* port) { Q_UNUSED(port); }
 
+
 signals:
     /**
      * @brief validChange is emitted when the valid status of this setting changes.
@@ -72,13 +79,37 @@ signals:
 protected:
     const Node* constNode() const { return (const Node*) parent(); }
 
+    virtual void writeToStream(QDataStream& stream) const;
+    static QMap<QString, Setting* (*)(QDataStream&)> *_creatorMap;
+    static Setting *createInstance(QString className, QDataStream&stream);
+
 private:
     Node* node();
-    Q_DISABLE_COPY(Setting)
     QString _name;
     QString _tooltip;
     bool _isValid;
+
+    friend QDataStream &operator<<(QDataStream &out, const Setting *setting);
+    friend QDataStream &operator>>(QDataStream &in, Setting *&setting);
 };
+
+template<typename T>
+struct SettingRegister : Setting
+{
+    SettingRegister(QString className) : Setting(0, "", "")
+    {
+        if (!_creatorMap)
+            _creatorMap = new QMap<QString, Setting* (*)(QDataStream&)>();
+        _creatorMap->insert(className, &createSetting<T>);
+    }
+};
+
+#define REGISTER_DECL_SETTINGTYPE(CLASSNAME) \
+private:    \
+    static SettingRegister<CLASSNAME> reg
+
+#define REGISTER_DEFN_SETTINGTYPE(CLASSNAME) \
+    SettingRegister<CLASSNAME> CLASSNAME::reg(#CLASSNAME)
 
 QDataStream &operator<<(QDataStream &out, const Setting *setting);
 QDataStream &operator>>(QDataStream &in, Setting *&setting);

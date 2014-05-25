@@ -45,7 +45,6 @@ SOURCES += main.cpp\
     Settings/integersetting.cpp \
     SettingWidgets/integersettingwidget.cpp \
     View/nodetree.cpp \
-    Model/Nodes/triggernode.cpp \
     Settings/doublesetting.cpp \
     SettingWidgets/doublesettingwidget.cpp \
     Model/Nodes/nordstage2input.cpp \
@@ -63,10 +62,9 @@ SOURCES += main.cpp\
     Settings/scalarsetting.cpp \
     Model/Nodes/delaynode.cpp \
     Model/Nodes/mathnode.cpp \
-    SettingWidgets/arbitrarydoublesettingwidget.cpp \
-    Settings/arbitrarydoublesetting.cpp \
     Model/Nodes/nordstage2noteinput.cpp \
-    Model/Nodes/memorynode.cpp
+    Model/Nodes/memorynode.cpp \
+    Model/Nodes/timernode.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -101,7 +99,6 @@ HEADERS  +=  \
     Settings/integersetting.h \
     SettingWidgets/integersettingwidget.h \
     View/nodetree.h \
-    Model/Nodes/triggernode.h \
     Settings/doublesetting.h \
     SettingWidgets/doublesettingwidget.h \
     Model/Nodes/nordstage2input.h \
@@ -119,10 +116,9 @@ HEADERS  +=  \
     Settings/scalarsetting.h \
     Model/Nodes/delaynode.h \
     Model/Nodes/mathnode.h \
-    SettingWidgets/arbitrarydoublesettingwidget.h \
-    Settings/arbitrarydoublesetting.h \
     Model/Nodes/nordstage2noteinput.h \
-    Model/Nodes/memorynode.h
+    Model/Nodes/memorynode.h \
+    Model/Nodes/timernode.h
 
 FORMS += \
     mainwindow.ui \
@@ -131,7 +127,6 @@ FORMS += \
     SettingWidgets/integersettingwidget.ui \
     SettingWidgets/doublesettingwidget.ui \
     SettingWidgets/midifiltersettingwidget.ui \
-    SettingWidgets/boolsettingwidget.ui \
-    SettingWidgets/arbitrarydoublesettingwidget.ui
+    SettingWidgets/boolsettingwidget.ui
 
 

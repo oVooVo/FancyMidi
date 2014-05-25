@@ -1,13 +1,14 @@
-#include "triggernode.h"
+#include "timernode.h"
 #include "../outputport.h"
 #include <QTimer>
 #include <QDebug>
 
-REGISTER_DEFN_NODETYPE(TriggerNode);
+REGISTER_DEFN_NODETYPE(TimerNode);
 
-TriggerNode::TriggerNode(QPoint position, Project* parent)
-    : EnableableNode(position, parent, "Trigger")
+TimerNode::TimerNode(QDataStream &stream)
+    : EnableableNode(stream)
 {
+    setName("Timer");
     addSetting(new IntegerSetting(this, "Duration", "Interval", 0, 10000, 1000, 1000));
     addSetting(new IntegerSetting(this, "Intervall", "Interval", 0, 10000, 1000, 1000));
     addPort(new OutputPort(this, "Timeout", "", Port::Trigger));
@@ -42,10 +43,6 @@ TriggerNode::TriggerNode(QPoint position, Project* parent)
     connect(inputPort("Reset"), &InputPort::receivedData, [this]() {
         _time = 0;
     });
-
-
-
-
 
     _timer.start(setting<IntegerSetting>("Intervall")->value());
 }

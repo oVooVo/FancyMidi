@@ -4,15 +4,30 @@
 #include <QDebug>
 #include "nordstage2.h"
 
+REGISTER_DEFN_SETTINGTYPE(MidiFilterSetting);
+
 MidiFilterSetting::MidiFilterSetting(Node *parent, QString name, QString tooltip):
     Setting(parent, name, tooltip)
 {
-    setValid(true);
 }
 
 MidiFilterSetting::~MidiFilterSetting()
 {
 
+}
+
+MidiFilterSetting::MidiFilterSetting(QDataStream &stream)
+    : Setting(stream)
+{
+    stream >> _channel >> _propertyIndex >> _typeIndex >> _categoryIndex
+           >> _filterChannel >> _filterProperty >> _filterType >> _filterCategory;
+}
+
+void MidiFilterSetting::writeToStream(QDataStream &stream) const
+{
+    Setting::writeToStream(stream);
+    stream << _channel << _propertyIndex << _typeIndex << _categoryIndex
+           << _filterChannel << _filterProperty << _filterType << _filterCategory;
 }
 
 void MidiFilterSetting::setCategoryIndex(int category)
@@ -100,14 +115,4 @@ MidiKey::MidiType MidiFilterSetting::type() const
     default:
         return MidiKey::Unknown;
     }
-}
-
-QDataStream &operator<<(QDataStream &out, const MidiFilterSetting *selectSetting)
-{
-    return out;
-}
-
-QDataStream &operator>>(QDataStream &in, MidiFilterSetting *&setting)
-{
-    return in;
 }

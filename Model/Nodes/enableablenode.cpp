@@ -2,10 +2,9 @@
 #include "../inputport.h"
 #include "Settings/integersetting.h"
 
-EnableableNode::EnableableNode(QPoint point, Project *parent, QString name, QString infotext)
-    : Node(point, parent, name, infotext)
+EnableableNode::EnableableNode(QDataStream& stream)
+    : Node(stream)
 {
-
     addPort(new InputPort(this, "Enabled", "", Port::Scalar));
     addPort(new OutputPort(this, "Enabled", "", Port::Scalar));
 

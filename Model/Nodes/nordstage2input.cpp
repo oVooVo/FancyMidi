@@ -4,9 +4,10 @@
 
 REGISTER_DEFN_NODETYPE(NordStage2Input);
 
-NordStage2Input::NordStage2Input(QPoint position, Project* parent)
-    : EnableableNode(position, parent, "NordStage2 input", "midi input filter")
+NordStage2Input::NordStage2Input(QDataStream& stream)
+    : EnableableNode(stream)
 {
+    setName("Control Input");
     addPort(new OutputPort(this, "Trigger", "", Port::Trigger));
     addPort(new OutputPort(this, "Channel", "", Port::Scalar));
     addPort(new OutputPort(this, "Category", "", Port::Scalar));
