@@ -22,7 +22,7 @@ public:
     QStringList items() const;
 
     Domain::Type domainType() const;
-    Domain* domain() const;
+    Domain* domain() const { return _domain; }
 
 
     int currentCategory() const { return _currentCategory; }
@@ -47,6 +47,8 @@ private:
                 .arg(NordStage2::categories()[_currentCategory])
                 .arg(NordStage2::properties(_currentCategory)[_currentProperty]); }
     MidiKey midiKey() const;
+    Domain* _domain = 0;
+    void updateDomain();
 
 
 signals:

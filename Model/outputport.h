@@ -47,12 +47,14 @@ public:
     bool isInput() const;
 
     void send(QVariant data = QVariant());
+    void setBlock(bool block);
+    bool block() const { return _block; }
 
 signals:
     void sendData(QVariant data);
 
 private:
-public://TODO
+    bool _block;
     QSet<InputPort*> _targets;
 };
 

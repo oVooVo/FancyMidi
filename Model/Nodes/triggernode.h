@@ -1,12 +1,12 @@
 #ifndef TRIGGERNODE_H
 #define TRIGGERNODE_H
 
-#include "../node.h"
+#include "../Nodes/enableablenode.h"
 
 #include <QTimer>
 #include "Settings/integersetting.h"
 
-class TriggerNode : public Node
+class TriggerNode : public EnableableNode
 {
     Q_OBJECT
 public:
@@ -18,8 +18,6 @@ private:
     REGISTER_DECL_NODETYPE(TriggerNode);
     QTimer _timer;
     int _time = 0;
-    IntegerSetting* _durationSetting;
-    IntegerSetting* _intervallSetting;
 };
 
 #endif // TRIGGERNODE_H

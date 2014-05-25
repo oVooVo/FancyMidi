@@ -50,7 +50,7 @@ bool GraphScene::eventFilter(QObject *watched, QEvent *event)
             foreach (InputPort* inputPort, disconnectedInputports) {
                 foreach (NodeItem* ni, nodeItemsToDelete)
                 {
-                    if (ni->getNode() == inputPort->getNode()) {
+                    if (ni->getNode() == inputPort->node()) {
                         disconnectedInputports.removeOne(inputPort);
                         break;
                     }
@@ -168,7 +168,7 @@ void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         QGraphicsItem* gi = itemAt(event->scenePos(), t_unused);
         PortItem* pi = (PortItem*) gi;
         if (gi && gi->type() == PortItem::Type
-                && pi->port() && pi->port()->type() == _temporaryConnection->portItem()->port()->type()
+                && pi->port() && Port::canConnect(pi->port(), _temporaryConnection->portItem()->port())
                 && pi->port()->isInput() != _temporaryConnection->portItem()->port()->isInput()) {
             _temporaryConnection->setBlack();
         } else {
@@ -230,7 +230,7 @@ void GraphScene::copy()
     for(int i = 0; i < _copyPasteNodeList.count(); i++) {
         for(int p = 0; p < _copyPasteNodeList[i]->getOutputs().count(); p++) {
             foreach (InputPort* inputPort, _copyPasteNodeList[i]->getOutputs()[p]->getTargets()) {
-                if (_copyPasteNodeList.contains(inputPort->getNode())) {
+                if (_copyPasteNodeList.contains(inputPort->node())) {
                     count++;
                 }
             }
@@ -240,11 +240,11 @@ void GraphScene::copy()
     for (int nodeIndex = 0; nodeIndex < _copyPasteNodeList.count(); nodeIndex++) {
         for (int inputPortIndex = 0; inputPortIndex < _copyPasteNodeList[nodeIndex]->getInputs().count(); inputPortIndex++) {
             OutputPort* outputPort = _copyPasteNodeList[nodeIndex]->getInputs()[inputPortIndex]->getSource();
-            if (outputPort && _copyPasteNodeList.contains(outputPort->getNode())) {
+            if (outputPort && _copyPasteNodeList.contains(outputPort->node())) {
                 copyStream << nodeIndex;                                                //target node
                 copyStream << inputPortIndex;                                           //target port
-                copyStream << _copyPasteNodeList.indexOf(outputPort->getNode());        //source node
-                copyStream << outputPort->getNode()->getOutputs().indexOf(outputPort);  //source port
+                copyStream << _copyPasteNodeList.indexOf(outputPort->node());        //source node
+                copyStream << outputPort->node()->getOutputs().indexOf(outputPort);  //source port
             }
         }
     }

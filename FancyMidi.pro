@@ -56,6 +56,17 @@ SOURCES += main.cpp\
     Model/Nodes/nordstage2controlout.cpp \
     Model/Nodes/nordstage2noteout.cpp \
     Model/Nodes/midichannelnode.cpp \
+    Model/Nodes/persistentnode.cpp \
+    Model/Nodes/enableablenode.cpp \
+    Settings/boolsetting.cpp \
+    SettingWidgets/boolsettingwidget.cpp \
+    Settings/scalarsetting.cpp \
+    Model/Nodes/delaynode.cpp \
+    Model/Nodes/mathnode.cpp \
+    SettingWidgets/arbitrarydoublesettingwidget.cpp \
+    Settings/arbitrarydoublesetting.cpp \
+    Model/Nodes/nordstage2noteinput.cpp \
+    Model/Nodes/memorynode.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -100,7 +111,18 @@ HEADERS  +=  \
     midikey.h \
     Model/Nodes/nordstage2controlout.h \
     Model/Nodes/nordstage2noteout.h \
-    Model/Nodes/midichannelnode.h
+    Model/Nodes/midichannelnode.h \
+    Model/Nodes/persistentnode.h \
+    Model/Nodes/enableablenode.h \
+    Settings/boolsetting.h \
+    SettingWidgets/boolsettingwidget.h \
+    Settings/scalarsetting.h \
+    Model/Nodes/delaynode.h \
+    Model/Nodes/mathnode.h \
+    SettingWidgets/arbitrarydoublesettingwidget.h \
+    Settings/arbitrarydoublesetting.h \
+    Model/Nodes/nordstage2noteinput.h \
+    Model/Nodes/memorynode.h
 
 FORMS += \
     mainwindow.ui \
@@ -109,5 +131,7 @@ FORMS += \
     SettingWidgets/integersettingwidget.ui \
     SettingWidgets/doublesettingwidget.ui \
     SettingWidgets/midifiltersettingwidget.ui \
+    SettingWidgets/boolsettingwidget.ui \
+    SettingWidgets/arbitrarydoublesettingwidget.ui
 
 

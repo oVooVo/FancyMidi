@@ -9,7 +9,7 @@ SelectSettingWidget::SelectSettingWidget(Setting* set, QWidget* parent) : Settin
     Q_ASSERT(set->metaObject()->className() == SelectSetting::staticMetaObject.className());
     _initMode = true;
     setupUi(this);
-    _title->setText(setting<SelectSetting>()->getName());
+    _title->setText(setting<SelectSetting>()->name());
     _toolTip->setText(setting<SelectSetting>()->tooltip());
     _toolTip->setVisible(false);
 

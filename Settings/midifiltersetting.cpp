@@ -40,7 +40,7 @@ void MidiFilterSetting::setChannel(int channel)
     if (channel == _channel)
         return;
 
-    _channel = qBound(0, channel, 15);
+    _channel = qBound(0, channel, Keyboard::NUM_MIDI_CHANNELS - 1);
     emit changed();
 }
 

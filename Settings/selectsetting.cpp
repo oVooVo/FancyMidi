@@ -1,12 +1,12 @@
-    #include "selectsetting.h"
+#include "selectsetting.h"
 #include <QThread>
 #include <QApplication>
 #include <QDebug>
 
-SelectSetting::SelectSetting(Node *parent, QString name, QString tooltip, int currentIndex, QList<QString> values, int defaultIndex):
-	Setting(parent, name, tooltip)
+SelectSetting::SelectSetting(Node *parent, QString name, QString tooltip, int currentIndex,
+                             QList<QString> values, int defaultIndex)
+    : Setting(parent, name, tooltip)
 {
-	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "constructor", "called from a thread other than the main thread");
 	_values = values;
 	_currentIndex = currentIndex;
 	_defaultIndex = defaultIndex;
@@ -15,7 +15,6 @@ SelectSetting::SelectSetting(Node *parent, QString name, QString tooltip, int cu
 
 SelectSetting::~SelectSetting()
 {
-	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "destructor", "called from a thread other than the main thread");
 }
 
 const QList<QString> SelectSetting::values() const
@@ -35,7 +34,6 @@ int SelectSetting::defaultIndex() const
 
 void SelectSetting::setCurrentIndex(int index)
 {
-	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "setCurrentIndex", "called from a thread other than the main thread");
     if((_values.length() > index) && (index >= 0) && _currentIndex != index)
     {
         _currentIndex = index;
@@ -46,7 +44,7 @@ void SelectSetting::setCurrentIndex(int index)
 QDataStream &operator<<(QDataStream &out, const SelectSetting *selectSetting)
 {
 	out << QString("SelectSetting");
-    out << selectSetting->getName() << selectSetting->tooltip() <<
+    out << selectSetting->name() << selectSetting->tooltip() <<
            qint32(selectSetting->currentIndex())
 		<< selectSetting->values() << qint32(selectSetting->defaultIndex());
     return out;
@@ -61,8 +59,7 @@ QDataStream &operator>>(QDataStream &in, SelectSetting *&setting)
 	QList<QString> values;
 
 	in >> name;
-	if (name == QString("SelectSetting"))
-	{
+    if (name == QString("SelectSetting")) {
 		in >> name ;
     }
 

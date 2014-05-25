@@ -171,12 +171,12 @@ void NodeItem::setSize(QSizeF size)
 
 void NodeItem::addInputPort(Port *port)
 {
-	addPort(port, port->getName(), false);
+    addPort(port, port->name(), false);
 }
 
 void NodeItem::addOutputPort(Port *port)
 {
-	addPort(port, port->getName(), true);
+    addPort(port, port->name(), true);
 }
 
 void NodeItem::addNamePort(const QString &name)

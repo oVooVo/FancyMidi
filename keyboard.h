@@ -10,6 +10,7 @@ class Keyboard : public QObject
 public:
     Keyboard(quint8 channel = 0, QObject* parent = 0);
     quint8 channel() const { return _channel; }
+    static const int NUM_MIDI_CHANNELS = 16;
 
 public slots:
     void setChannel(quint8 channel);
@@ -19,6 +20,7 @@ public slots:
 private:
     quint8 _channel = 0;
     const MidiHandler* midi;
+
 };
 
 #endif // KEYBOARD_H

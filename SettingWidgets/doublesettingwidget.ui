@@ -6,14 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>207</width>
-    <height>84</height>
+    <width>119</width>
+    <height>139</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <item>
     <widget class="QFrame" name="frame_2">
      <property name="sizePolicy">
@@ -124,6 +121,9 @@
       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
      </property>
     </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="lineEdit"/>
    </item>
    <item>
     <widget class="QDoubleSpinBox" name="_doubleSpinBox"/>

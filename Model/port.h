@@ -36,23 +36,21 @@ public:
      * @brief getNode Returns the associated node
      * @return Returns the associated node
      */
-    Node* getNode() const;
+    Node* node() const;
     /**
      * @brief getName Returns the name of this port
      * @return Returns the name of this port
      */
-    QString getName() const;
+    QString name() const;
     /**
      * @brief getInfoText Returns the text describing this port
      * @return Returns the text describing this port
      */
-    QString getInfoText() const;
+    QString infoText() const;
 
-    /**
-     * @brief isData returns whether this port represents a data port.
-     * @return whether this port represents a data port.
-     */
-    Type type() const;
+    Type type() const { return _type; }
+
+    static bool canConnect(const Port *port1, const Port *port2);
 
 private:
     Node* _node;

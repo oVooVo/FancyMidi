@@ -7,12 +7,13 @@
 #include <QString>
 #include <QChildEvent>
 #include <QCoreApplication>
+#include <QDebug>
 
 class InputPort;
-class QueueInputPort;
 class OutputPort;
 class Project;
 class Setting;
+class Port;
 
 /**
  * @brief The Node class represents a module, containing the In/Output-Ports and the Settings
@@ -37,7 +38,7 @@ public:
      * @brief setSettings adds given settings.
      * @param settings the settings of this node.
      */
-    void setSettings(QVector<Setting *> settings);
+    void setSettings(QList<Setting *> settings);
 
     /**
      * @brief Node Creates a new Node into given project.
@@ -85,7 +86,7 @@ public:
      * @brief getSettings Returns the settings from this node
      * @return Returns the settings
      */
-    const QVector<Setting*> getSettings() const;
+    const QList<Setting *> settings() const;
 
     /**
      * @brief getProject Returns the Project
@@ -153,17 +154,17 @@ public:
     void polish();
 
 protected:
-    /**
-     * @brief _inputs the input ports of this node.
-     */
-    QList<InputPort*> _inputs;
+    void addPort(Port* port);
+    void addSetting(Setting* setting);
+    InputPort* inputPort(QString key) const;
+    OutputPort* outputPort(QString key) const;
+    template<typename T> T* setting(QString key) const
+    {
+        Q_ASSERT(_settings.contains(key));
 
-    /**
-     * @brief _outputs the output ports of this node.
-     */
-    QList<OutputPort*> _outputs;
+        return (T*) _settings[key];
+    }
 
-    void childEvent(QChildEvent* event);
 
     /**
      * @brief _creatorMap this map contains all nodes.
@@ -175,20 +176,18 @@ protected:
      */
     STATE _state;
 
-    /**
-     * @brief _newSettings whether the settings have to be renewed.
-     */
-    bool _newSettings;
+    void setBlock(bool block);
+    bool block() const { return _block; }
 
 private:
+    QMap<QString, InputPort*> _inputs;
+    QMap<QString, OutputPort*> _outputs;
+    QMap<QString, Setting*> _settings;
     QPoint _position;
     QString _name;
     QString _infoText;
     QSizeF _size;
-    /**
-     * @brief _settings a list of all settings related to this node.
-     */
-    QVector<Setting*> _settings;
+    bool _block = false;
 };
 
 template<typename T>
@@ -203,6 +202,7 @@ struct NodeRegister : Node
 };
 
 #define REGISTER_DECL_NODETYPE(CLASSNAME) \
+private:    \
 	static NodeRegister<CLASSNAME> reg
 
 #define REGISTER_DEFN_NODETYPE(CLASSNAME) \

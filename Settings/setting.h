@@ -32,7 +32,7 @@ public:
      * @brief getName Returns the name of this setting
      * @return Returns The name of this setting
      */
-    const QString getName() const;
+    const QString name() const;
     /**
      * @brief getInfoText Returns the description of this setting
      * @return Returns The description of this setting

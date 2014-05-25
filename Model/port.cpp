@@ -14,27 +14,28 @@ Port::~Port()
 
 }
 
-
-Node* Port::getNode() const
+Node* Port::node() const
 {
 	return _node;
 }
 
-QString Port::getName() const
+QString Port::name() const
 {
     return _name;
 }
 
-QString Port::getInfoText() const
+QString Port::infoText() const
 {
     return _infoText;
 }
 
-Port::Type Port::type() const
+bool Port::canConnect(const Port *port1, const Port *port2)
 {
-    return _type;
+    //TODO check cycles
+    Q_UNUSED(port1);
+    Q_UNUSED(port2);
+    return true;
 }
-
 
 
 

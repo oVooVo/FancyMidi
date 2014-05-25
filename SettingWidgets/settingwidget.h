@@ -8,6 +8,9 @@
 #include <QMap>
 
 
+#define CHECK_SETTING(SETTING_CLASS) \
+    Q_ASSERT(QString(set->metaObject()->className()) == QString(SETTING_CLASS::staticMetaObject.className()))
+
 #define SETTINGWIDGET_CREATOR_MAP_TYPE QMap<QString, SettingWidget* (*)(Setting* setting, QWidget* parent)>
 template<typename T> SettingWidget *createSettingWidget(Setting* setting, QWidget* parent) {
     return new T(setting, parent);

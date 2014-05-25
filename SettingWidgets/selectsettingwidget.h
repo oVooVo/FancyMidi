@@ -11,7 +11,7 @@
  */
 class SelectSettingWidget: public SettingWidget, private Ui::SelectSettingWidget
 {
-	Q_OBJECT
+    Q_OBJECT
     REGISTER_DECL_SETTINGWIDGETTYPE(SelectSettingWidget);
 public:
 	/**

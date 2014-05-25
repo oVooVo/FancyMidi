@@ -22,14 +22,13 @@ const QSet<InputPort*> OutputPort::getTargets()
     return _targets;
 }
 
-
 bool OutputPort::connect(Port* port) {
-    if(port->isInput() && port->type() == type()) {
-        if(_targets.contains((InputPort*)port)) {
+    if(port->isInput() && canConnect(this, port)) {
+        if(_targets.contains((InputPort*) port)) {
             return false;
         } else {
-            _targets.insert((InputPort*)port);
-            ((InputPort*)port)->connect(this);
+            _targets.insert((InputPort*) port);
+            ((InputPort*) port)->connect(this);
             return true;
         }
     }
@@ -55,8 +54,14 @@ bool OutputPort::isInput() const
 
 void OutputPort::send(QVariant data)
 {
+    if (_block) return;
     emit sendData(data);
     for (InputPort* ip : _targets) {
         ip->receive(data);
     }
+}
+
+void OutputPort::setBlock(bool block)
+{
+    _block = block;
 }

@@ -5,59 +5,49 @@
 
 REGISTER_DEFN_NODETYPE(TriggerNode);
 
-TriggerNode::TriggerNode(QPoint position, Project* parent) : Node(position, parent, "Trigger")
+TriggerNode::TriggerNode(QPoint position, Project* parent)
+    : EnableableNode(position, parent, "Trigger")
 {
-    _durationSetting = new IntegerSetting(this, "Duration", "Interval", 0, 10000, 1000, 1, 1000);
-    _intervallSetting = new IntegerSetting(this, "Intervall", "Interval", 0, 10000, 1000, 1, 1000);
-    _outputs += new OutputPort(this, "slow", "Trigger", Port::Trigger);
-    _outputs += new OutputPort(this, "fast", "Trigger", Port::Trigger);
-    _outputs += new OutputPort(this, "time", "time", Port::Scalar);
-    _inputs += new InputPort(this, "Stop", "Stops the timer", Port::Trigger);
-    _inputs += new InputPort(this, "Start", "Starts the timer", Port::Trigger);
-    _inputs += new InputPort(this, "Reset", "Synchronizes the timer", Port::Trigger);
-    _inputs += new InputPort(this, "Enabled", "Enables or disables the timer", Port::Scalar);
+    addSetting(new IntegerSetting(this, "Duration", "Interval", 0, 10000, 1000, 1000));
+    addSetting(new IntegerSetting(this, "Intervall", "Interval", 0, 10000, 1000, 1000));
+    addPort(new OutputPort(this, "Timeout", "", Port::Trigger));
+    addPort(new OutputPort(this, "Time", "", Port::Scalar));
+    addPort(new InputPort(this, "Stop", "Stops the timer", Port::Trigger));
+    addPort(new InputPort(this, "Start", "Starts the timer", Port::Trigger));
+    addPort(new InputPort(this, "Reset", "Synchronizes the timer", Port::Trigger));
 
 
-    connect(_intervallSetting, &IntegerSetting::changed, [this]() {
-        _timer.setInterval(_intervallSetting->value());
+    connect(setting<IntegerSetting>("Intervall"), &IntegerSetting::changed, [this]() {
+        _timer.setInterval(setting<IntegerSetting>("Intervall")->value());
     });
 
     connect(&_timer, &QTimer::timeout, [this]() {
-       _outputs[2]->send(_time);
-       _outputs[1]->send();
+       outputPort("Time")->send(_time);
        _time++;
-       if (_time >= _durationSetting->value()) {
+       if (_time >= setting<IntegerSetting>("Duration")->value()) {
            _time = 0;
-           _outputs[0]->send();
+           outputPort("Timeout")->send();
        }
     });
 
-    connect(_inputs[0], &InputPort::receivedData, [this]() {
+    connect(inputPort("Stop"), &InputPort::receivedData, [this]() {
         _timer.stop();
     });
 
-    connect(_inputs[1], &InputPort::receivedData, [this]() {
+    connect(inputPort("Start"), &InputPort::receivedData, [this]() {
         if (!_timer.isActive())
             _timer.start();
     });
 
-    connect(_inputs[1], &InputPort::receivedData, [this]() {
+    connect(inputPort("Reset"), &InputPort::receivedData, [this]() {
         _time = 0;
     });
 
-    connect(_inputs[1], &InputPort::receivedData, [this](QVariant data) {
-        if (data.canConvert(QVariant::Bool)) return;
-        if (_timer.isActive() && !data.value<bool>())
-            _timer.stop();
-        else if (!_timer.isActive() && data.value<bool>())
-            _timer.start();
-    });
 
 
 
 
-
-    _timer.start(_intervallSetting->value());
+    _timer.start(setting<IntegerSetting>("Intervall")->value());
 }
 
 

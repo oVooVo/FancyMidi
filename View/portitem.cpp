@@ -27,11 +27,11 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
 
     setPen(QPen(Qt::black, 1.5));
 
+    _brushColor = QColor(Qt::darkBlue);
     if (_port) {
         //set color;
         switch (_port->type()) {
         case Port::Trigger:
-            _brushColor = QColor(Qt::darkBlue);
             break;
         case Port::Scalar:
             _brushColor = QColor(Qt::darkRed);

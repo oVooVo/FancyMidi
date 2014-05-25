@@ -24,19 +24,17 @@ Node::Node(QPoint position, Project* parent, QString name, QString infoText, QSi
 
 Node::~Node()
 {
-    foreach (InputPort *p, _inputs)
-        delete p;
-    foreach (OutputPort *p, _outputs)
-        delete p;
+    qDeleteAll(_inputs);
+    qDeleteAll(_outputs);
 }
 
 const QList<OutputPort*> Node::getOutputs()
 {
-	return _outputs;
+    return _outputs.values();
 }
 const QList<InputPort*> Node::getInputs()
 {
-	return _inputs;
+    return _inputs.values();
 }
 
 void Node::selfCheck()
@@ -69,9 +67,9 @@ QPoint Node::getPosition() const
 	return _position;
 }
 
-const QVector<Setting*> Node::getSettings() const
+const QList<Setting*> Node::settings() const
 {
-	return _settings;
+    return _settings.values();
 }
 
 Project* Node::getProject() {
@@ -94,20 +92,6 @@ void Node::polish()
         QCoreApplication::sendEvent(parent(), new QChildEvent(QEvent::ChildPolished, this));
 }
 
-void Node::childEvent(QChildEvent *event)
-{
-    if(event->polished() || event->added()) {
-        
-        Setting* newSetting = (Setting*)event->child();
-        if(!_settings.contains(newSetting))
-            _settings += newSetting;
-    }
-    else
-    {
-        _settings.remove(_settings.indexOf((Setting*)event->child()));
-    }
-}
-
 Node *Node::createInstance(QString className)
 {
     if (!_creatorMap) {
@@ -125,7 +109,7 @@ QDataStream &operator << (QDataStream &ostream, const Node *node)
 {
     //qDebug() << "operator <<: metaObject class name: " << node->metaObject()->className();
     QString className = QString(node->metaObject()->className());
-    ostream << className << node->getPosition() << node->getSize() << node->getSettings();
+    ostream << className << node->getPosition() << node->getSize() << node->settings();
     return ostream;
 }
 
@@ -134,7 +118,7 @@ QDataStream &operator >> (QDataStream &istream, Node *&node)
     QString className;
     QPoint position;
     QSizeF size;
-    QVector<Setting*> settings;
+    QList<Setting*> settings;
 
     istream >> className;
     if(className.isEmpty()) {
@@ -164,14 +148,13 @@ QList<QString> Node::getModuleClassNames() {
 	qSort(list);
     return list;
 }
-void Node::setSettings(QVector<Setting *> settings)
+void Node::setSettings(QList<Setting *> settings)
 {
     _settings.clear();
 
-    _settings = settings;
-
-    for (Setting *setting : _settings) {
+    for (Setting *setting : settings) {
         //qDebug() << setting->getName() << " "<< _settings.size();
+        _settings.insert(setting->name(), setting);
         setting->setParent(this);
     }
 }
@@ -180,7 +163,6 @@ void Node::clear()
 {
 	Q_ASSERT_X(QThreadPool::globalInstance()->activeThreadCount() == 0, "Node::clear()", "Called clear() while running.");
 	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "Node::clear()", "Called clear() from an other thread then the main thread.");
-    _newSettings = true;
 }
 
 QSizeF Node::getSize() const
@@ -196,6 +178,43 @@ void Node::setSize(QSizeF size)
         getProject()->popularizeNodesChange();
 }
 
+void Node::addPort(Port *port)
+{
+    if (port->isInput()) {
+        Q_ASSERT(!_inputs.contains(port->name()));
+        _inputs.insert(port->name(), (InputPort*) port);
+    } else {
+        Q_ASSERT(!_outputs.contains(port->name()));
+        _outputs.insert(port->name(), (OutputPort*) port);
+        ((OutputPort*) port)->setBlock(_block);
+    }
+}
+
+void Node::addSetting(Setting *setting)
+{
+    Q_ASSERT(!_settings.contains(setting->name()));
+    _settings.insert(setting->name(), setting);
+}
+
+void Node::setBlock(bool block)
+{
+    _block = block;
+    for (OutputPort* port : _outputs.values()) {
+        port->setBlock(block);
+    }
+}
+
+InputPort* Node::inputPort(QString key) const
+{
+    Q_ASSERT(_inputs.contains(key));
+    return _inputs[key];
+}
+
+OutputPort* Node::outputPort(QString key) const
+{
+    Q_ASSERT(_outputs.contains(key));
+    return _outputs[key];
+}
 
 
 

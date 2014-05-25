@@ -1,9 +1,9 @@
 #ifndef NORDSTAGE2INPUT_H
 #define NORDSTAGE2INPUT_H
-#include "../node.h"
+#include "../Nodes/enableablenode.h"
 #include "Settings/midifiltersetting.h"
 
-class NordStage2Input : public Node
+class NordStage2Input : public EnableableNode
 {
     Q_OBJECT
 public:
@@ -12,7 +12,6 @@ public:
     QString category() const { return "Input"; }
 
 private:
-    MidiFilterSetting* _midiFilter;
     REGISTER_DECL_NODETYPE(NordStage2Input);
 
 private slots:

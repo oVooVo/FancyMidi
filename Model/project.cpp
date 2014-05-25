@@ -189,9 +189,9 @@ QDataStream &operator << (QDataStream &ostream, const Project *project)
             OutputPort* source = nodeList[i]->getInputs()[p]->getSource();
             if(source) {
                 ostream << i << p;
-                int sourceNodeIndex = nodeList.indexOf(source->getNode());
+                int sourceNodeIndex = nodeList.indexOf(source->node());
                 ostream << sourceNodeIndex;
-                int sourceNodePortIndex = source->getNode()->getOutputs().indexOf(source);
+                int sourceNodePortIndex = source->node()->getOutputs().indexOf(source);
                 ostream << sourceNodePortIndex;
             }
         }

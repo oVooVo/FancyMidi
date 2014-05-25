@@ -13,7 +13,6 @@ public:
     QString category() const { return "Midi Out"; }
 
 private:
-    MidiCommandSelectSetting* _midiSetting;
     REGISTER_DECL_NODETYPE(NordStage2ControlOut);
 
 

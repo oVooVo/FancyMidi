@@ -16,8 +16,8 @@ InputPort::~InputPort()
 
 bool InputPort::connect(Port* port)
 {
-    if(!port) {    // disconnect
-		if(_source) {
+    if  (!port) {    // disconnect
+        if (_source) {
 			_source->disconnect(this);
             _source = NULL;
 			
@@ -26,10 +26,10 @@ bool InputPort::connect(Port* port)
 			return false;
 		}
     } else {    // connect
-        if (port->isInput() || port == _source || port->type() != type())
+        if (port->isInput() || port == _source || !canConnect(port, this))
 			return false;
         else {
-			disconnect();
+            disconnect();
 
             _source = (OutputPort*) port;
 			return port->connect(this);

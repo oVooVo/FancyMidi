@@ -8,6 +8,8 @@
 #include "../Settings/integersetting.h"
 #include "integersettingwidget.h"
 
+
+
 SettingWidget::SettingWidget(Setting *setting, QWidget* parent) : QWidget(parent)
 {
     _initMode = false;
@@ -58,8 +60,13 @@ SettingWidget* SettingWidget::createNewSettingWidget(Setting* setting, QWidget* 
     }
 
     if (!widget) {
-        qWarning() << "Warning: Classname " << classname << "not found.";
+        qDebug() << "creator Map:";
+        qDebug() << *_creatorMap;
+        qDebug() << classname;
     }
+
+    Q_ASSERT_X(widget, "SettingWidget::createNewSettingWidget()",
+               QString("Warning: Classname %1 not found.").arg(classname).toStdString().c_str());
 
     return widget;
 }

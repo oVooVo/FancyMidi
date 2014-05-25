@@ -13,6 +13,15 @@ MidiCommandSelectSetting::MidiCommandSelectSetting(Node *parent, QString name, Q
 
     connect(parent, SIGNAL(channelChanged(int)), this, SIGNAL(changed()));
     setValid(true);
+    updateDomain();
+}
+
+void MidiCommandSelectSetting::updateDomain()
+{
+    if (_domain)
+        delete _domain;
+
+    _domain = NordStage2::DOMAINS[midiKey()]->copy(NordStage2::channel(channel()));
 }
 
 MidiCommandSelectSetting::~MidiCommandSelectSetting()
@@ -101,6 +110,7 @@ void MidiCommandSelectSetting::setCategoryIndex(int i)
     _currentCategory = qBound(0, i, NordStage2::categories().length() - 1);
     _currentProperty = 0;
 
+    updateDomain();
     emitChanged();
 }
 
@@ -110,6 +120,8 @@ void MidiCommandSelectSetting::setPropertyIndex(int i)
         return;
 
     _currentProperty = qBound(0, i, NordStage2::properties(_currentCategory).length() - 1);
+
+    updateDomain();
     emitChanged();
 }
 
@@ -118,7 +130,8 @@ void MidiCommandSelectSetting::setChannel(int i)
     if (i == _currentChannel)
         return;
 
-    _currentChannel = qBound(0, i, 15);
+    updateDomain();
+    _currentChannel = qBound(0, i, Keyboard::NUM_MIDI_CHANNELS - 1);
     emit changed();
 }
 
@@ -129,11 +142,6 @@ MidiKey MidiCommandSelectSetting::midiKey() const
 
     return NordStage2::CODES[key()];
 
-}
-
-Domain* MidiCommandSelectSetting::domain() const
-{
-    return NordStage2::channel(channel())->domains()[midiKey()];
 }
 
 Domain::Type MidiCommandSelectSetting::domainType() const

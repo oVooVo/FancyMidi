@@ -7,7 +7,14 @@
 #include <QTimer>
 
 //#define PHANTOM       // does not really sends midi commands thus no need for connection to midi device.
-//#define VERBOSE
+#define VERBOSE
+
+/*
+#if def PHANTOM & undef VERBOSE
+#define VERBOSE
+#endif
+*/
+
 
 MidiHandler* MidiHandler::_singleton = 0;
 

@@ -1,20 +1,22 @@
 #include "midichannelnode.h"
 #include "../inputport.h"
+#include "keyboard.h"
+#include <QDebug>
 
 MidiChannelNode::MidiChannelNode(QPoint position, Project* parent, QString name, QString tooltip)
-    : Node(position, parent, name, tooltip)
+    : EnableableNode(position, parent, name, tooltip)
 {
-    _inputs += new InputPort(this, "channel", "midi channel", Port::Scalar);
-    _channelSetting = new IntegerSetting(this, "Channel", "", 0, 15, 0, 1, 0);
+    addPort(new InputPort(this, "Channel", "midi channel", Port::Scalar));
+    addSetting(new IntegerSetting(this, "Channel", "", 0, Keyboard::NUM_MIDI_CHANNELS - 1, 0, 0));
 
-    connect(_inputs[0], &InputPort::receivedData, [this](QVariant data) {
+    connect(inputPort("Channel"), &InputPort::receivedData, [this](QVariant data) {
         if (!data.canConvert(QVariant::Int)) return;
 
-        _channelSetting->setValue(data.value<int>());
+        setting<IntegerSetting>("Channel")->setValue(data.value<int>());
     });
 }
 
 void MidiChannelNode::setChannel(int channel)
 {
-    _channelSetting->setValue(channel);
+    setting<IntegerSetting>("Channel")->setValue(channel);
 }

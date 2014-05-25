@@ -24,7 +24,7 @@ bool Setting::isValid() const
     return _isValid;
 }
 
-const QString Setting::getName() const
+const QString Setting::name() const
 {
 	return _name;
 }

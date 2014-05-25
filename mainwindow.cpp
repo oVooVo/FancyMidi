@@ -37,7 +37,7 @@ void MainWindow::updateSettingTable(Node* node)
         ui->nodePropertyHead->show();
         ui->nodeName->setText(node->getName());
         ui->nodeInfoText->setText(node->getInfoText());
-        foreach (Setting* s, node->getSettings()) {
+        foreach (Setting* s, node->settings()) {
             SettingWidget* settingWidget = SettingWidget::createNewSettingWidget(s, ui->settingFrame);
             ui->settingFrame->layout()->addWidget(settingWidget);
         }

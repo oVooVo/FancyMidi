@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>267</width>
-    <height>85</height>
+    <width>392</width>
+    <height>175</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -148,6 +148,9 @@
          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit"/>
       </item>
      </layout>
     </widget>
