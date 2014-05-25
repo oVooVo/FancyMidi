@@ -33,7 +33,7 @@ IntegerSettingWidget::IntegerSettingWidget(Setting* set, QWidget *parent) : Sett
         connect(_slider, SIGNAL(valueChanged(int)), _spinBox, SLOT(setValue(int)));
         connect(_spinBox, SIGNAL(valueChanged(int)), _slider, SLOT(setValue(int)));
 
-        connect(_slider, &QSlider::valueChanged, [this](int value){
+        connect(_slider, &QSlider::valueChanged, [this](int value) {
             setting<IntegerSetting>()->setValue(value);
         });
     } else {

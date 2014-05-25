@@ -16,6 +16,11 @@ TimerNode::TimerNode(QDataStream &stream)
     addPort(new InputPort(this, "Stop", "Stops the timer", Port::Trigger));
     addPort(new InputPort(this, "Start", "Starts the timer", Port::Trigger));
     addPort(new InputPort(this, "Reset", "Synchronizes the timer", Port::Trigger));
+    addPort(new InputPort(this, "Duration", "", Port::Scalar));
+    addPort(new InputPort(this, "Intervall", "", Port::Scalar));
+
+    setting<IntegerSetting>("Duration")->connectPort(inputPort("Duration"));
+    setting<IntegerSetting>("Intervall")->connectPort(inputPort("Intervall"));
 
 
     connect(setting<IntegerSetting>("Intervall"), &IntegerSetting::changed, [this]() {

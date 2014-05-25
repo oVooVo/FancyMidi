@@ -160,6 +160,24 @@ NordStage2::Triple NordStage2::createProperties()
     reg(Domains::Domain_0_10(MidiKey(MidiKey::ControlChange, 95), "Reverb.Amount"));
     reg(Domains::ReverbSizeDomain(MidiKey(MidiKey::ControlChange, 96), "Reverb.Size"));
     reg(Domains::StatusDomain(MidiKey(MidiKey::ControlChange, 97), "Reverb.Enabled"));
+    reg(Domains::SlotDomain(MidiKey(MidiKey::ControlChange, 68), "Misc.Slot Focus"));
+    reg(Domains::Domain_0_1(MidiKey(MidiKey::ControlChange, 64), "Pedal.Sustain Pedal"));
+    //reg(Domains::Domain??(MidiKey(MidiKey::ControlChange, 66), "Pedal.Latch Pedal"));
+    //reg(Domains::Domain??(MidiKey(MidiKey::ControlChange, 67), "Pedal.Soft Pedal"));
+    //reg(Domains::Domain??(MidiKey(MidiKey::ControlChange,  4), "Pedal.Organ Swell Pedal"));
+    //reg(Domains::Domain??(MidiKey(MidiKey::ControlChange, 11), "Pedal.Controll Pedal"));
+    //reg(Domains::Domain??(MidiKey(MidiKey::ControlChange, 82), "Pedal.Rotor Speed Pedal"));
+    //reg(Domains::Domain??(MidiKey(MidiKey::ControlChange, 67), "Pedal.Keyboard Gate Pedal"));
+    //reg(Domains::Domain??(MidiKey(MidiKey::ControlChange, 7), "Misc.Master Level"));
+    reg(Domains::Domain_0_1(MidiKey(MidiKey::ControlChange, 1), "Misc.Wheel"));
+
+
+
+
+
+    reg(Domains::Domain_0_1(MidiKey(MidiKey::ControlChange, 64), "Pedal.Sustain Pedal"));
+
+    reg(Domains::Domain_0_1(MidiKey(MidiKey::ControlChange, 64), "Pedal.Sustain Pedal"));
 
 
     return Triple(codes, properties, domains);
@@ -195,7 +213,6 @@ void NordStage2::installReceiver(int myChannel)
         switch (key.type()) {
         case MidiKey::ControlChange:
             if (!DOMAINS.contains(key)) return;
-
             switch (DOMAINS[key]->type()) {
             case Domain::Discrete:
                 emit midiInput(myChannel, key, ((DiscreteDomain*) DOMAINS[key])->decode(data));
@@ -211,8 +228,12 @@ void NordStage2::installReceiver(int myChannel)
         case MidiKey::NoteOn:
         case MidiKey::NoteOff:
             emit midiInput(myChannel, key, data);
+            break;
         case MidiKey::Aftertouch:
+            break;
         case MidiKey::PitchBend:
+            emit midiInput(myChannel, key, Domains::decodePitch(key, data));
+            break;
         case MidiKey::ProgramChange:
         case MidiKey::Unknown:
         default:

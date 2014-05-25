@@ -52,6 +52,9 @@ public:
     static Domain* Domain_80_128x32(MidiKey midiKey, QString name);
     static Domain* Domain_1_128(MidiKey midiKey, QString name);
     //void setSynthGlideRate(quint8 rate);    //TODO
+
+    static double decodePitch(MidiKey key, quint8 data);
+    static QPair<MidiKey, quint8> encodePitch(double pitch);
 };
 
 #endif // DOMAINS_H

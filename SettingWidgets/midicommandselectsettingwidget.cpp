@@ -35,8 +35,13 @@ MidiCommandSelectSettingWidget::MidiCommandSelectSettingWidget(Setting* set, QWi
             setting<MidiCommandSelectSetting>(), SLOT(setIndex(int)));
     connect(ui->pushButton, SIGNAL(clicked()),
             setting<MidiCommandSelectSetting>(), SIGNAL(sendMidi()));
-    reset();
+    connect(ui->channelSlider, SIGNAL(valueChanged(int)),
+            setting<MidiCommandSelectSetting>(), SLOT(setChannel(int)));
+
+    ui->spinBox->setRange(0, Keyboard::NUM_MIDI_CHANNELS);
+    ui->channelSlider->setRange(0, Keyboard::NUM_MIDI_CHANNELS);
     updatePropertyBox();
+    reset();
 }
 
 MidiCommandSelectSettingWidget::~MidiCommandSelectSettingWidget()
@@ -66,6 +71,11 @@ void MidiCommandSelectSettingWidget::reset()
     ui->comboBox->blockSignals(true);
     ui->spinBox->blockSignals(true);
     ui->doubleSpinBox->blockSignals(true);
+    ui->channelSlider->blockSignals(true);
+    ui->spinBox->blockSignals(true);
+
+    ui->channelSlider->setValue(setting<MidiCommandSelectSetting>()->channel());
+    ui->spinBox->setValue(setting<MidiCommandSelectSetting>()->channel());
 
     switch (setting<MidiCommandSelectSetting>()->domainType()) {
     case Domain::Discrete:

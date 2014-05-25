@@ -1,4 +1,5 @@
 #include "domains.h"
+#include <QDebug>
 
 const double AttackSamples[128] = {
     0.5,   0.6,   0.7,   0.9,   1.1,   1.3,   1.5,   1.8,   2.1,   2.5,             // 0  - 9
@@ -87,7 +88,13 @@ auto encode_0_1 = [](double level, bool &ok)
         ok = false;
         qWarning() << "Limited value to" << l << "between 0 and 1 (was" << level << ").";
     }
-    return 128 * level;
+    return 127 * level;
+};
+
+auto decode_0_1 = [](quint8 code, bool &ok)
+{
+    ok = code < 128;
+    return code / 127.0;
 };
 
 auto encodeAttack = [](double attack, bool& ok) -> quint8
@@ -167,6 +174,12 @@ auto encode_0_10 = [](double nz, bool& ok)
 {
     ok = nz >= 0.0 && nz <= 10.0;
     return 12.7 * nz;
+};
+
+auto decode_0_10 = [](quint8 code, bool &ok)
+{
+    ok = code < 128;
+    return code / 12.7;
 };
 
 auto encode_m10_10 = [](double mzz, bool& ok)
@@ -344,9 +357,9 @@ Domain* Domains::SlotDomain(MidiKey midiKey, QString name) { return new Discrete
 
 //double
 Domain* Domains::Domain_0_1(MidiKey midiKey, QString name) {
-        return new DoubleDomain(midiKey, name, 0, 1, encode_0_1, decode); }
+        return new DoubleDomain(midiKey, name, 0, 1, encode_0_1, decode_0_1); }
 Domain* Domains::Domain_0_10(MidiKey midiKey, QString name) {
-        return new DoubleDomain(midiKey, name, 0, 10, encode_0_10, decode); }
+        return new DoubleDomain(midiKey, name, 0, 10, encode_0_10, decode_0_10); }
 Domain* Domains::Domain_m10_10(MidiKey midiKey, QString name) {
         return new DoubleDomain(midiKey, name, -10, 10, encode_m10_10, decode); }
 Domain* Domains::Domain_m15_15(MidiKey midiKey, QString name) {
@@ -376,5 +389,35 @@ Domain* Domains::Domain_80_128x32(MidiKey midiKey, QString name) {
         return new IntegerDomain(midiKey, name, 80, 128*32, encodeRate, decode); }
 Domain* Domains::Domains::Domain_1_128(MidiKey midiKey, QString name) {
         return new IntegerDomain(midiKey, name, 1, 128, encodeIdm1, decode); }
+
+
+double Domains::decodePitch(MidiKey key, quint8 value)
+{
+    double v = value +  key.code() / 128.0;     // in [0, 127.5]
+    v /= 127.5;                                 // in [0, 1]
+    v *= 4;
+    return v - 2;
+}
+
+QPair<MidiKey, quint8> Domains::encodePitch(double value)
+{
+    value = qBound(-2.0, value, 2.0);
+    value /= 2;
+    value += 1;         // in [0,1];
+    value *= 127.5;     // in [0, 127.5];
+    quint8 data = (quint8) value;   // 0, 1, ..., 127
+    value -= data;
+    value = qRound(value * 4)/4.0;
+    quint8 code = value * 128;
+    return qMakePair(MidiKey(MidiKey::PitchBend, code), data);
+}
+
+
+
+
+
+
+
+
 
 

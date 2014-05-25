@@ -8,7 +8,6 @@ NordStage2Input::NordStage2Input(QDataStream& stream)
     : EnableableNode(stream)
 {
     setName("Control Input");
-    addPort(new OutputPort(this, "Trigger", "", Port::Trigger));
     addPort(new OutputPort(this, "Channel", "", Port::Scalar));
     addPort(new OutputPort(this, "Category", "", Port::Scalar));
     addPort(new OutputPort(this, "Property", "", Port::Scalar));
@@ -29,8 +28,10 @@ void NordStage2Input::filter(int channel, MidiKey key, QVariant data)
     if (setting<MidiFilterSetting>("Midi Filter")->filterType()
             && key.type() != setting<MidiFilterSetting>("Midi Filter")->type()) return;
     if (setting<MidiFilterSetting>("Midi Filter")->filterCategory()
+            && setting<MidiFilterSetting>("Midi Filter")->type() == MidiKey::ControlChange
             && NordStage2::categoryIndex(key) != setting<MidiFilterSetting>("Midi Filter")->categoryIndex()) return;
     if (setting<MidiFilterSetting>("Midi Filter")->filterProperty()
+            && setting<MidiFilterSetting>("Midi Filter")->type() == MidiKey::ControlChange
             && NordStage2::propertyIndex(key) != setting<MidiFilterSetting>("Midi Filter")->propertyIndex()) return;
 
     int categoryIndex = NordStage2::categoryIndex(key);
@@ -41,5 +42,4 @@ void NordStage2Input::filter(int channel, MidiKey key, QVariant data)
         outputPort("Property")->send(NordStage2::properties(categoryIndex)[propertyIndex]);
     }
     outputPort("Value")->send(data);
-    outputPort("Trigger")->send();
 }

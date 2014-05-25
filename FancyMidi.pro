@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     Model/Nodes/mathnode.cpp \
     Model/Nodes/nordstage2noteinput.cpp \
     Model/Nodes/memorynode.cpp \
-    Model/Nodes/timernode.cpp
+    Model/Nodes/timernode.cpp \
+    Model/Nodes/pitchbendinput.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -118,7 +119,8 @@ HEADERS  +=  \
     Model/Nodes/mathnode.h \
     Model/Nodes/nordstage2noteinput.h \
     Model/Nodes/memorynode.h \
-    Model/Nodes/timernode.h
+    Model/Nodes/timernode.h \
+    Model/Nodes/pitchbendinput.h
 
 FORMS += \
     mainwindow.ui \

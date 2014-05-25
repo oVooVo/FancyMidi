@@ -21,6 +21,7 @@ private:
     Ui::MidiFilterSettingWidget *ui;
 
 private slots:
+    void updateVisibility();
     void reset();
     void updatePropertyBox();
 };

@@ -22,6 +22,9 @@ private:
 public slots:
     void sendNoteOn(quint8 note, quint8 velocity);
     void sendNoteOff(quint8 note, quint8 velocity);
+
+private:
+    QMap<quint8, QTimer*> _timers;
 };
 
 #endif // NORDSTAGE2NOTEOUT_H

@@ -12,6 +12,7 @@ MidiFilterSettingWidget::MidiFilterSettingWidget(Setting *set, QWidget *parent) 
 {
     Q_ASSERT(set->metaObject()->className() == MidiFilterSetting::staticMetaObject.className());
     ui->setupUi(this);
+    ui->category->addItems(NordStage2::categories());
     connect(ui->filterProperty, &QCheckBox::toggled, [this](bool on) {
         if (on) {
             ui->filterCategory->setChecked(true);
@@ -23,18 +24,17 @@ MidiFilterSettingWidget::MidiFilterSettingWidget(Setting *set, QWidget *parent) 
        }
     });
 
-    connect(ui->type, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
-        bool e = index == 2;
-        ui->filterProperty->setEnabled(e);
-        ui->filterCategory->setEnabled(e);
-        ui->property->setEnabled(e);
-        ui->category->setEnabled(e);
+    connect(ui->type, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this]() {
+        updateVisibility();
     });
 
     connect(ui->category, SIGNAL(currentIndexChanged(int)),
             setting<MidiFilterSetting>(), SLOT(setCategoryIndex(int)));
+
     connect(ui->type, SIGNAL(currentIndexChanged(int)),
             setting<MidiFilterSetting>(), SLOT(setTypeIndex(int)));
+    connect(ui->type, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(updateVisibility()));
     connect(ui->property, SIGNAL(currentIndexChanged(int)),
             setting<MidiFilterSetting>(), SLOT(setPropertyIndex(int)));
     connect(ui->channel, SIGNAL(valueChanged(int)),
@@ -51,8 +51,17 @@ MidiFilterSettingWidget::MidiFilterSettingWidget(Setting *set, QWidget *parent) 
             setting<MidiFilterSetting>(), SLOT(setFilterChannel(bool)));
     connect(ui->filterProperty, SIGNAL(toggled(bool)),
             setting<MidiFilterSetting>(), SLOT(setFilterProperty(bool)));
-    reset();
     updatePropertyBox();
+    reset();
+}
+
+void MidiFilterSettingWidget::updateVisibility()
+{
+    bool e = ui->type->currentIndex() == 2;
+    ui->filterProperty->setEnabled(e);
+    ui->filterCategory->setEnabled(e);
+    ui->property->setEnabled(e && ui->filterProperty->isChecked());
+    ui->category->setEnabled(e && ui->filterCategory->isChecked());
 }
 
 MidiFilterSettingWidget::~MidiFilterSettingWidget()
@@ -87,6 +96,7 @@ void MidiFilterSettingWidget::reset()
     if (ui->filterProperty->isChecked() != setting<MidiFilterSetting>()->filterProperty()) {
         ui->filterProperty->setChecked(setting<MidiFilterSetting>()->filterProperty());
     }
+    updateVisibility();
 }
 
 void MidiFilterSettingWidget::updatePropertyBox()
