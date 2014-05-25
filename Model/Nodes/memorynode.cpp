@@ -14,9 +14,6 @@ MemoryNode::MemoryNode(QPoint position, Project* parent) : Node(position, parent
     addPort(new InputPort(this, "Read", "", Port::Trigger));
     addPort(new OutputPort(this, "Value", "", Port::Scalar));
 
-    connect(inputPort("Read"), SIGNAL(receivedData(QVariant)), this, SLOT(read()));
-    connect(inputPort("Write"), SIGNAL(receivedData(QVariant)), this, SLOT(write()));
-
     connect(inputPort("Read Key"), &InputPort::receivedData, [this](QVariant data) {
         if (!data.canConvert<int>())
             return;
@@ -32,6 +29,8 @@ MemoryNode::MemoryNode(QPoint position, Project* parent) : Node(position, parent
     connect(inputPort("Write Value"), &InputPort::receivedData, [this](QVariant data) {
         _writeValue = data;
     });
+    connect(inputPort("Read"), SIGNAL(receivedData(QVariant)), this, SLOT(read()));
+    connect(inputPort("Write"), SIGNAL(receivedData(QVariant)), this, SLOT(write()));
 }
 
 MemoryNode::MemoryNode(QDataStream& stream)

@@ -30,6 +30,12 @@ Project::Project(QFileInfo *filepath, QObject *parent) : QObject(parent)
     _isStartupProject = false;
 }
 
+Project::~Project()
+{
+    if (_projectPath)
+        delete _projectPath;
+}
+
 void Project::childEvent(QChildEvent *event)
 {
     if (event->polished()) { // event->added() ||
@@ -67,9 +73,11 @@ QFileInfo *Project::projectPath() const
     return _projectPath;
 }
 
-void Project::setProjectPath(QFileInfo* projectPath)
+void Project::setProjectPath(QString filepath)
 {
-    _projectPath = projectPath;
+    if (!_projectPath)
+        _projectPath = new QFileInfo();
+    _projectPath->setFile(filepath);
 }
 
 bool Project::isSaved() const
@@ -98,8 +106,10 @@ QSet<Node *> Project::nodes() const
 
 QDataStream &operator << (QDataStream &ostream, const Project *project)
 {
+    ostream << Project::magicNumber();
     QList<Node*> nodeList = project->nodes().toList();
     ostream << nodeList;
+
     int count = 0;
     for(int i = 0; i < nodeList.count(); i++)
         for(int p = 0; p < nodeList[i]->getOutputs().count(); p++)
@@ -124,11 +134,21 @@ QDataStream &operator << (QDataStream &ostream, const Project *project)
 
 QDataStream &operator >> (QDataStream &istream, Project *&project)
 {
+    QByteArray magic;
+    istream >> magic;
+    if (magic != Project::magicNumber()) {
+        project = 0;
+        return istream;
+    }
+
     project = new Project();
     QList<Node*> nodes;
     istream >> nodes;
-    for(int i = 0; i < nodes.count(); i++)
+    for(int i = 0; i < nodes.count(); i++) {
         nodes[i]->setParent(project);
+        nodes[i]->polish();
+    }
+
     int count;
     istream >> count;
     for(int c = 0; c < count; c++) {
@@ -141,6 +161,7 @@ QDataStream &operator >> (QDataStream &istream, Project *&project)
         if(nodes[i] && nodes[sourceNodeIndex])
             nodes[i]->getInputs()[p]->connect(nodes[sourceNodeIndex]->getOutputs()[sourceNodePortIndex]);
     }
+
     project->setSaved(true);
     return istream;
 }
@@ -176,25 +197,6 @@ void Project::popularizeNodesChange(QList<InputPort *> inputs)
     }
 }
 
-int Project::count() {
-	// Exact count
-    /*
-	int count = 0;
-	foreach(Output* output, _outputs) {
-		if(output->isComplete())
-			count = qMax(count, output->exactCount());
-		else
-			count = qMax(count, output->count());
-	}
-	// Do not count missing packets.
-	foreach(Output* output, _outputs)
-		if(output->getState() == Node::GOOD && !output->isComplete())
-			count = qMin(count, output->count());
-	return count;
-    */
-    return 0;
-}
-
 void Project::beginUpdate() {
     _update = true;
 }
@@ -207,6 +209,11 @@ void Project::clear() {
     qDebug() << "clear";
 	foreach(Node* node, _nodes)
 		node->clear();
+}
+
+QByteArray Project::magicNumber()
+{
+    return QByteArray("FancyMidiProjectFile");
 }
 
 /*
@@ -250,44 +257,5 @@ void Project::dfs2(Node* n, QSet<Port*> &visited) {
 		}
 	}
 }
-
-QSet<Port *> Project::targets(QSet<Port *> ps) {
-	QSet<Port*> re;
-	foreach(Port* p, ps)
-		re += targets(p);
-	return re;
-}
-
-QSet<Port*> Project::targets(Node* n) {
-	QSet<Port*> re;
-	foreach(OutputPort* p, n->getOutputs())
-		re += p;
-	return re;
-}
-
-QSet<Port*> Project::targets(QSet<Generator*> ns) {
-	QSet<Port*> re;
-	foreach(Node* n, ns)
-		re += targets(n);
-	return re;
-}
-
-QSet<Port*> Project::targets(OutputPort* p) {
-	QSet<Port*> re;
-	foreach(Port* t, p->getTargets())
-		re += t;
-	return re;
-}
-
-QSet<Port*> Project::toPortSet(QList<InputPort*> ps) {
-	QSet<Port*> re;
-	foreach(Port* t, ps)
-		re += t;
-	return re;
-}
-
-QSet<Port*> Project::targets(Port* port) {
-	return port->isInput() ? targets(((InputPort*)port)->getNode()) : targets((OutputPort*)port);
-}*/
-
+*/
 

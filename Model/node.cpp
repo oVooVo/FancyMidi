@@ -160,8 +160,6 @@ void Node::addPort(Port *port)
 
 void Node::addSetting(Setting *setting)
 {
-    qDebug() << "try to add " << setting->name();
-    qDebug() << _settings;
     if (_settings.contains(setting->name())) {
         delete setting; //setting already exists (e.g. created from deserialization).
     } else {

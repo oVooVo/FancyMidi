@@ -60,7 +60,6 @@ void Setting::setValid(bool valid)
 QDataStream &operator<<(QDataStream &out, const Setting *setting)
 {
     out << QString(setting->metaObject()->className());
-    qDebug() << "write " << QString(setting->metaObject()->className());
     setting->writeToStream(out);
     return out;
 }

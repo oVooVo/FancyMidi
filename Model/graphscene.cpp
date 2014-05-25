@@ -220,7 +220,6 @@ void GraphScene::copy()
     foreach (QGraphicsItem* gi, selectedItems()) {
         if (gi->type() == NodeItem::Type) {
             if (((NodeItem*) gi)->getNode()) {
-                qDebug() << ((NodeItem*) gi)->getNode();
                 _copyPasteNodeList.append(((NodeItem*) gi)->getNode());
             }
         }
@@ -262,7 +261,6 @@ void GraphScene::paste()
         istream >> _pastedNodes;
 
         for(int i = 0; i < _pastedNodes.count(); i++) {
-            qDebug() << "paste " << _pastedNodes[i];
            _pastedNodes[i]->setParent(this->model());
            _pastedNodes[i]->setPosition(_pastedNodes[i]->getPosition() + QPoint(20, 20));
            _pastedNodes[i]->polish();

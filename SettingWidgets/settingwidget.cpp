@@ -59,12 +59,6 @@ SettingWidget* SettingWidget::createNewSettingWidget(Setting* setting, QWidget* 
         widget = (it.value())(setting, parent);
     }
 
-    if (!widget) {
-        qDebug() << "creator Map:";
-        qDebug() << *_creatorMap;
-        qDebug() << classname;
-    }
-
     Q_ASSERT_X(widget, "SettingWidget::createNewSettingWidget()",
                QString("Warning: Classname %1 not found.").arg(classname).toStdString().c_str());
 
