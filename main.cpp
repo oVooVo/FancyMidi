@@ -12,6 +12,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    QApplication::setApplicationName("FancyMidi");
+    QApplication::setOrganizationName("Me");
+
     MainWindow m;
     m.show();
 

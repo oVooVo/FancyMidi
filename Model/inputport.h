@@ -1,6 +1,6 @@
 #pragma once
 
-#include "node.h"
+#include "Nodes/node.h"
 #include "packet.h"
 #include "port.h"
 #include <QVariant>
@@ -43,7 +43,8 @@ public:
      * @brief getSource returns the OutputPort this port is connected with.
      * @return the OutputPort this port is connected with.
      */
-    OutputPort* getSource() const;
+    OutputPort* source() const;
+
 
     void receive(QVariant data);
 

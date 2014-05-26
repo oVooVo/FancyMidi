@@ -11,7 +11,7 @@ class TimerNode : public EnableableNode
     Q_OBJECT
 public:
     TimerNode(QDataStream& stream);
-    QString category() const { return "Generator"; }
+    QString category() const { return "Time"; }
 
 
 private:

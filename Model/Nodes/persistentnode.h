@@ -11,6 +11,7 @@ class PersistentNode : public EnableableNode
     REGISTER_DECL_NODETYPE(PersistentNode);
 public:
     PersistentNode(QDataStream& stream);
+    QString category() const { return "General"; }
 
 private:
     BoolSetting* _boolSetting;

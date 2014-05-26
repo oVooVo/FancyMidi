@@ -9,7 +9,7 @@ class PitchBendInput : public EnableableNode
     Q_OBJECT
 public:
     PitchBendInput(QDataStream& stream);
-    QString category() const { return "Input"; }
+    QString category() const { return "Midi In"; }
 
 private slots:
     void filter(int channel, MidiKey key, QVariant data);

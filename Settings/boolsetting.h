@@ -25,5 +25,8 @@ public:
      */
     virtual ~BoolSetting() {}
 
+public slots:
+    void setValue(bool value) { ScalarSetting<bool>::setValue(value); }
+
     REGISTER_DECL_SETTINGTYPE(BoolSetting);
 };

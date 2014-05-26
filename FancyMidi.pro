@@ -23,7 +23,7 @@ SOURCES += main.cpp\
     Domain/doubledomain.cpp \
     Domain/domains.cpp \
     mainwindow.cpp \
-    Model/node.cpp \
+    Model/Nodes/node.cpp \
     Model/port.cpp \
     Model/inputport.cpp \
     Model/outputport.cpp \
@@ -63,9 +63,14 @@ SOURCES += main.cpp\
     Model/Nodes/delaynode.cpp \
     Model/Nodes/mathnode.cpp \
     Model/Nodes/nordstage2noteinput.cpp \
-    Model/Nodes/memorynode.cpp \
     Model/Nodes/timernode.cpp \
-    Model/Nodes/pitchbendinput.cpp
+    Model/Nodes/pitchbendinput.cpp \
+    Model/Nodes/tointegernode.cpp \
+    Model/Nodes/pitchbendoutput.cpp \
+    Model/Nodes/memorymapnode.cpp \
+    Model/Nodes/memorynode.cpp \
+    Model/Nodes/conditionnode.cpp \
+    logger.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -77,7 +82,7 @@ HEADERS  +=  \
     Domain/doubledomain.h \
     Domain/domains.h \
     mainwindow.h \
-    Model/node.h \
+    Model/Nodes/node.h \
     Model/port.h \
     Model/inputport.h \
     Model/outputport.h \
@@ -118,9 +123,14 @@ HEADERS  +=  \
     Model/Nodes/delaynode.h \
     Model/Nodes/mathnode.h \
     Model/Nodes/nordstage2noteinput.h \
-    Model/Nodes/memorynode.h \
     Model/Nodes/timernode.h \
-    Model/Nodes/pitchbendinput.h
+    Model/Nodes/pitchbendinput.h \
+    Model/Nodes/tointegernode.h \
+    Model/Nodes/pitchbendoutput.h \
+    Model/Nodes/memorymapnode.h \
+    Model/Nodes/memorynode.h \
+    Model/Nodes/conditionnode.h \
+    logger.h
 
 FORMS += \
     mainwindow.ui \

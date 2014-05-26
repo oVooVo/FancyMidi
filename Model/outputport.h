@@ -21,12 +21,12 @@ public:
      */
     OutputPort(Node* node, QString name, QString infoText, Type type);
     /**
-     * @brief getTargets Returns a list of connected input ports
+     * @brief targets Returns a list of connected input ports
      * @return Returns a list of connected input ports
      */
     ~OutputPort();
 
-    const QSet<InputPort*> getTargets();
+    const QSet<InputPort*> targets() const;
 
     /**
      * @brief connect Whether this port is connected with the given port
@@ -50,12 +50,15 @@ public:
     void setBlock(bool block);
     bool block() const { return _block; }
 
+    bool closesCycle(const InputPort *in) const;
+
 signals:
     void sendData(QVariant data);
 
 private:
     bool _block;
     QSet<InputPort*> _targets;
+
 };
 
 

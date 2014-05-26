@@ -1,6 +1,9 @@
 #include <QDebug>
 #include "port.h"
 
+#include "outputport.h"
+#include "inputport.h"
+
 Port::Port(Node* node, QString name, QString infoText, Type type)
 {
 	_node = node;
@@ -31,13 +34,10 @@ QString Port::infoText() const
 
 bool Port::canConnect(const Port *port1, const Port *port2)
 {
-    //TODO check cycles
-    Q_UNUSED(port1);
-    Q_UNUSED(port2);
-    return true;
+    const OutputPort* out = (const OutputPort*) (port1->isInput() ? port2 : port1);
+    const InputPort*  in  = (const InputPort*)  (port1->isInput() ? port1 : port2);
+    return !out->closesCycle(in);
 }
-
-
 
 
 

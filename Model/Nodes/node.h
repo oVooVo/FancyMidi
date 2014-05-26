@@ -26,6 +26,8 @@ class Node:	public QObject
 {
 
 	Q_OBJECT
+protected:
+    Node() {}
 
 public:
     /**
@@ -43,7 +45,6 @@ public:
      * @param size the size of this Node.
      * @note only DisplayOutput has a size.
      */
-    explicit Node(QPoint position, Project* parent, QString name, QString infoText = "", QSizeF size = QSizeF(0,0));
     explicit Node(QDataStream& stream);
     virtual void writeToStream(QDataStream& stream) const;
 
@@ -65,13 +66,13 @@ public:
      * @brief getInputs Returns a 'list' of all input ports
      * @return Returns a 'list' of all input ports
      */
-    const QList<InputPort*> getInputs();
+    const QList<InputPort*> inputPorts() const;
 
     /**
      * @brief getInputs Returns a 'list' of all output ports
      * @return Returns a 'list' of all output ports
      */
-    const QList<OutputPort*> getOutputs();
+    const QList<OutputPort*> outputPorts() const;
 
     /**
      * @brief getSettings Returns the settings from this node
@@ -104,12 +105,7 @@ public:
      */
     static Node *createInstance(QString className); // for drag & drop
     static Node *createInstance(QString className, QDataStream &stream);    // for deserialization
-
-    /**
-     * @brief getModuleClassNames returns all registred class names.
-     * @return all registred class names.
-     */
-    static QList<QString> getModuleClassNames();
+    static QList<QString> nodeClassnames();
 
     virtual void clear();
 
@@ -132,6 +128,8 @@ public:
      * @brief must be called as the last function of child constructor. Sends polish-event (= construction done)
      */
     void polish();
+
+    void setParent(Project* project);
 
 protected:
     void addPort(Port* port);
@@ -164,12 +162,15 @@ private:
     QString _infoText;
     QSizeF _size;
     bool _block = false;
+
+signals:
+    void newLogMessage(QString);
 };
 
 template<typename T>
 struct NodeRegister : Node
 {
-	NodeRegister(QString className) : Node(QPoint(), 0, QString(""), QString(""))
+    NodeRegister(QString className) : Node()
 	{
 		if (!_creatorMap)
             _creatorMap = new QMap<QString, Node* (*)(QDataStream&)>();

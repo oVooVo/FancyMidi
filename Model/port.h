@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QSharedPointer>
-#include "node.h"
+#include "Nodes/node.h"
 #include "packet.h"
 
 /**

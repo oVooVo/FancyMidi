@@ -9,6 +9,8 @@ class MathNode : public EnableableNode
 public:
     MathNode(QDataStream& stream);
 
+    QString category() const { return "Math"; }
+
     REGISTER_DECL_NODETYPE(MathNode);
 
 private slots:

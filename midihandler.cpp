@@ -5,16 +5,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <QTimer>
+#include "logger.h"
 
-//#define PHANTOM       // does not really sends midi commands thus no need for connection to midi device.
-//#define VERBOSE
-
-
-#if defined(PHANTOM) && !defined(VERBOSE)
-#define VERBOSE
-#endif
-
-
+#define PHANTOM       // does not really sends midi commands thus no need for connection to midi device.
 
 MidiHandler* MidiHandler::_singleton = 0;
 
@@ -72,14 +65,16 @@ void MidiHandler::readyRead()
 #endif
     quint8 buffer[3] = {0,0,0};
     read(_notifier->socket(), &buffer, 3);
-#ifdef VERBOSE
-    qDebug() << "== RECV ==========";
-    qDebug() << "type = " << getType(buffer[0]) << "(" << typeToString(getType(buffer[0])) << ")";
-    qDebug() << "channel = " << getChannel(buffer[0]);
-    qDebug() << "data1 = " << buffer[1];
-    qDebug() << "data2 = " << buffer[2];
-    qDebug() << "==================";
-#endif
+
+    Logger::log(  QString("== RECV ==========\n"    \
+                          "type = %1 (%2)\n"        \
+                          "channel = %3\n"          \
+                          "data1 = %4\n"            \
+                          "data2 = %5\n"            \
+                          "==================\n")
+            .arg(getType(buffer[0])).arg(typeToString(getType(buffer[0])))
+            .arg(getChannel(buffer[0])).arg(buffer[1]).arg(buffer[2])
+            );
     if (buffer[0] & 0x80)
         emit receivedMidiCommand(MidiKey(getType(buffer[0]), buffer[1]), getChannel(buffer[0]), buffer[2]);
     else {
@@ -164,17 +159,18 @@ void MidiHandler::sendMidiCommand(MidiKey key, quint8 channel, quint8 data2) con
     if (_valid) {
 #endif
         quint8 buffer[3] = { statusByte(key.type(), channel), key.code(), data2 };
-#ifndef PHNATOM
+#ifndef PHANTOM
             write(_notifier->socket(), &buffer, 3);
 #endif
-#ifdef VERBOSE
-        qDebug() << "== SEND ==========";
-        qDebug() << "type = " << getType(buffer[0]) << "(" << typeToString(getType(buffer[0])) << ")";
-        qDebug() << "channel = " << getChannel(buffer[0]);
-        qDebug() << "data1 = " << buffer[1];
-        qDebug() << "data2 = " << buffer[2];
-        qDebug() << "==================";
-#endif
+    Logger::log(  QString("== SEND ==========\n"    \
+                          "type = %1 (%2)\n"        \
+                          "channel = %3\n"          \
+                          "data1 = %4\n"            \
+                          "data2 = %5\n"            \
+                          "==================\n")
+            .arg(getType(buffer[0])).arg(typeToString(getType(buffer[0])))
+            .arg(getChannel(buffer[0])).arg(buffer[1]).arg(buffer[2])
+            );
     } else {
         qWarning() << "cannot send data to unconnected midi device.";
     }

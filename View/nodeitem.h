@@ -2,7 +2,7 @@
 
 #include <QGraphicsPathItem>
 
-#include "Model/node.h"
+#include "Model/Nodes/node.h"
 #include "Model/port.h"
 
 class NodeEvent;

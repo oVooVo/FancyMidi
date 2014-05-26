@@ -17,6 +17,9 @@ public:
     DoubleSetting(QDataStream& stream);
     ~DoubleSetting();
 
+public slots:
+    void setValue(double value) { ScalarSetting<double>::setValue(value); }
+
     REGISTER_DECL_SETTINGTYPE(DoubleSetting);
 };
 

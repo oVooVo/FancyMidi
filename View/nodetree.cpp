@@ -1,7 +1,7 @@
 #include <QDragEnterEvent>
 #include <QDebug>
 #include <QApplication>
-#include "Model/node.h"
+#include "Model/Nodes/node.h"
 #include <QDebug>
 #include <QDrag>
 #include <QMimeData>
@@ -18,7 +18,7 @@ NodeTree::NodeTree(QWidget* parent) : QTreeWidget(parent)
 	setHeaderHidden(true);
 	//Move this to a more central place?>
     QMap<QString, QList<Node*> > nodes;
-    for (QString className : Node::getModuleClassNames()) {
+    for (QString className : Node::nodeClassnames()) {
 		Node* node = Node::createInstance(className);
         if (nodes.keys().contains(node->category())) {
             nodes[node->category()].append(node);

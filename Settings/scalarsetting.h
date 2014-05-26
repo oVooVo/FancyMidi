@@ -11,7 +11,6 @@
 template<typename T>
 class ScalarSetting : public Setting
 {
-
 public:
     ScalarSetting(Node *parent, QString name, QString tooltip, T min, T max,
                   T defaultValue, T currentValue)
@@ -64,6 +63,7 @@ public:
         }
     }
 
+protected:
     virtual void setValue(T value)
     {
         if (_value == value) {

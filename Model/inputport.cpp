@@ -1,7 +1,7 @@
 #include <QDebug>
 #include "inputport.h"
 #include "outputport.h"
-#include "node.h"
+#include "Nodes/node.h"
 #include "port.h"
 
 InputPort::InputPort(Node* node, QString name, QString infoText, Type type): Port(node, name, infoText, type)
@@ -18,23 +18,23 @@ bool InputPort::connect(Port* port)
 {
     if  (!port) {    // disconnect
         if (_source) {
-			_source->disconnect(this);
+            _source->disconnect(this);
             _source = NULL;
-			
-			return true;
+
+            return true;
         } else {
-			return false;
-		}
+            return false;
+        }
     } else {    // connect
         if (port->isInput() || port == _source || !canConnect(port, this))
-			return false;
+            return false;
         else {
             disconnect();
 
             _source = (OutputPort*) port;
-			return port->connect(this);
-		}
-	}
+            return port->connect(this);
+        }
+    }
 }
 
 bool InputPort::disconnect()
@@ -47,7 +47,7 @@ bool InputPort::isInput() const
 	return true;
 }
 
-OutputPort* InputPort::getSource() const
+OutputPort* InputPort::source() const
 {
     return _source;
 }

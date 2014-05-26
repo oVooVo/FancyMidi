@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Model/node.h"
+#include "Model/Nodes/node.h"
 #include "Model/graphscene.h"
 #include <QCloseEvent>
 
@@ -39,6 +39,7 @@ private slots:
     bool saveAs();
     void newProject();
     void open();
+    void updateWindowTitle();
 };
 
 #endif // MAINWINDOW_H

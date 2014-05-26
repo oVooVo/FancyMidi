@@ -9,7 +9,7 @@ class NordStage2Input : public EnableableNode
 public:
     NordStage2Input(QDataStream& stream);
 
-    QString category() const { return "Input"; }
+    QString category() const { return "Midi In"; }
 
 private:
     REGISTER_DECL_NODETYPE(NordStage2Input);

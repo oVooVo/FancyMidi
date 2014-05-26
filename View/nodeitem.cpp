@@ -40,11 +40,11 @@ NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene*
 
     /********* add ports ******************/
     addNamePort(node->name());
-    for (int i = 0; i < _node->getInputs().size(); i++) {
-        addInputPort(_node->getInputs().at(i));
+    for (int i = 0; i < _node->inputPorts().size(); i++) {
+        addInputPort(_node->inputPorts().at(i));
     }
-    for (int i = 0; i < _node->getOutputs().size(); i++) {
-        addOutputPort(_node->getOutputs().at(i));
+    for (int i = 0; i < _node->outputPorts().size(); i++) {
+        addOutputPort(_node->outputPorts().at(i));
     }
     /**************************************/
 

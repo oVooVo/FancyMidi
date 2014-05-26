@@ -3,6 +3,7 @@
 #include "SettingWidgets/settingwidget.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include "logger.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSave_As, SIGNAL(triggered()), this, SLOT(saveAs()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newProject()));
+    connect(Logger::singleton(), SIGNAL(newLogMessage(QString)), ui->textEdit, SLOT(append(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +35,11 @@ void MainWindow::setProject(Project *project)
     _scene = new GraphScene(_project, this, this);
     ui->graphicsView->setScene(_scene);
     connect(_scene, SIGNAL(showSettings(Node*)), this, SLOT(updateSettingTable(Node*)));
+    connect(_project, SIGNAL(isSaveStatusChanged(bool)), this, SLOT(updateWindowTitle()));
+    connect(_project, &Project::newLogMessage, [this](QString log) {
+        ui->textEdit->append(log);
+    });
+    updateWindowTitle();
 }
 
 void MainWindow::updateSettingTable(Node* node)
@@ -91,6 +98,7 @@ bool MainWindow::open(QString filepath, Project *&project)
         return false;
     }
 
+    updateWindowTitle();
     return true;
 }
 
@@ -111,6 +119,7 @@ bool MainWindow::saveAs()
     QString filepath = QFileDialog::getSaveFileName(this, "Save Project", currentDirectory);
     if (!filepath.isEmpty() && save(filepath)) {
         _project->setProjectPath(filepath);
+        updateWindowTitle();
         return true;
     }
     return false;
@@ -162,4 +171,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     else
         event->accept();
+}
+
+void MainWindow::updateWindowTitle()
+{
+    setWindowTitle(QString("%1 - %2%3")
+                   .arg(QApplication::applicationDisplayName())
+                   .arg(_project->name())
+                   .arg(_project->isSaved()));
 }

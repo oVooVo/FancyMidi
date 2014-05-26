@@ -1,5 +1,5 @@
 #include "pitchbendinput.h"
-#include "../node.h"
+#include "../Nodes/node.h"
 #include "keyboard.h"
 #include "nordstage2.h"
 

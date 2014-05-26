@@ -56,14 +56,12 @@ bool GraphScene::eventFilter(QObject *watched, QEvent *event)
                     }
                 }
             }
-			_model->beginUpdate();
 			foreach (InputPort* inputPort, disconnectedInputports) {
 				inputPort->disconnect();
 			}
             foreach (NodeItem* n, nodeItemsToDelete) {
                 delete n->getNode();
             }
-            _model->endUpdate();
             _model->popularizeModelChange();
             _model->popularizeNodesChange(disconnectedInputports);
             redraw();
@@ -227,8 +225,8 @@ void GraphScene::copy()
     copyStream << _copyPasteNodeList;
     int count = 0;
     for(int i = 0; i < _copyPasteNodeList.count(); i++) {
-        for(int p = 0; p < _copyPasteNodeList[i]->getOutputs().count(); p++) {
-            foreach (InputPort* inputPort, _copyPasteNodeList[i]->getOutputs()[p]->getTargets()) {
+        for(int p = 0; p < _copyPasteNodeList[i]->outputPorts().count(); p++) {
+            foreach (InputPort* inputPort, _copyPasteNodeList[i]->outputPorts()[p]->targets()) {
                 if (_copyPasteNodeList.contains(inputPort->node())) {
                     count++;
                 }
@@ -237,13 +235,13 @@ void GraphScene::copy()
     }
     copyStream << count;
     for (int nodeIndex = 0; nodeIndex < _copyPasteNodeList.count(); nodeIndex++) {
-        for (int inputPortIndex = 0; inputPortIndex < _copyPasteNodeList[nodeIndex]->getInputs().count(); inputPortIndex++) {
-            OutputPort* outputPort = _copyPasteNodeList[nodeIndex]->getInputs()[inputPortIndex]->getSource();
+        for (int inputPortIndex = 0; inputPortIndex < _copyPasteNodeList[nodeIndex]->inputPorts().count(); inputPortIndex++) {
+            OutputPort* outputPort = _copyPasteNodeList[nodeIndex]->inputPorts()[inputPortIndex]->source();
             if (outputPort && _copyPasteNodeList.contains(outputPort->node())) {
                 copyStream << nodeIndex;                                                //target node
                 copyStream << inputPortIndex;                                           //target port
                 copyStream << _copyPasteNodeList.indexOf(outputPort->node());        //source node
-                copyStream << outputPort->node()->getOutputs().indexOf(outputPort);  //source port
+                copyStream << outputPort->node()->outputPorts().indexOf(outputPort);  //source port
             }
         }
     }
@@ -256,7 +254,6 @@ void GraphScene::paste()
         QList<InputPort*> newInputPorts;
         _pastedNodes.clear();
 
-        _model->beginUpdate();
         QDataStream istream(&_copy, QIODevice::ReadOnly);
         istream >> _pastedNodes;
 
@@ -271,13 +268,11 @@ void GraphScene::paste()
         for(int c = 0; c < count; c++) {
            int targetNodeIndex, targetPortIndex, sourceNodeIndex, sourcePortIndex;
            istream >> targetNodeIndex >> targetPortIndex >> sourceNodeIndex >> sourcePortIndex;
-           _pastedNodes[targetNodeIndex]->getInputs()[targetPortIndex]->connect(_pastedNodes[sourceNodeIndex]->getOutputs()[sourcePortIndex]);
-           newInputPorts += _pastedNodes[targetNodeIndex]->getInputs()[targetPortIndex];
+           _pastedNodes[targetNodeIndex]->inputPorts()[targetPortIndex]->connect(_pastedNodes[sourceNodeIndex]->outputPorts()[sourcePortIndex]);
+           newInputPorts += _pastedNodes[targetNodeIndex]->inputPorts()[targetPortIndex];
 
         }
-        _model->endUpdate();
-
-        QTimer::singleShot(0, this, SLOT(selectPastedNodes()));
+        selectPastedNodes();
         _model->popularizeModelChange();
         _model->popularizeNodesChange(newInputPorts);
     }

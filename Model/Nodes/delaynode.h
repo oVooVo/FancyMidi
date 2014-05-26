@@ -10,6 +10,8 @@ class DelayNode : public EnableableNode
 public:
     DelayNode(QDataStream& stream);
 
+    QString category() const { return "Time"; }
+
     REGISTER_DECL_NODETYPE(DelayNode);
 };
 

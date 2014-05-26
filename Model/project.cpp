@@ -23,11 +23,8 @@ class MainWindow;
 
 Project::Project(QFileInfo *filepath, QObject *parent) : QObject(parent)
 {
-    _hasCalculatedData = false;
     _projectPath = filepath;
     _isSaved = true;
-    _update = false;
-    _isStartupProject = false;
 }
 
 Project::~Project()
@@ -38,32 +35,15 @@ Project::~Project()
 
 void Project::childEvent(QChildEvent *event)
 {
-    if (event->polished()) { // event->added() ||
+    if (event->polished()) {
         Node* node = qobject_cast<Node *>(event->child());
         if(node != NULL) {
             _nodes += node;
-            /*Output* output = qobject_cast<Output *>(event->child());
-            if(output != NULL) {
-                _outputs += output;
-            }
-            Generator* generator = qobject_cast<Generator *>(event->child());
-            if(generator != NULL) {
-                _generators += generator;
-            }
-            */
             popularizeModelChange();
         }
     } else if (event->removed()) {
         if(_nodes.contains((Node*)event->child()))
             _nodes -= (Node*)event->child();
-        /*
-        if(_outputs.contains((Output*)event->child()))
-            _outputs -= (Output*)event->child();
-            */
-        /*
-        if(_generators.contains((Generator*)event->child())) {
-			_generators -= (Generator*)event->child();
-        }*/
         popularizeModelChange();
     }
 }
@@ -88,16 +68,9 @@ bool Project::isSaved() const
 void Project::setSaved(bool isSaved) {
     if (isSaved != _isSaved) {
         _isSaved = isSaved;
-        _isStartupProject = false;
         emit isSaveStatusChanged(isSaved);
     }
 }
-
-bool Project::isStartupProject() const
-{
-    return _isStartupProject;
-}
-
 
 QSet<Node *> Project::nodes() const
 {
@@ -112,18 +85,18 @@ QDataStream &operator << (QDataStream &ostream, const Project *project)
 
     int count = 0;
     for(int i = 0; i < nodeList.count(); i++)
-        for(int p = 0; p < nodeList[i]->getOutputs().count(); p++)
-            count += nodeList[i]->getOutputs()[p]->getTargets().count();
+        for(int p = 0; p < nodeList[i]->outputPorts().count(); p++)
+            count += nodeList[i]->outputPorts()[p]->targets().count();
     ostream << count;
     for(int i = 0; i < nodeList.count(); i++)
     {
-        for(int p = 0; p < nodeList[i]->getInputs().count(); p++) {
-            OutputPort* source = nodeList[i]->getInputs()[p]->getSource();
+        for(int p = 0; p < nodeList[i]->inputPorts().count(); p++) {
+            OutputPort* source = nodeList[i]->inputPorts()[p]->source();
             if(source) {
                 ostream << i << p;
                 int sourceNodeIndex = nodeList.indexOf(source->node());
                 ostream << sourceNodeIndex;
-                int sourceNodePortIndex = source->node()->getOutputs().indexOf(source);
+                int sourceNodePortIndex = source->node()->outputPorts().indexOf(source);
                 ostream << sourceNodePortIndex;
             }
         }
@@ -159,56 +132,29 @@ QDataStream &operator >> (QDataStream &istream, Project *&project)
         int sourceNodePortIndex;
         istream >> sourceNodePortIndex;
         if(nodes[i] && nodes[sourceNodeIndex])
-            nodes[i]->getInputs()[p]->connect(nodes[sourceNodeIndex]->getOutputs()[sourceNodePortIndex]);
+            nodes[i]->inputPorts()[p]->connect(nodes[sourceNodeIndex]->outputPorts()[sourceNodePortIndex]);
     }
 
     project->setSaved(true);
     return istream;
 }
 
-void Project::setStartupProject()
-{
-    _isStartupProject = true;
-}
-
 void Project::popularizeModelChange()
 {
-    //Q_ASSERT_X(isStopped(), "popularizeModelChange", "Project");
     if (_isSaved) {
         _isSaved = false;
         emit isSaveStatusChanged(false);
     }
-    if(!_update) {
-        emit modelChanged();
-    }
+    emit modelChanged();
 }
 
 void Project::popularizeNodesChange(QList<InputPort *> inputs)
 {
-    if (!inputs.isEmpty())  { //  !inputs.isEmpty() <=> connection deleted/created
-        //Q_ASSERT_X(isStopped(), "popularizeNodesChange", "Project");
-    }
     if (_isSaved) {
         _isSaved = false;
         emit isSaveStatusChanged(false);
     }
-    if (!_update) {
-        emit nodesChanged(inputs);
-    }
-}
-
-void Project::beginUpdate() {
-    _update = true;
-}
-
-void Project::endUpdate() {
-    _update = false;
-}
-
-void Project::clear() {
-    qDebug() << "clear";
-	foreach(Node* node, _nodes)
-		node->clear();
+    emit nodesChanged(inputs);
 }
 
 QByteArray Project::magicNumber()
@@ -216,46 +162,9 @@ QByteArray Project::magicNumber()
     return QByteArray("FancyMidiProjectFile");
 }
 
-/*
-void Project::dfs1() {
-	QHash<Port*, int> visited;
-	QSet<Port*> finalized;
-	foreach(Port* p, targets(_generators))
-		dfs1(p, visited, finalized);
-}
-*//*
-void Project::dfs1(Port* p, QHash<Port*, int> &visited, QSet<Port*> &finalized) {
-    if(!finalized.contains(p)) {
-        if(visited.contains(p)) { // Cycle found
-            for(int i = visited[p]; i < visited.count(); i++) { // Mark the cycle
-                Port* portR = visited.key(i);
-                if(!finalized.contains(portR)) {
-                    portR->getNode()->setState(Node::RED);
-                }
-            }
-        }
-		else {
-            visited[p] = visited.count();
-			foreach(Port* t, targets(p))
-                dfs1(t, visited, finalized);
-            finalized += p;
-		}
-    }
-}*//*
+QString Project::name() const
+{
+    if (!_projectPath) return "Untitled";
 
-void Project::dfs2() {
-	QSet<Port*> visited;
-	foreach(Node* n, _generators)
-		dfs2(n, visited);
-}*//*
-void Project::dfs2(Node* n, QSet<Port*> &visited) {
-    if(n->getState() == Node::DEAD && visited.contains(toPortSet(n->getInputs()))) {
-		n->setState(Node::GOOD); // Mark the reachable node
-        foreach(Port* p, targets(targets(n))) {
-            visited += p;
-			dfs2(p->getNode(), visited);
-		}
-	}
+    return _projectPath->fileName();
 }
-*/
-

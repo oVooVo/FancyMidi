@@ -1,7 +1,7 @@
 #ifndef ENABLEABLENODE_H
 #define ENABLEABLENODE_H
 
-#include "../node.h"
+#include "../Nodes/node.h"
 #include "Settings/boolsetting.h"
 
 class EnableableNode : public Node

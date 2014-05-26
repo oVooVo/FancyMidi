@@ -5,21 +5,12 @@
 #include <QThread>
 
 #include "node.h"
-#include "inputport.h"
-#include "project.h"
+#include "../inputport.h"
+#include "../project.h"
 #include <QCoreApplication>
 #include "Settings/setting.h"
 
 QMap<QString, Node* (*)(QDataStream&)> *Node::_creatorMap = 0;
-
-Node::Node(QPoint position, Project* parent, QString name, QString infoText, QSizeF size)
-{
-    setParent(parent);
-	_position = position;
-    _size = size;
-    _name = name;
-    _infoText = infoText;
-}
 
 Node::Node(QDataStream &stream)
 {
@@ -39,11 +30,11 @@ Node::~Node()
     qDeleteAll(_outputs);
 }
 
-const QList<OutputPort*> Node::getOutputs()
+const QList<OutputPort*> Node::outputPorts() const
 {
     return _outputs.values();
 }
-const QList<InputPort*> Node::getInputs()
+const QList<InputPort*> Node::inputPorts() const
 {
     return _inputs.values();
 }
@@ -108,7 +99,7 @@ Node *Node::createInstance(QString className)
 }
 
 
-QList<QString> Node::getModuleClassNames() {
+QList<QString> Node::nodeClassnames() {
     QSet<QString> re;
     foreach(QString className, _creatorMap->keys()) {
         re += className;
@@ -205,6 +196,12 @@ QDataStream &operator >> (QDataStream &istream, Node *&node)
     istream >> classname;
     node = Node::createInstance(classname, istream);
     return istream;
+}
+
+void Node::setParent(Project *project)
+{
+    connect(this, SIGNAL(newLogMessage(QString)), project, SIGNAL(newLogMessage(QString)));
+    QObject::setParent(project);
 }
 
 

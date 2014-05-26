@@ -2,7 +2,6 @@
 
 #include <QString>
 #include "scalarsetting.h"
-#include "../Model/node.h"
 #include <QDataStream>
 
 /**
@@ -30,6 +29,10 @@ public:
     ~IntegerSetting();
     IntegerSetting(Node *parent, QString name, QString tooltip, int defaultValue, int currentValue);
     IntegerSetting(QDataStream& stream);
+
+
+public slots:
+    void setValue(int value) { ScalarSetting<int>::setValue(value); }
 
     REGISTER_DECL_SETTINGTYPE(IntegerSetting);
 

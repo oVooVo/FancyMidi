@@ -4,7 +4,7 @@
 #include <QDataStream>
 #include <QWidget>
 #include <QObject>
-#include "Model/node.h"
+#include "Model/Nodes/node.h"
 #include "Model/port.h"
 #include <QByteArray>
 

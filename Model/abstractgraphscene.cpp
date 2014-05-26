@@ -80,7 +80,7 @@ void AbstractGraphScene::lightRedraw(QList<InputPort *> inputs)
     }
     foreach (InputPort* inputPort, inputs) {
         PortItem* input = _inputPortMap.value(inputPort);
-        OutputPort* source = ((InputPort*)input->port())->getSource();
+        OutputPort* source = ((InputPort*)input->port())->source();
         if (!input->connections().isEmpty()) {
             if (input->connections().first()->outputPort()->port() != source) {
                 _connectionItems.removeAll(input->connections().first());   // use removeOne()? (only intension for this is performance)
@@ -139,7 +139,7 @@ void AbstractGraphScene::setModel(Project *model){
         redraw();
         QList<InputPort*> inputPorts;
         foreach (Node* node, _model->nodes()) {
-            inputPorts.append(node->getInputs());
+            inputPorts.append(node->inputPorts());
         }
         lightRedraw(inputPorts);
     }
