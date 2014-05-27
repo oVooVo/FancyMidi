@@ -6,6 +6,7 @@
 #include "Model/graphscene.h"
 #include <QCloseEvent>
 #include "Model/minimapgraphscene.h"
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,9 @@ private:
     bool open(QString filepath, Project* &project);
     void setProject(Project* project);
     bool canDropProject();
+
+    void writeSettings();
+    void readSettings();
 
 protected:
     void closeEvent(QCloseEvent *event);

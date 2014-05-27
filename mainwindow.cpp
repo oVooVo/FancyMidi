@@ -43,14 +43,17 @@ void MainWindow::setProject(Project *project)
     _minimapScene = new MinimapGraphScene(this, _project, this);
     ui->graphicsView->setScene(_scene);
     ui->minimapView->setScene(_minimapScene);
+    updateMinimap();
+
     connect(_scene, SIGNAL(showSettings(Node*)), this, SLOT(updateSettingTable(Node*)));
     connect(_minimapScene, SIGNAL(doubleClick(QPointF)), this, SLOT(centerOn(QPointF)));
     connect(_project, SIGNAL(isSaveStatusChanged(bool)), this, SLOT(updateWindowTitle()));
-    connect(_project, SIGNAL(nodesChanged()), this, SLOT(updateMinimapDelayed()));
-    connect(_project, SIGNAL(modelChanged()), this, SLOT(updateMinimapDelayed()));
+    connect(_project, SIGNAL(nodesChanged()), this, SLOT(updateMinimap()));
+    connect(_project, SIGNAL(modelChanged()), this, SLOT(updateMinimap()));
     connect(_project, &Project::newLogMessage, [this](QString log) {
         ui->textEdit->append(log);
     });
+
     updateWindowTitle();
 }
 
@@ -190,7 +193,7 @@ void MainWindow::updateWindowTitle()
     setWindowTitle(QString("%1 - %2%3")
                    .arg(QApplication::applicationDisplayName())
                    .arg(_project->name())
-                   .arg(_project->isSaved()));
+                   .arg(_project->isSaved() ? "" : " *"));
 }
 
 void MainWindow::updateMinimapDelayed()
@@ -202,10 +205,29 @@ void MainWindow::updateMinimap()
 {
     _minimapScene->setVisibleRect(ui->graphicsView->mapToScene(ui->graphicsView->viewport()->geometry()).boundingRect());
     ui->minimapView->setMainViewRect(_scene->boundingBox());
+    _minimapScene->update();
 }
 
 void MainWindow::centerOn(QPointF center)
 {
     ui->graphicsView->centerOn(center);
     updateMinimapDelayed();
+}
+
+void MainWindow::readSettings()
+{
+    QSettings settings;
+    settings.beginGroup("MainWindow");
+    settings.setValue("Geometry", saveGeometry());
+    settings.setValue("State", saveState());
+    settings.endGroup();
+}
+
+void MainWindow::writeSettings()
+{
+    QSettings settings;
+    settings.beginGroup("MainWindow");
+    restoreGeometry(settings.value("Geometry").toByteArray());
+    restoreState(settings.value("State").toByteArray());
+    settings.endGroup();
 }

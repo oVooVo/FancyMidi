@@ -13,7 +13,6 @@ void MinimapView::setMainViewRect(QRectF mainViewRect)
 {
     _mainViewRect = mainViewRect;
     updateSceneRect();
-
 }
 
 void MinimapView::updateSceneRect()

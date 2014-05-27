@@ -3,6 +3,7 @@
 #include <QGraphicsView>
 #include "Model/minimapgraphscene.h"
 #include <QResizeEvent>
+#include "Model/minimapgraphscene.h"
 
 /**
  * @brief The MinimapView class provides minimap-view-widget.
@@ -18,13 +19,13 @@ public:
     explicit MinimapView(QWidget* parent = 0);
 
     void setMainViewRect(QRectF mainViewRect);
+    void updateSceneRect();
 
 protected:
     void resizeEvent(QResizeEvent* e);
 
 private:
     QRectF _mainViewRect;
-    void updateSceneRect();
 
 };
 
