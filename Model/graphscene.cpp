@@ -313,19 +313,9 @@ void GraphScene::unlock()
 
 QPointF GraphScene::getCenter() const
 {
-    QList<QGraphicsItem*> itemList = items();
-    itemList.removeOne(_contentRect);
-
-    if (itemList.isEmpty()) return QPointF(0,0);
-
-    QRectF boundingRect = QRectF(itemList.first()->scenePos(), QSizeF(0,0));
-    foreach (QGraphicsItem* gi, items()) {
-        if (gi->type() != NodeItem::Type) continue;
-
-        boundingRect |= ((NodeItem*)gi)->myBoundingRect();
-    }
-    return boundingRect.center();
+    return boundingBox().center();
 }
+
 
 void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {

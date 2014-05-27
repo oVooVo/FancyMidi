@@ -5,7 +5,8 @@
 #include "Model/project.h"
 #include <QStack>
 
-OutputPort::OutputPort(Node* node, QString name, QString infoText, Type type) : Port(node, name, infoText, type)
+OutputPort::OutputPort(Node* node, QString name, QString infoText, Type type)
+    : Port(node, name, infoText, type)
 {
 
 }
@@ -80,10 +81,8 @@ bool OutputPort::closesCycle(const InputPort *in) const
             continue;
 
         for (const InputPort* currentInput : currentNode->inputPorts()) {
-            if (currentInput == in) {
+            if (currentInput == in)
                 return true;
-            } else {
-            }
             if (currentInput->source())
                 toVisit.push(currentInput->source()->node());
         }

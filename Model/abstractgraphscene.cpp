@@ -167,3 +167,20 @@ NodeItem* AbstractGraphScene::nodeItemAt(QPointF scenePos)
         return 0;
     }
 }
+
+QRectF AbstractGraphScene::boundingBox() const
+{
+    QList<QGraphicsItem*> itemList = items();
+    //itemList.removeOne(_contentRect);
+
+    if (itemList.isEmpty())
+        return QRectF();
+
+    QRectF boundingRect = QRectF(itemList.first()->scenePos(), QSizeF(0,0));
+    foreach (QGraphicsItem* gi, items()) {
+        if (gi->type() != NodeItem::Type) continue;
+
+        boundingRect |= gi->boundingRect().translated(gi->pos());
+    }
+    return boundingRect;
+}

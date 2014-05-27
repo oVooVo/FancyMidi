@@ -105,7 +105,6 @@ public:
      */
     void removeConnectionItem(ConnectionItem* connectionItem);
 
-
 protected:
     /**
      * @brief itemChange is calles when this NodeItem made a change.

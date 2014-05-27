@@ -5,6 +5,7 @@
 #include "Model/Nodes/node.h"
 #include "Model/graphscene.h"
 #include <QCloseEvent>
+#include "Model/minimapgraphscene.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,7 @@ private:
     Ui::MainWindow *ui;
     Project* _project = 0;
     GraphScene* _scene = 0;
+    MinimapGraphScene* _minimapScene = 0;
     bool save(QString filepath);
     bool open(QString filepath, Project* &project);
     void setProject(Project* project);
@@ -40,6 +42,9 @@ private slots:
     void newProject();
     void open();
     void updateWindowTitle();
+    void updateMinimapDelayed();
+    void updateMinimap();
+    void centerOn(QPointF center);
 };
 
 #endif // MAINWINDOW_H

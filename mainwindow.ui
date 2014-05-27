@@ -315,6 +315,27 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
+    <string>Minimap</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="MinimapView" name="minimapView"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionNew">
    <property name="text">
     <string>New</string>
@@ -351,6 +372,11 @@
    <class>NodeTree</class>
    <extends>QTreeWidget</extends>
    <header>View/nodetree.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MinimapView</class>
+   <extends>QGraphicsView</extends>
+   <header>View/minimapview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

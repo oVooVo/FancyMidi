@@ -70,7 +70,9 @@ SOURCES += main.cpp\
     Model/Nodes/memorymapnode.cpp \
     Model/Nodes/memorynode.cpp \
     Model/Nodes/conditionnode.cpp \
-    logger.cpp
+    logger.cpp \
+    Model/minimapgraphscene.cpp \
+    View/minimapview.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -130,7 +132,9 @@ HEADERS  +=  \
     Model/Nodes/memorymapnode.h \
     Model/Nodes/memorynode.h \
     Model/Nodes/conditionnode.h \
-    logger.h
+    logger.h \
+    Model/minimapgraphscene.h \
+    View/minimapview.h
 
 FORMS += \
     mainwindow.ui \
@@ -139,6 +143,7 @@ FORMS += \
     SettingWidgets/integersettingwidget.ui \
     SettingWidgets/doublesettingwidget.ui \
     SettingWidgets/midifiltersettingwidget.ui \
-    SettingWidgets/boolsettingwidget.ui
+    SettingWidgets/boolsettingwidget.ui \
+
 
 

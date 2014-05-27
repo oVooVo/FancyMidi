@@ -48,6 +48,7 @@ public:
      */
     QPointF getCenter() const;
 
+
 signals:
     /**
      * @brief showSettings is emitted when mainwindow has to show settings of the specified Node.

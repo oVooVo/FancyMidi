@@ -68,12 +68,6 @@ public:
     void setSize(QSizeF size);
 
     /**
-     * @brief myBoundingRect returns the bounding rect of this item.
-     * @return returns the bounding rect of this item.
-     */
-    QRectF myBoundingRect() const;
-
-    /**
      * @brief showFrame shows the frame with given id.
      * @param id the id of the frame supposed to be shown.
      */

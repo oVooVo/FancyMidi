@@ -234,24 +234,6 @@ void NodeItem::showFrame(int id) {
 	}
 }
 
-QRectF NodeItem::myBoundingRect() const
-{
-    int hasInputs = 0;
-    int hasOutputs = 0;
-    foreach (PortItem* pi, _portItems) {
-        if (!pi->port()) continue;
-
-        if (pi->port()->isInput()) {
-            hasInputs = 1;
-        } else {
-            hasOutputs = 1;
-        }
-
-        if (hasInputs == 1 && hasOutputs == 1) break;
-    }
-    return QRectF(scenePos(), QSizeF(width + (hasInputs + hasOutputs) * _portItemRadius, height));
-}
-
 void NodeItem::redraw()
 {
     prepareGeometryChange();
@@ -261,7 +243,6 @@ bool NodeItem::isResizeable() const
 {
 	return _resizeable;
 }
-
 
 
 

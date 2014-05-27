@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newProject()));
     connect(Logger::singleton(), SIGNAL(newLogMessage(QString)), ui->textEdit, SLOT(append(QString)));
+
+    connect(ui->graphicsView, SIGNAL(viewRectangleChanged(QRectF)), this, SLOT(updateMinimap()));
+    ui->minimapView->installEventFilter(this); //recognize resizing due to redraw
+
 }
 
 MainWindow::~MainWindow()
@@ -31,11 +35,19 @@ void MainWindow::setProject(Project *project)
         delete _project;
     if (_scene)
         delete _scene;
+    if (_minimapScene)
+        delete _minimapScene;
+
     _project = project;
     _scene = new GraphScene(_project, this, this);
+    _minimapScene = new MinimapGraphScene(this, _project, this);
     ui->graphicsView->setScene(_scene);
+    ui->minimapView->setScene(_minimapScene);
     connect(_scene, SIGNAL(showSettings(Node*)), this, SLOT(updateSettingTable(Node*)));
+    connect(_minimapScene, SIGNAL(doubleClick(QPointF)), this, SLOT(centerOn(QPointF)));
     connect(_project, SIGNAL(isSaveStatusChanged(bool)), this, SLOT(updateWindowTitle()));
+    connect(_project, SIGNAL(nodesChanged()), this, SLOT(updateMinimapDelayed()));
+    connect(_project, SIGNAL(modelChanged()), this, SLOT(updateMinimapDelayed()));
     connect(_project, &Project::newLogMessage, [this](QString log) {
         ui->textEdit->append(log);
     });
@@ -129,7 +141,7 @@ void MainWindow::newProject()
 {
     if (!canDropProject()) return;
 
-    setProject(new Project);
+    setProject(new Project());
 }
 
 void MainWindow::open()
@@ -179,4 +191,21 @@ void MainWindow::updateWindowTitle()
                    .arg(QApplication::applicationDisplayName())
                    .arg(_project->name())
                    .arg(_project->isSaved()));
+}
+
+void MainWindow::updateMinimapDelayed()
+{
+    QTimer::singleShot(0, this, SLOT(updateMinimap()));
+}
+
+void MainWindow::updateMinimap()
+{
+    _minimapScene->setVisibleRect(ui->graphicsView->mapToScene(ui->graphicsView->viewport()->geometry()).boundingRect());
+    ui->minimapView->setMainViewRect(_scene->boundingBox());
+}
+
+void MainWindow::centerOn(QPointF center)
+{
+    ui->graphicsView->centerOn(center);
+    updateMinimapDelayed();
 }

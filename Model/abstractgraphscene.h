@@ -50,6 +50,7 @@ public:
      * @return the nodeItem at the denoted position or zero if there is no NodeItem.
      */
     NodeItem* nodeItemAt(QPointF scenePos);
+    QRectF boundingBox() const;
 
 protected:
     /**
@@ -67,6 +68,7 @@ protected:
      * @param model the new projetc.
      */
     void setModel(Project* model);
+
 
 public slots:
     /**
