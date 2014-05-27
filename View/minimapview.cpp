@@ -26,8 +26,7 @@ void MinimapView::updateSceneRect()
     double xscale = actual.width()  / _mainViewRect.width();
     double yscale = actual.height() / _mainViewRect.height();
     double mscale = qMin(xscale, yscale);
-    if (mscale > 1)
-        mscale = 1;
+
     scale(mscale, mscale);
 }
 

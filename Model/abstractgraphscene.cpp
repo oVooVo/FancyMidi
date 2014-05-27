@@ -23,12 +23,12 @@ void AbstractGraphScene::redraw()
     if(_isUpdating || !_model) return;
     beginUpdate();
     foreach (NodeItem* nodeItem, _nodeMap.keys()) {
-        if (!_model->nodes().contains(nodeItem->getNode())) {
+        if (!_model->nodes().contains(nodeItem->node())) {
             _nodeMap.remove(nodeItem);
 			_displayOutputNodeItems.remove(nodeItem);
 
             //unperformant, but input->port() will not work because input->port() is already deleted
-            foreach (PortItem* input, nodeItem->getInputs()) {
+            foreach (PortItem* input, nodeItem->inputs()) {
                 foreach (InputPort* inputPort, _inputPortMap.keys()) {
                     if (_inputPortMap.value(inputPort) == input) {
                         _inputPortMap.remove(inputPort);
@@ -52,11 +52,11 @@ void AbstractGraphScene::redraw()
     }
     foreach (Node* node, _model->nodes()) {
         if (!_nodeMap.values().contains(node)) {
-            NodeItem* newNodeItem = new NodeItem(node, _isSelectable, node->inherits("DisplayOutput"), this);
+            NodeItem* newNodeItem = new NodeItem(node, _isSelectable, this);
             _nodeMap.insert(newNodeItem, node);
 			if(node->inherits("DisplayOutput"))
 				_displayOutputNodeItems += newNodeItem;
-            foreach (PortItem* input, newNodeItem->getInputs()) {
+            foreach (PortItem* input, newNodeItem->inputs()) {
                 _inputPortMap.insert((InputPort*) input->port(), input);
             }
         }
@@ -71,11 +71,8 @@ void AbstractGraphScene::lightRedraw(QList<InputPort *> inputs)
     beginUpdate();
     foreach (QGraphicsItem *g, items()) {
         NodeItem *nodeItem = dynamic_cast<NodeItem*>(g);
-        if (nodeItem && nodeItem->getNode()) {
-            nodeItem->redraw();
-            nodeItem->setPos(nodeItem->getNode()->getPosition());
-			if(nodeItem->isResizeable())
-				nodeItem->setSize(nodeItem->getNode()->getSize());
+        if (nodeItem && nodeItem->node()) {
+            nodeItem->setPos(nodeItem->node()->getPosition());
 		}
     }
     foreach (InputPort* inputPort, inputs) {

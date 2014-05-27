@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->graphicsView, SIGNAL(viewRectangleChanged(QRectF)), this, SLOT(updateMinimap()));
     ui->minimapView->installEventFilter(this); //recognize resizing due to redraw
 
+    readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -186,8 +187,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (!canDropProject())
         event->ignore();
-    else
+    else {
+        writeSettings();
         event->accept();
+    }
 }
 
 void MainWindow::updateWindowTitle()
@@ -220,8 +223,8 @@ void MainWindow::readSettings()
 {
     QSettings settings;
     settings.beginGroup("MainWindow");
-    settings.setValue("Geometry", saveGeometry());
-    settings.setValue("State", saveState());
+    restoreGeometry(settings.value("Geometry").toByteArray());
+    restoreState(settings.value("State").toByteArray());
     settings.endGroup();
 }
 
@@ -229,7 +232,7 @@ void MainWindow::writeSettings()
 {
     QSettings settings;
     settings.beginGroup("MainWindow");
-    restoreGeometry(settings.value("Geometry").toByteArray());
-    restoreState(settings.value("State").toByteArray());
+    settings.setValue("Geometry", saveGeometry());
+    settings.setValue("State", saveState());
     settings.endGroup();
 }

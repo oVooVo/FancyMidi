@@ -72,7 +72,9 @@ SOURCES += main.cpp\
     Model/Nodes/conditionnode.cpp \
     logger.cpp \
     Model/minimapgraphscene.cpp \
-    View/minimapview.cpp
+    View/minimapview.cpp \
+    Model/Nodes/testnode.cpp \
+    View/nodewidget.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -134,7 +136,9 @@ HEADERS  +=  \
     Model/Nodes/conditionnode.h \
     logger.h \
     Model/minimapgraphscene.h \
-    View/minimapview.h
+    View/minimapview.h \
+    Model/Nodes/testnode.h \
+    View/nodewidget.h
 
 FORMS += \
     mainwindow.ui \

@@ -14,6 +14,8 @@
 
 #include <QDebug>
 
+#include "View/nodewidget.h"
+
 #define SCENE_SIZE 1000000
 
 GraphScene::GraphScene(Project *project, MainWindow* mainWindow, QObject *parent) :
@@ -50,7 +52,7 @@ bool GraphScene::eventFilter(QObject *watched, QEvent *event)
             foreach (InputPort* inputPort, disconnectedInputports) {
                 foreach (NodeItem* ni, nodeItemsToDelete)
                 {
-                    if (ni->getNode() == inputPort->node()) {
+                    if (ni->node() == inputPort->node()) {
                         disconnectedInputports.removeOne(inputPort);
                         break;
                     }
@@ -60,7 +62,7 @@ bool GraphScene::eventFilter(QObject *watched, QEvent *event)
 				inputPort->disconnect();
 			}
             foreach (NodeItem* n, nodeItemsToDelete) {
-                delete n->getNode();
+                delete n->node();
             }
             _model->popularizeModelChange();
             _model->popularizeNodesChange(disconnectedInputports);
@@ -213,8 +215,8 @@ void GraphScene::copy()
 
     foreach (QGraphicsItem* gi, selectedItems()) {
         if (gi->type() == NodeItem::Type) {
-            if (((NodeItem*) gi)->getNode()) {
-                _copyPasteNodeList.append(((NodeItem*) gi)->getNode());
+            if (((NodeItem*) gi)->node()) {
+                _copyPasteNodeList.append(((NodeItem*) gi)->node());
             }
         }
     }
@@ -278,9 +280,9 @@ void GraphScene::paste()
 void GraphScene::selectPastedNodes()
 {
     foreach (QGraphicsItem* gi, items()) {
-        if (gi->type() == NodeItem::Type && _pastedNodes.contains(((NodeItem*) gi)->getNode())) {
+        if (gi->type() == NodeItem::Type && _pastedNodes.contains(((NodeItem*) gi)->node())) {
             foreach (QGraphicsItem* before, items()) {
-                if (before->type() == NodeItem::Type && !_pastedNodes.contains(((NodeItem*) before)->getNode()))
+                if (before->type() == NodeItem::Type && !_pastedNodes.contains(((NodeItem*) before)->node()))
                     before->stackBefore(gi);
             }
             gi->setSelected(true);
@@ -288,12 +290,6 @@ void GraphScene::selectPastedNodes()
             gi->setSelected(false);
         }
     }
-}
-
-void GraphScene::showFrame(int id) {
-	foreach(NodeItem* ni, _displayOutputNodeItems) {
-		ni->showFrame(id);
-	}
 }
 
 void GraphScene::lock()
@@ -323,7 +319,7 @@ QList<Node*> GraphScene::selectedNodes() const
     QList<Node*> nodes;
     for (QGraphicsItem* item : selectedItems()) {
         if (item->type() == NodeItem::Type) {
-            nodes.append(((NodeItem*) item)->getNode());
+            nodes.append(((NodeItem*) item)->node());
         }
     }
     return nodes;

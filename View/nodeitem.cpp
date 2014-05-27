@@ -12,30 +12,29 @@
 #include <QDebug>
 
 
-NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene* scene, QGraphicsPathItem* parent) :
+NodeItem::NodeItem(Node* node, bool selectable, QGraphicsScene *scene, QGraphicsPathItem* parent) :
     QGraphicsPathItem(parent)
 {
-    if (!parent) scene->addItem(this);
+    if (!parent)
+        scene->addItem(this);
     setToolTip(node->getInfoText());
-	_node = node;
-	_resizeable = resizeable;
-	_portCount = 0;
-	_portItemRadius = -1;
-	_resizeHandlerSize = 10;
+    _node = node;
+    _portCount = 0;
+    _portItemRadius = -1;
 
-	/* define the way this item becomes painted */
-	QPainterPath p;
-	setPos(node->getPosition());
-	if (selectable) {
-		setFlag(QGraphicsItem::ItemIsMovable);
-		setFlag(QGraphicsItem::ItemIsSelectable);
-	}
+    /* define the way this item becomes painted */
+    QPainterPath p;
+    setPos(node->getPosition());
+    if (selectable) {
+        setFlag(QGraphicsItem::ItemIsMovable);
+        setFlag(QGraphicsItem::ItemIsSelectable);
+    }
 
-	horzMargin = 35;
-	vertMargin = 5;
-	width = horzMargin;
-	height = vertMargin;
-	/**************************************/
+    horzMargin = 35;
+    vertMargin = 5;
+    width = horzMargin;
+    height = vertMargin;
+    /**************************************/
 
 
     /********* add ports ******************/
@@ -49,28 +48,22 @@ NodeItem::NodeItem(Node* node, bool selectable, bool resizeable, QGraphicsScene*
     /**************************************/
 
     setFlag(ItemSendsGeometryChanges); //tell me position changes
-	_resize = false;
-	_pwidth = width;
-	_pheight = height;
-	_currentId = 0;
-    if (_resizeable) {
-		p.addRect(width-_resizeHandlerSize, height-_resizeHandlerSize, _resizeHandlerSize, _resizeHandlerSize);
-        setSize(node->getSize());
-    }
+    _pwidth = width;
+    _pheight = height;
     p.addRoundedRect(0, 0, width, height, 5, 5);
-    setPath(p.translated(-width/2, -height/2));
+    setPath(p);
 }
 
 NodeItem::~NodeItem()
 {
     foreach (PortItem* pi, _portItems) {
-		delete pi;
-	}
+        delete pi;
+    }
 }
 
-Node* NodeItem::getNode()
+Node* NodeItem::node()
 {
-	return _node;
+    return _node;
 }
 
 void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -86,58 +79,52 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
     painter->setPen(pen);
 
     painter->drawPath(path());
-	if (_resizeable) {
-        /** handle display output */
-	}
 }
 
 void NodeItem::addPort(Port* port, const QString &name, bool isOutput, int flags)
 {
     PortItem *portItem = new PortItem(port, name, scene(), this);
-	portItem->setIsOutput(isOutput);
-	portItem->setPortFlags(flags);
+    portItem->setIsOutput(isOutput);
+    portItem->setPortFlags(flags);
 
-	QFontMetrics fm(getGraphScene()->font());
-	int w = fm.width(name);
-	int h = fm.height();
-	// port->setPos(0, height + h/2);
-	if (w > width - horzMargin)
-		width = w + horzMargin;
-	height += h;
-	if(_resizeable) {
-		width = 250;
-		height = 150;
-	}
-	QPainterPath p;
-	p.addRoundedRect(0, 0, width, height, 5, 5);
+    QFontMetrics fm(getGraphScene()->font());
+    int w = fm.width(name);
+    int h = fm.height();
+    // port->setPos(0, height + h/2);
+    if (w > width - horzMargin)
+        width = w + horzMargin;
+    height += h;
 
-    int y = vertMargin + portItem->radius() - height/2;
+    QPainterPath p;
+    p.addRoundedRect(0, 0, width, height, 5, 5);
+
+    int y = vertMargin + portItem->radius();
 
     foreach(QGraphicsItem *port_, QGraphicsPathItem::childItems()) {
-		if (port_->type() != PortItem::Type)
-			continue;
+        if (port_->type() != PortItem::Type)
+            continue;
 
-		PortItem *portItem = (PortItem*) port_;
-		if (portItem->isOutput())
-            portItem->setPos(width/2 + portItem->radius(), y);
-		else
-            portItem->setPos(-portItem->radius() - width/2, y);
-		y += h;
-	}
+        PortItem *portItem = (PortItem*) port_;
+        if (portItem->isOutput())
+            portItem->setPos(width + portItem->radius(), y);
+        else
+            portItem->setPos(-portItem->radius(), y);
+        y += h;
+    }
 
-	_portItems.append(portItem);
-	if (port && !isOutput) {
-		_inputPortItems.append(portItem);
-	}
-	_portCount++;
-	if (_portItemRadius == -1) {
-		_portItemRadius = portItem->radius();
-	}
-	_initialHeight = height;
-	_initialWidth = width;
-	_pwidth = width;
-	_pheight = height;
-	setPath(p);
+    _portItems.append(portItem);
+    if (port && !isOutput) {
+        _inputPortItems.append(portItem);
+    }
+    _portCount++;
+    if (_portItemRadius == -1) {
+        _portItemRadius = portItem->radius();
+    }
+    _initialHeight = height;
+    _initialWidth = width;
+    _pwidth = width;
+    _pheight = height;
+    setPath(p);
 
 }
 
@@ -145,10 +132,10 @@ void NodeItem::setSize(QSizeF size)
 {
     width = size.width() > _initialWidth ? size.width() : _initialWidth;
     height = size.height() > _initialHeight ? size.height() : _initialHeight;
-	QPainterPath p;
+    QPainterPath p;
     p.addRoundedRect(0, 0, width, height, 5, 5);
-	setPath(p);
-    getNode()->setSize(QSizeF(width, height));
+    setPath(p);
+    node()->setSize(QSizeF(width, height));
 }
 
 void NodeItem::addInputPort(Port *port)
@@ -163,91 +150,39 @@ void NodeItem::addOutputPort(Port *port)
 
 void NodeItem::addNamePort(const QString &name)
 {
-	addPort(0, name, false, PortItem::NamePort);
+    addPort(0, name, false, PortItem::NamePort);
 }
 
 QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-	//If this is moved by user
-	if (change == ItemPositionHasChanged) {
-		getGraphScene()->beginUpdate();
-		_node->setPosition(value.toPoint());    //Set pos in Model
-		updateConnections();
-		getGraphScene()->endUpdate();
-	}
-	return value;
+    //If this is moved by user
+    if (change == ItemPositionHasChanged) {
+        getGraphScene()->beginUpdate();
+        _node->setPosition(value.toPoint()); //Set pos in Model
+        updateConnections();
+        getGraphScene()->endUpdate();
+    }
+    return value;
 }
 
 void NodeItem::updateConnections()
 {
-	foreach(PortItem *portItem, _portItems) {
+    foreach(PortItem *portItem, _portItems) {
         foreach (ConnectionItem *connectionItem, portItem->connections()) {
-			connectionItem->updatePath();
-		}
-	}
+            connectionItem->updatePath();
+        }
+    }
 }
 
 AbstractGraphScene* NodeItem::getGraphScene() const
 {
-	return qobject_cast<AbstractGraphScene*>(scene());
+    return qobject_cast<AbstractGraphScene*>(scene());
 }
 
-QList<PortItem*> NodeItem::getInputs() const
+QList<PortItem*> NodeItem::inputs() const
 {
-	return _inputPortItems;
+    return _inputPortItems;
 }
-
-void NodeItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-	if (_resize)
-	{
-		prepareGeometryChange();
-		_pwidth  += (event->scenePos().x() - event->lastScenePos().x());
-		_pheight += (event->scenePos().y() - event->lastScenePos().y());
-        setSize(QSizeF(_pwidth, _pheight));
-	} else {
-		QGraphicsPathItem::mouseMoveEvent(event);
-	}
-}
-
-void NodeItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-	if (_resizeable && event->button() == Qt::LeftButton && (event->pos() - QPointF(width, height)).manhattanLength() < 2*_resizeHandlerSize) {
-		_resize = true;
-	}
-	QGraphicsPathItem::mousePressEvent(event);
-}
-
-void NodeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-	_resize = false;
-	_pwidth = width;
-	_pheight = height;
-	QGraphicsPathItem::mouseReleaseEvent(event);
-}
-
-void NodeItem::showFrame(int id) {
-	if (id >= 0)
-	{
-		_currentId = id;
-        update();
-	}
-}
-
-void NodeItem::redraw()
-{
-    prepareGeometryChange();
-}
-
-bool NodeItem::isResizeable() const
-{
-	return _resizeable;
-}
-
-
-
-
-
 
 
 
