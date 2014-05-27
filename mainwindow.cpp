@@ -45,7 +45,7 @@ void MainWindow::setProject(Project *project)
     ui->minimapView->setScene(_minimapScene);
     updateMinimap();
 
-    connect(_scene, SIGNAL(showSettings(Node*)), this, SLOT(updateSettingTable(Node*)));
+    connect(_scene, SIGNAL(showSettings(QList<Node*>)), this, SLOT(updateSettingTable(QList<Node*>)));
     connect(_minimapScene, SIGNAL(doubleClick(QPointF)), this, SLOT(centerOn(QPointF)));
     connect(_project, SIGNAL(isSaveStatusChanged(bool)), this, SLOT(updateWindowTitle()));
     connect(_project, SIGNAL(nodesChanged()), this, SLOT(updateMinimap()));
@@ -57,8 +57,10 @@ void MainWindow::setProject(Project *project)
     updateWindowTitle();
 }
 
-void MainWindow::updateSettingTable(Node* node)
+void MainWindow::updateSettingTable(QList<Node*> nodes)
 {
+    Node* node = nodes.isEmpty() ? 0 : nodes.first();
+
     delete ui->settingFrame->layout();
     foreach(QObject* o, ui->settingFrame->children())
         delete o;

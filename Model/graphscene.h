@@ -48,12 +48,14 @@ public:
      */
     QPointF getCenter() const;
 
+    QList<Node*> selectedNodes() const;
+
 
 signals:
     /**
      * @brief showSettings is emitted when mainwindow has to show settings of the specified Node.
      */
-    void showSettings(Node*);
+    void showSettings(QList<Node*>);
 
     /**
      * @brief togglePlay is emitted when the project should start playing.

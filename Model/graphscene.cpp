@@ -64,6 +64,7 @@ bool GraphScene::eventFilter(QObject *watched, QEvent *event)
             }
             _model->popularizeModelChange();
             _model->popularizeNodesChange(disconnectedInputports);
+            showSettings(selectedNodes());
             redraw();
         } else if (16777249 == key) {   //strg
             _strgPressed = true;
@@ -107,7 +108,7 @@ void GraphScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         node->setPosition(event->scenePos().toPoint());
         node->setParent(_model);
         node->polish();
-        emit showSettings(node);
+        emit showSettings(QList<Node*>() << node);
     }
     QGraphicsScene::dropEvent(event);
 }
@@ -123,12 +124,6 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     if (e->button() == Qt::LeftButton) {
 
         NodeItem* clicked = nodeItemAt(e->scenePos());
-        if (clicked && clicked->getNode()) {
-            emit showSettings(clicked->getNode());
-        } else {
-            emit showSettings(0);       //showSetting when node or nodeitem is zero too!
-        }
-
         if (clicked) {
             foreach (QGraphicsItem* gi, items()) {
                 NodeItem* ni = dynamic_cast<NodeItem*>(gi);
@@ -157,6 +152,7 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     }
     if (forwardMousePress)
         QGraphicsScene::mousePressEvent(e);
+    emit showSettings(selectedNodes());
 }
 
 void GraphScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -320,6 +316,17 @@ QPointF GraphScene::getCenter() const
 void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mouseDoubleClickEvent(event);
+}
+
+QList<Node*> GraphScene::selectedNodes() const
+{
+    QList<Node*> nodes;
+    for (QGraphicsItem* item : selectedItems()) {
+        if (item->type() == NodeItem::Type) {
+            nodes.append(((NodeItem*) item)->getNode());
+        }
+    }
+    return nodes;
 }
 
 

@@ -40,7 +40,7 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void updateSettingTable(Node* node);
+    void updateSettingTable(QList<Node *> nodes);
     bool save();
     bool saveAs();
     void newProject();
