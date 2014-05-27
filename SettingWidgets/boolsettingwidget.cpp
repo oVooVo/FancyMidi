@@ -9,19 +9,12 @@ BoolSettingWidget::BoolSettingWidget(Setting *set, QWidget *parent) : SettingWid
 
    _initMode = true;
 	setupUi(this);
-    _title->setText(set->name());
-    _toolTip->setText(set->tooltip());
-    _toolTip->setVisible(false);
-	helpIcon->setVisible(false);
-    _checkBox->setText(set->tooltip());
+    _checkBox->setText(set->name());
     _checkBox->setChecked(setting<BoolSetting>()->value());
-    _checkBox->setToolTip(set->tooltip());
     connect(_checkBox, &QCheckBox::toggled, [this](bool on) {
         setting<BoolSetting>()->setValue(on);
     });
 
-    connect(helpIcon, SIGNAL(pressed()), _toolTip, SLOT(show()));
-    connect(helpIcon, SIGNAL(released()), _toolTip, SLOT(hide()));
     _initMode = false;
 }
 

@@ -8,6 +8,9 @@
 #include "Model/inputport.h"
 #include "Model/outputport.h"
 #include "Model/abstractgraphscene.h"
+#include <QGraphicsProxyWidget>
+#include <QVBoxLayout>
+#include "SettingWidgets/settingwidget.h"
 
 #include <QDebug>
 
@@ -52,6 +55,25 @@ NodeItem::NodeItem(Node* node, bool selectable, QGraphicsScene *scene, QGraphics
     _pheight = height;
     p.addRoundedRect(0, 0, width, height, 5, 5);
     setPath(p);
+
+    if (node->hasSettingsToDisplayInNode()) {
+        QWidget* settingContainer = new QWidget();
+        _settingsItem = new GraphicsProxyWidget(this);
+
+        settingContainer->setLayout(new QVBoxLayout());
+        settingContainer->layout()->setSpacing(0);
+        settingContainer->layout()->setContentsMargins(0,0,0,0);
+        foreach (Setting* s, node->settings()) {
+            if (!s->showInNode())
+                continue;
+            SettingWidget* settingWidget = SettingWidget::createNewSettingWidget(s, settingContainer);
+            settingContainer->layout()->addWidget(settingWidget);
+            _settingWidgets.append(settingWidget);
+        }
+        _settingsItem->setWidget(settingContainer);
+        _settingsItem->setPos(0, height);
+        _settingsItem->blockSignals(true);
+    }
 }
 
 NodeItem::~NodeItem()
@@ -72,8 +94,10 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
     pen.setColor(Qt::darkGray);
     pen.setWidth(2);
     if (isSelected()) {
+        if (_settingsItem)  _settingsItem->show();
         painter->setBrush(QColor(255, 255, 0, 210));
     } else {
+        if (_settingsItem) _settingsItem->hide();
         painter->setBrush(QColor(180, 180, 180, 210));
     }
     painter->setPen(pen);
@@ -184,6 +208,10 @@ QList<PortItem*> NodeItem::inputs() const
     return _inputPortItems;
 }
 
+void NodeItem::prepareDeletion()
+{
+    qDeleteAll(_settingWidgets);
+}
 
 
 

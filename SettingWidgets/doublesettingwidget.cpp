@@ -9,8 +9,6 @@ DoubleSettingWidget::DoubleSettingWidget(Setting* set, QWidget *parent) :
     _initMode = true;
     setupUi(this);
     _title->setText(setting<DoubleSetting>()->name());
-    _toolTip->setText(setting<DoubleSetting>()->tooltip());
-    _toolTip->setVisible(false);
 
     _doubleSpinBox->setVisible(setting<DoubleSetting>()->hasBounds());
     lineEdit->setVisible(!setting<DoubleSetting>()->hasBounds());
@@ -27,8 +25,6 @@ DoubleSettingWidget::DoubleSettingWidget(Setting* set, QWidget *parent) :
         });
     }
 
-    connect(helpIcon, SIGNAL(pressed()), _toolTip, SLOT(show()));
-    connect(helpIcon, SIGNAL(released()), _toolTip, SLOT(hide()));
     _initMode = false;
     reset();
 }

@@ -8,8 +8,9 @@
 
 REGISTER_DEFN_SETTINGTYPE(MidiCommandSelectSetting);
 
-MidiCommandSelectSetting::MidiCommandSelectSetting(Node *parent, QString name, QString tooltip)
-    : Setting(parent, name, tooltip)
+MidiCommandSelectSetting::MidiCommandSelectSetting(Node *parent, QString name, QString tooltip,
+                                                   bool showInNode)
+    : Setting(parent, name, tooltip, showInNode)
 {
     Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(),
                "constructor", "called from a thread other than the main thread");

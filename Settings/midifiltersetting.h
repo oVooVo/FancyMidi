@@ -12,8 +12,10 @@
 class MidiFilterSetting : public Setting
 {
     Q_OBJECT
+
 public:
-    MidiFilterSetting(Node *parent, QString name, QString tooltip);
+    MidiFilterSetting(Node *parent, QString name, QString tooltip,
+                      bool showInNode = true);
     MidiFilterSetting(QDataStream& stream);
     void writeToStream(QDataStream &stream) const;
     ~MidiFilterSetting();

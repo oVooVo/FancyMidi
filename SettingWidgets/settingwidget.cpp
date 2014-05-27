@@ -14,21 +14,7 @@ SettingWidget::SettingWidget(Setting *setting, QWidget* parent) : QWidget(parent
 {
     _initMode = false;
 	_setting = setting;
-    connect(setting, SIGNAL(validChange()), this, SLOT(update())); //repaint when valid state changed
     connect(setting, SIGNAL(changed()), this, SLOT(reset()));
-}
-
-void SettingWidget::paintEvent(QPaintEvent *)
-{
-	const int FRAME_WIDTH = 5;
-    if (!_setting->isValid()) {
-		QPainter painter(this);
-		QPen pen;
-		pen.setWidth(FRAME_WIDTH);
-		pen.setColor(Qt::red);
-		painter.setPen(pen);
-        painter.drawRect(0, 0, width(), height());
-	}
 }
 
 SETTINGWIDGET_CREATOR_MAP_TYPE *SettingWidget::_creatorMap = 0;

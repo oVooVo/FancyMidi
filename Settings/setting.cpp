@@ -9,31 +9,27 @@
 QMap<QString, Setting* (*)(QDataStream&)> *Setting::_creatorMap = 0;
 
 
-Setting::Setting(Node *parent, QString name, QString tooltip):
+Setting::Setting(Node *parent, QString name, QString tooltip, bool showInNode):
 	QObject(parent)
 {
 	_name = name;
     _tooltip = tooltip;
+    _showInNode = showInNode;
 }
 
 Setting::Setting(QDataStream& stream)
 {
-    stream >> _name >> _tooltip >> _isValid;
+    stream >> _name >> _tooltip >> _showInNode;
 }
 
 void Setting::writeToStream(QDataStream& stream) const
 {
-    stream << _name << _tooltip << _isValid;
+    stream << _name << _tooltip << _showInNode;
 }
 
 
 Setting::~Setting()
 {
-}
-
-bool Setting::isValid() const
-{
-    return true;
 }
 
 const QString Setting::name() const
@@ -44,17 +40,6 @@ const QString Setting::name() const
 const QString Setting::tooltip() const
 {
     return _tooltip;
-}
-
-void Setting::setValid(bool valid)
-{
-    if (valid != _isValid) {
-        _isValid = valid;
-        if (node() && node()->getProject()) {
-            node()->getProject()->popularizeNodesChange();
-        }
-        emit validChange();
-    }
 }
 
 QDataStream &operator<<(QDataStream &out, const Setting *setting)

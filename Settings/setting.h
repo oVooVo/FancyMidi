@@ -22,6 +22,8 @@ class Setting:
 {
 Q_OBJECT
 
+protected:
+    Setting(QDataStream &stream);
 public:
     /**
      * @brief Setting Creates a settings object with a given name and a description
@@ -29,8 +31,7 @@ public:
      * @param name The given name
      * @param infoText The given description
      */
-    Setting(Node *parent, QString name, QString tooltip);
-    Setting(QDataStream &stream); //for deserializaztion //TODO make protected or private!
+    Setting(Node *parent, QString name, QString tooltip, bool showInNode = true);
 
     ~Setting();
 
@@ -46,30 +47,16 @@ public:
     const QString tooltip() const;
 
     /**
-     * @brief setValid sets or removes the valid flag.
-     * @param valid sets or removes the valid flag.
-     */
-    void setValid(bool valid);
-
-    /**
-     * @brief isValid returns whether this setting is adjusted validly.
-     * @return whether this setting is adjusted validly.
-     */
-    bool isValid() const;
-
-    /**
      * @brief emitChanged emits a changed signal and stops the project.
      */
     void emitChanged();
 
     virtual void connectPort(Port* port) { Q_UNUSED(port); }
 
+    bool showInNode() const { return _showInNode; }
+
 
 signals:
-    /**
-     * @brief validChange is emitted when the valid status of this setting changes.
-     */
-    void validChange();
 
     /**
      * @brief changed is emitted when any value of this setting changes.
@@ -87,7 +74,7 @@ private:
     Node* node();
     QString _name;
     QString _tooltip;
-    bool _isValid;
+    bool _showInNode;
 
     friend QDataStream &operator<<(QDataStream &out, const Setting *setting);
     friend QDataStream &operator>>(QDataStream &in, Setting *&setting);

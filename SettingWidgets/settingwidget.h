@@ -48,12 +48,6 @@ public slots:
 
 protected:
     /**
-     * @brief paintEvent is called when the Widget has to be redrawn.
-     * @param event the event.
-     */
-    void paintEvent(QPaintEvent *event);
-
-    /**
      * @brief _initMode whether this widget changes due to initial draw.
      */
     bool _initMode;
@@ -65,6 +59,7 @@ protected:
 
 public:
     template<typename T> T* setting() const { return (T*) _setting; }
+    void block() { blockSignals(true); }
 
 private:
     static SETTINGWIDGET_CREATOR_MAP_TYPE *_creatorMap;

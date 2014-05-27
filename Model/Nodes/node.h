@@ -131,6 +131,8 @@ public:
 
     void setParent(Project* project);
 
+    bool hasSettingsToDisplayInNode() const;
+
 protected:
     void addPort(Port* port);
     void addSetting(Setting* setting);

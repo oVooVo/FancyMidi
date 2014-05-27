@@ -92,6 +92,8 @@ bool MainWindow::save(QString filepath)
     }
     QDataStream stream(&file);
     stream << _project;
+    _project->setSaved(true);
+    updateWindowTitle();
     file.close();
     return true;
 }

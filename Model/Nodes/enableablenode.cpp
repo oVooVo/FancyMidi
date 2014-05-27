@@ -7,7 +7,7 @@ EnableableNode::EnableableNode(QDataStream& stream)
 {
     addPort(new InputPort(this, "Enabled", "", Port::Scalar));
 
-    addSetting(new BoolSetting(this, "Enabled", "", true, true));
+    addSetting(new BoolSetting(this, "Enabled", "", true, true, false));
 
     setting<BoolSetting>("Enabled")->connectPort(inputPort("Enabled"));
 

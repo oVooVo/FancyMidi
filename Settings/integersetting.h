@@ -25,9 +25,10 @@ public:
      * @param defaultValue the default value of this setting.
      * @param stepSize The step size of this setting.
      */
-    IntegerSetting(Node *parent, QString name, QString tooltip, int minValue, int maxValue, int defaultValue, int currentValue);
+    IntegerSetting(Node *parent, QString name, QString tooltip, int minValue, int maxValue, int defaultValue,
+                   int currentValue, bool showInNode = true);
     ~IntegerSetting();
-    IntegerSetting(Node *parent, QString name, QString tooltip, int defaultValue, int currentValue);
+    IntegerSetting(Node *parent, QString name, QString tooltip, int defaultValue, int currentValue, bool showInNode = true);
     IntegerSetting(QDataStream& stream);
 
 

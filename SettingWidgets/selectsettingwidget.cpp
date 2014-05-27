@@ -10,9 +10,6 @@ SelectSettingWidget::SelectSettingWidget(Setting* set, QWidget* parent) : Settin
     _initMode = true;
     setupUi(this);
     _title->setText(setting<SelectSetting>()->name());
-    _toolTip->setText(setting<SelectSetting>()->tooltip());
-    _toolTip->setVisible(false);
-
     foreach(QString entry, setting<SelectSetting>()->values())
 	{
         _comboBox->addItem(entry);
@@ -24,8 +21,6 @@ SelectSettingWidget::SelectSettingWidget(Setting* set, QWidget* parent) : Settin
 
     connect(_comboBox, SIGNAL(activated(int)), SettingWidget::setting<SelectSetting>(), SLOT(setCurrentIndex(int)));
 
-    connect(helpIcon, SIGNAL(pressed()), _toolTip, SLOT(show()));
-    connect(helpIcon, SIGNAL(released()), _toolTip, SLOT(hide()));
     _initMode = false;
 }
 

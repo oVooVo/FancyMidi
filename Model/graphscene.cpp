@@ -36,14 +36,15 @@ bool GraphScene::eventFilter(QObject *watched, QEvent *event)
 {
     if (!_locked && event->type() == QEvent::KeyPress) {
         int key = ((QKeyEvent*) event)->key();
-        if (16777223 == key || 16777219 == key) { //entf, backspace
-            _mainWindow->stop();    //TODO
+        if (16777223 == key) {                              //entf
+
             QList<NodeItem*> nodeItemsToDelete;
             QList<InputPort*> disconnectedInputports; //the relation inputport --> connection is unambiguous
             foreach (QGraphicsItem* gi, selectedItems())
             {
                 if (gi->type() == NodeItem::Type) {
                     nodeItemsToDelete.append(((NodeItem*)gi));
+                    ((NodeItem*) gi)->prepareDeletion();
                 } else if (gi->type() == ConnectionItem::Type) {
                     disconnectedInputports.append((InputPort*)((ConnectionItem*)gi)->inputPort()->port());
                 }

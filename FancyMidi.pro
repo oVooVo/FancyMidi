@@ -55,7 +55,6 @@ SOURCES += main.cpp\
     Model/Nodes/nordstage2controlout.cpp \
     Model/Nodes/nordstage2noteout.cpp \
     Model/Nodes/midichannelnode.cpp \
-    Model/Nodes/persistentnode.cpp \
     Model/Nodes/enableablenode.cpp \
     Settings/boolsetting.cpp \
     SettingWidgets/boolsettingwidget.cpp \
@@ -73,8 +72,8 @@ SOURCES += main.cpp\
     logger.cpp \
     Model/minimapgraphscene.cpp \
     View/minimapview.cpp \
-    Model/Nodes/testnode.cpp \
-    View/nodewidget.cpp
+    View/nodewidget.cpp \
+    View/graphicsproxywidget.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -119,7 +118,6 @@ HEADERS  +=  \
     Model/Nodes/nordstage2controlout.h \
     Model/Nodes/nordstage2noteout.h \
     Model/Nodes/midichannelnode.h \
-    Model/Nodes/persistentnode.h \
     Model/Nodes/enableablenode.h \
     Settings/boolsetting.h \
     SettingWidgets/boolsettingwidget.h \
@@ -137,8 +135,8 @@ HEADERS  +=  \
     logger.h \
     Model/minimapgraphscene.h \
     View/minimapview.h \
-    Model/Nodes/testnode.h \
-    View/nodewidget.h
+    View/nodewidget.h \
+    View/graphicsproxywidget.h
 
 FORMS += \
     mainwindow.ui \

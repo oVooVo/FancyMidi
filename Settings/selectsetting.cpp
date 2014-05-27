@@ -6,8 +6,8 @@
 REGISTER_DEFN_SETTINGTYPE(SelectSetting);
 
 SelectSetting::SelectSetting(Node *parent, QString name, QString tooltip, int currentIndex,
-                             QList<QString> values, int defaultIndex)
-    : Setting(parent, name, tooltip)
+                             QList<QString> values, int defaultIndex, bool showInNode)
+    : Setting(parent, name, tooltip, showInNode)
 {
 	_values = values;
 	_currentIndex = currentIndex;

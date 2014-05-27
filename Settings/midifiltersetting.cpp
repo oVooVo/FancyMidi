@@ -6,8 +6,8 @@
 
 REGISTER_DEFN_SETTINGTYPE(MidiFilterSetting);
 
-MidiFilterSetting::MidiFilterSetting(Node *parent, QString name, QString tooltip):
-    Setting(parent, name, tooltip)
+MidiFilterSetting::MidiFilterSetting(Node *parent, QString name, QString tooltip, bool showInNode):
+    Setting(parent, name, tooltip, showInNode)
 {
 }
 

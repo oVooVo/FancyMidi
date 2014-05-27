@@ -13,8 +13,9 @@ class ScalarSetting : public Setting
 {
 public:
     ScalarSetting(Node *parent, QString name, QString tooltip, T min, T max,
-                  T defaultValue, T currentValue)
-        : Setting(parent, name, tooltip)
+                  T defaultValue, T currentValue,
+                  bool showInNode = true)
+        : Setting(parent, name, tooltip, showInNode)
     {
         _default = defaultValue;
         _value = currentValue;
@@ -24,8 +25,8 @@ public:
     }
 
     ScalarSetting(Node *parent, QString name, QString tooltip,
-                  T defaultValue, T currentValue)
-        : Setting(parent, name, tooltip)
+                  T defaultValue, T currentValue, bool showInNode = true)
+        : Setting(parent, name, tooltip, showInNode)
     {
         _default = defaultValue;
         _value = currentValue;

@@ -11,8 +11,9 @@
 class MidiCommandSelectSetting : public Setting
 {
     Q_OBJECT
+
 public:
-    MidiCommandSelectSetting(Node *parent, QString name, QString tooltip);
+    MidiCommandSelectSetting(Node *parent, QString name, QString tooltip, bool showInNode = true);
     MidiCommandSelectSetting(QDataStream& stream);
     void writeToStream(QDataStream &stream) const;
     ~MidiCommandSelectSetting();

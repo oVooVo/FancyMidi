@@ -13,7 +13,6 @@ PitchBendOutput::PitchBendOutput(QDataStream& stream) : MidiChannelNode(stream)
     setting<DoubleSetting>("Pitch")->connectPort(inputPort("Pitch"));
 
     connect(inputPort("Trigger"), &InputPort::receivedData, [this]() {
-        qDebug() << "send pitch";
         QPair<MidiKey, quint8> code = Domains::encodePitch(setting<DoubleSetting>("Pitch")->value());
         NordStage2::channel(channel())->sendMidiCommand(code.first, code.second);
     });

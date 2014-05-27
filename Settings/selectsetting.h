@@ -10,7 +10,7 @@
  */
 class SelectSetting : public Setting
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
     /**
@@ -21,7 +21,8 @@ public:
      * @param defaultEntry Set the value chosen by default, it has to be a number existing in the given map
      * @param values Contains all things to be chosen from (String and a int)
      */
-    SelectSetting(Node *parent, QString name, QString infoText, int currentIndex, QList<QString> values, int defaultValue);
+    SelectSetting(Node *parent, QString name, QString infoText, int currentIndex, QList<QString> values, int defaultValue,
+                  bool showInNode = true);
     SelectSetting(QDataStream &stream);
     virtual void writeToStream(QDataStream& stream) const;
 

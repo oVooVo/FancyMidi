@@ -12,8 +12,6 @@ IntegerSettingWidget::IntegerSettingWidget(Setting* set, QWidget *parent) : Sett
     _initMode = true;
 	setupUi(this);
     _title->setText(setting<IntegerSetting>()->name());
-    _toolTip->setText(setting<IntegerSetting>()->tooltip());
-    _toolTip->setVisible(false);
 
     _slider->setVisible(setting<IntegerSetting>()->hasBounds());
     _spinBox->setVisible(setting<IntegerSetting>()->hasBounds());
@@ -42,9 +40,6 @@ IntegerSettingWidget::IntegerSettingWidget(Setting* set, QWidget *parent) : Sett
             setting<IntegerSetting>()->setValue(lineEdit->text().toInt());
         });
     }
-
-    connect(helpIcon, SIGNAL(pressed()), _toolTip, SLOT(show()));
-    connect(helpIcon, SIGNAL(released()), _toolTip, SLOT(hide()));
     _initMode = false;
     reset();
 }
@@ -58,6 +53,5 @@ void IntegerSettingWidget::reset()
         lineEdit->setText(QString("%1").arg(setting<IntegerSetting>()->value()));
     }
 }
-
 
 

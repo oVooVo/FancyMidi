@@ -204,6 +204,15 @@ void Node::setParent(Project *project)
     QObject::setParent(project);
 }
 
+bool Node::hasSettingsToDisplayInNode() const
+{
+    for (Setting* s : settings()) {
+        if (s->showInNode())
+            return true;
+    }
+    return false;
+}
+
 
 
 

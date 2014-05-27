@@ -5,6 +5,7 @@
 #include <QSlider>
 #include <QSpinBox>
 #include "ui_integersettingwidget.h"
+#include <QKeyEvent>
 
 /**
  * @brief The IntegerSettingWidget class provides a graphical user interface for the IntegerSetting class.
@@ -30,6 +31,7 @@ public:
 private slots:
     //void forwardValue(int value);
     void reset();
+
 };
 
 

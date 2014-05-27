@@ -5,6 +5,8 @@
 #include "Model/Nodes/node.h"
 #include "Model/port.h"
 #include <QSlider>
+#include "graphicsproxywidget.h"
+#include "SettingWidgets/settingwidget.h"
 
 class NodeEvent;
 class AbstractGraphScene;
@@ -68,6 +70,8 @@ public:
 */
     void setSize(QSizeF size);
 
+    void prepareDeletion();
+
 private:
     /**
 * @brief itemChange is calles when this NodeItem made a change.
@@ -87,6 +91,8 @@ private:
     AbstractGraphScene* getGraphScene() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void updateConnections();
+    GraphicsProxyWidget* _settingsItem = 0;
+    QList<SettingWidget*> _settingWidgets;
 
     int _portCount;
     int _portItemRadius;
