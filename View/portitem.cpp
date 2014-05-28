@@ -56,11 +56,11 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
 
         if (_port->isInput()) {
             QObject::connect((InputPort*) _port, &InputPort::receivedData, [this]() {
-                _timer.start(1);
+                _timer.start(30);
             });
         } else {
             QObject::connect((OutputPort*) _port, &OutputPort::sendData, [this]() {
-                _timer.start(1);
+                _timer.start(30);
             });
         }
     }

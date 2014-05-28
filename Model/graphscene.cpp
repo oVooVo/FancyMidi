@@ -34,16 +34,16 @@ GraphScene::GraphScene(Project *project, MainWindow* mainWindow, QObject *parent
 
 bool GraphScene::eventFilter(QObject *watched, QEvent *event)
 {
-    if (!_locked && event->type() == QEvent::KeyPress) {
+    if (event->type() == QEvent::KeyPress) {
         int key = ((QKeyEvent*) event)->key();
-        if (16777223 == key) {                              //entf
+        if (16777223 == key && ((QKeyEvent*) event)->modifiers() == Qt::ControlModifier) {                              //entf
 
             QList<NodeItem*> nodeItemsToDelete;
             QList<InputPort*> disconnectedInputports; //the relation inputport --> connection is unambiguous
             foreach (QGraphicsItem* gi, selectedItems())
             {
                 if (gi->type() == NodeItem::Type) {
-                    nodeItemsToDelete.append(((NodeItem*)gi));
+                    nodeItemsToDelete.append(((NodeItem*) gi));
                     ((NodeItem*) gi)->prepareDeletion();
                 } else if (gi->type() == ConnectionItem::Type) {
                     disconnectedInputports.append((InputPort*)((ConnectionItem*)gi)->inputPort()->port());

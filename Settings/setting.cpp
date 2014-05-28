@@ -53,7 +53,6 @@ QDataStream &operator>>(QDataStream &in, Setting *&setting)
 {
     QString classname;
     in >> classname;
-    qDebug() << "read " << classname;
     setting = Setting::createInstance(classname, in);
     return in;
 }
@@ -66,10 +65,7 @@ Setting *Setting::createInstance(QString className, QDataStream &stream)
 
     QMap<QString, Setting* (*)(QDataStream&)>::iterator it = _creatorMap->find(className);
 
-    qDebug() << _creatorMap->contains(className);
 
-    qDebug() << className;
-    qDebug() << *_creatorMap;
     Q_ASSERT(it != _creatorMap->end());
 
     return (it.value())(stream);

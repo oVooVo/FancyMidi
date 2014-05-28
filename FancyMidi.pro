@@ -74,7 +74,10 @@ SOURCES += main.cpp\
     View/minimapview.cpp \
     View/nodewidget.cpp \
     View/graphicsproxywidget.cpp \
-    numbered.cpp
+    numbered.cpp \
+    Settings/sequencesetting.cpp \
+    Model/Nodes/sequencenode.cpp \
+    SettingWidgets/sequencesettingwidget.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -138,7 +141,10 @@ HEADERS  +=  \
     View/minimapview.h \
     View/nodewidget.h \
     View/graphicsproxywidget.h \
-    numbered.h
+    numbered.h \
+    Settings/sequencesetting.h \
+    Model/Nodes/sequencenode.h \
+    SettingWidgets/sequencesettingwidget.h
 
 FORMS += \
     mainwindow.ui \

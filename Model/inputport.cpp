@@ -3,6 +3,7 @@
 #include "outputport.h"
 #include "Nodes/node.h"
 #include "port.h"
+#include <QTimer>
 
 InputPort::InputPort(Node* node, QString name, QString infoText, Type type): Port(node, name, infoText, type)
 {
@@ -52,9 +53,17 @@ OutputPort* InputPort::source() const
     return _source;
 }
 
+void InputPort::emitReceivedDate()
+{
+    emit receivedData(QVariant());
+}
+
 void InputPort::receive(QVariant data)
 {
-    emit receivedData(data);
+    if (type() == Trigger)
+        QTimer::singleShot(DELAY_TRIGGER, this, SLOT(emitReceivedDate()));
+    else
+        emit receivedData(data);
 }
 
 

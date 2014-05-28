@@ -51,7 +51,11 @@ public:
 
 signals:
     void receivedData(QVariant data);
+private slots:
+    void emitReceivedDate();
 
+private:
+    static const int DELAY_TRIGGER = 0;
 
 protected:
     /**
