@@ -76,6 +76,7 @@ protected:
         } else {
             _value = value;
         }
+
         emitChanged();
 
     }

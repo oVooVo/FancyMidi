@@ -11,5 +11,13 @@ ToIntegerNode::ToIntegerNode(QDataStream& stream)
     addPort(new OutputPort(this, "Integer", "", Port::Scalar));
 
     setting<IntegerSetting>("Integer")->connectPort(inputPort("Value"));
+
+
+    connect(inputPort("Value"), &InputPort::receivedData, [this](QVariant data) {
+        if (!data.canConvert<int>())
+            return;
+        setting<IntegerSetting>("Integer")->setValue(data.value<double>());
+    });
+
     setting<IntegerSetting>("Integer")->connectPort(outputPort("Integer"));
 }

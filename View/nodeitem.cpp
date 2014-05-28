@@ -93,11 +93,14 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
     QPen pen;
     pen.setColor(Qt::lightGray);
     pen.setWidth(2);
+    if (_settingsItem && _showSettings && isSelected()) {
+        _settingsItem->show();
+    } else if (_settingsItem) {
+        _settingsItem->hide();
+    }
     if (isSelected()) {
-        if (_settingsItem)  _settingsItem->show();
         painter->setBrush(QColor(255, 255, 0, 210));
     } else {
-        if (_settingsItem) _settingsItem->hide();
         painter->setBrush(QColor(180, 180, 180, 210));
     }
     painter->setPen(pen);
@@ -181,12 +184,17 @@ QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     //If this is moved by user
     if (change == ItemPositionHasChanged) {
+        _wasMoved = true;
+        _showSettings = false;
         getGraphScene()->beginUpdate();
         _node->setPosition(value.toPoint()); //Set pos in Model
         updateConnections();
         getGraphScene()->endUpdate();
+    } else if (change == ItemSelectedChange) {
+        if (!value.value<bool>())
+            _showSettings = false;
     }
-    return value;
+    return QGraphicsItem::itemChange(change, value);
 }
 
 void NodeItem::updateConnections()
@@ -213,11 +221,15 @@ void NodeItem::prepareDeletion()
     qDeleteAll(_settingWidgets);
 }
 
+void NodeItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    _wasMoved = false;
+    QGraphicsItem::mousePressEvent(event);
+}
 
-
-
-
-
-
-
-
+void NodeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    QGraphicsItem::mouseReleaseEvent(event);
+    _showSettings = !_wasMoved & isSelected();
+    update();
+}

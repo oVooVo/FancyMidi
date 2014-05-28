@@ -36,69 +36,66 @@ bool GraphScene::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress) {
         int key = ((QKeyEvent*) event)->key();
-        if (16777223 == key && ((QKeyEvent*) event)->modifiers() == Qt::ControlModifier) {                              //entf
+        if (((QKeyEvent*) event)->modifiers() == Qt::ControlModifier) {
+            if (16777223 == key) {                              //entf
 
-            QList<NodeItem*> nodeItemsToDelete;
-            QList<InputPort*> disconnectedInputports; //the relation inputport --> connection is unambiguous
-            foreach (QGraphicsItem* gi, selectedItems())
-            {
-                if (gi->type() == NodeItem::Type) {
-                    nodeItemsToDelete.append(((NodeItem*) gi));
-                    ((NodeItem*) gi)->prepareDeletion();
-                } else if (gi->type() == ConnectionItem::Type) {
-                    disconnectedInputports.append((InputPort*)((ConnectionItem*)gi)->inputPort()->port());
-                }
-            }
-
-            foreach (InputPort* inputPort, disconnectedInputports) {
-                foreach (NodeItem* ni, nodeItemsToDelete)
+                QList<NodeItem*> nodeItemsToDelete;
+                QList<InputPort*> disconnectedInputports; //the relation inputport --> connection is unambiguous
+                foreach (QGraphicsItem* gi, selectedItems())
                 {
-                    if (ni->node() == inputPort->node()) {
-                        disconnectedInputports.removeOne(inputPort);
-                        break;
+                    if (gi->type() == NodeItem::Type) {
+                        nodeItemsToDelete.append(((NodeItem*) gi));
+                        ((NodeItem*) gi)->prepareDeletion();
+                    } else if (gi->type() == ConnectionItem::Type) {
+                        disconnectedInputports.append((InputPort*)((ConnectionItem*)gi)->inputPort()->port());
                     }
                 }
-            }
-			foreach (InputPort* inputPort, disconnectedInputports) {
-				inputPort->disconnect();
-			}
-            foreach (NodeItem* n, nodeItemsToDelete) {
-                delete n->node();
-            }
-            _model->popularizeModelChange();
-            _model->popularizeNodesChange(disconnectedInputports);
-            showSettings(selectedNodes());
-            redraw();
-        } else if (16777249 == key) {   //strg
-            _strgPressed = true;
-        } else if (65 == key && _strgPressed) { //A
-            foreach (QGraphicsItem* gi, items()) {
-                if (gi->type() == NodeItem::Type) {
-                    gi->setSelected(true);
-                } else {
-                    gi->setSelected(false);
+
+                foreach (InputPort* inputPort, disconnectedInputports) {
+                    foreach (NodeItem* ni, nodeItemsToDelete)
+                    {
+                        if (ni->node() == inputPort->node()) {
+                            disconnectedInputports.removeOne(inputPort);
+                            break;
+                        }
+                    }
                 }
-            }
-        } else if (67 == key && _strgPressed) { //C
-            copy();
-        } else if (84 == key && _strgPressed) { //T
-            foreach (QGraphicsItem* gi, items()) {
-                if (gi->type() == ConnectionItem::Type) {
-                    gi->setSelected(true);
-                } else {
-                    gi->setSelected(false);
+                foreach (InputPort* inputPort, disconnectedInputports) {
+                    inputPort->disconnect();
                 }
+                foreach (NodeItem* n, nodeItemsToDelete) {
+                    delete n->node();
+                }
+                _model->popularizeModelChange();
+                _model->popularizeNodesChange(disconnectedInputports);
+                showSettings(selectedNodes());
+                redraw();
+            } else if (16777249 == key) {   //strg
+                _strgPressed = true;
+            } else if (65 == key && ((QKeyEvent*) event)->modifiers() == Qt::ControlModifier) { //A
+                foreach (QGraphicsItem* gi, items()) {
+                    if (gi->type() == NodeItem::Type) {
+                        gi->setSelected(true);
+                    } else {
+                        gi->setSelected(false);
+                    }
+                }
+            } else if (67 == key) { //C
+                copy();
+            } else if (84 == key) { //T
+                foreach (QGraphicsItem* gi, items()) {
+                    if (gi->type() == ConnectionItem::Type) {
+                        gi->setSelected(true);
+                    } else {
+                        gi->setSelected(false);
+                    }
+                }
+            } else if (86 == key) { //V
+                paste();
             }
-        } else if (!_locked && 86 == key && _strgPressed) { //V
-            paste();
         }
     }
-    if (event->type() == QEvent::KeyRelease) {
-        int key = ((QKeyEvent*) event)->key();
-        if (16777249 == key) {   //strg
-            _strgPressed = false;
-        }
-    }
+
     return QGraphicsScene::eventFilter(watched, event);
 }
 

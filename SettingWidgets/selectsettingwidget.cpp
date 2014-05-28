@@ -1,6 +1,7 @@
 #include "selectsettingwidget.h"
 #include "../Settings/selectsetting.h"
 #include <QHBoxLayout>
+#include <QPushButton>
 
 REGISTER_DEFN_SETTINGWIDGETTYPE(SelectSettingWidget);
 

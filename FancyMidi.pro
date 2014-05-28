@@ -77,7 +77,8 @@ SOURCES += main.cpp\
     numbered.cpp \
     Settings/sequencesetting.cpp \
     Model/Nodes/sequencenode.cpp \
-    SettingWidgets/sequencesettingwidget.cpp
+    SettingWidgets/sequencesettingwidget.cpp \
+    Model/Nodes/switch.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -144,7 +145,8 @@ HEADERS  +=  \
     numbered.h \
     Settings/sequencesetting.h \
     Model/Nodes/sequencenode.h \
-    SettingWidgets/sequencesettingwidget.h
+    SettingWidgets/sequencesettingwidget.h \
+    Model/Nodes/switch.h
 
 FORMS += \
     mainwindow.ui \

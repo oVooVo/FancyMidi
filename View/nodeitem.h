@@ -7,6 +7,7 @@
 #include <QSlider>
 #include "graphicsproxywidget.h"
 #include "SettingWidgets/settingwidget.h"
+#include <QGraphicsSceneMouseEvent>
 
 class NodeEvent;
 class AbstractGraphScene;
@@ -72,6 +73,11 @@ public:
 
     void prepareDeletion();
 
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
 private:
     /**
 * @brief itemChange is calles when this NodeItem made a change.
@@ -79,7 +85,6 @@ private:
 * @param value the new value. E.g. the NodeItem moved, it is the new position.
 * @return value.
 */
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     void addPort(Port* port, const QString &name, bool isOutput, int flags = 0);
     int horzMargin;
     int vertMargin;
@@ -93,6 +98,8 @@ private:
     void updateConnections();
     GraphicsProxyWidget* _settingsItem = 0;
     QList<SettingWidget*> _settingWidgets;
+    bool _showSettings = false;
+    bool _wasMoved = false;
 
     int _portCount;
     int _portItemRadius;

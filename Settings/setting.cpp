@@ -19,12 +19,14 @@ Setting::Setting(Node *parent, QString name, QString tooltip, bool showInNode):
 
 Setting::Setting(QDataStream& stream)
 {
-    stream >> _name >> _tooltip >> _showInNode;
+    int number;
+    stream >> _name >> _tooltip >> _showInNode >> number;
+    setNumber(number);
 }
 
 void Setting::writeToStream(QDataStream& stream) const
 {
-    stream << _name << _tooltip << _showInNode;
+    stream << _name << _tooltip << _showInNode << number();
 }
 
 
@@ -64,7 +66,6 @@ Setting *Setting::createInstance(QString className, QDataStream &stream)
     }
 
     QMap<QString, Setting* (*)(QDataStream&)>::iterator it = _creatorMap->find(className);
-
 
     Q_ASSERT(it != _creatorMap->end());
 

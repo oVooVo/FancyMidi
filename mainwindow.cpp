@@ -55,6 +55,8 @@ void MainWindow::setProject(Project *project)
         ui->textEdit->append(log);
     });
 
+    centerOn(ui->minimapView->mapToScene(ui->minimapView->viewport()->rect().center()));
+
     updateWindowTitle();
 }
 
