@@ -32,11 +32,17 @@ Node::~Node()
 
 const QList<OutputPort*> Node::outputPorts() const
 {
-    return _outputs.values();
+    return sort(_outputs.values());
+
 }
 const QList<InputPort*> Node::inputPorts() const
 {
-    return _inputs.values();
+    return sort(_inputs.values());
+}
+
+const QList<Setting*> Node::settings() const
+{
+    return sort(_settings.values());
 }
 
 void Node::setPosition(QPoint position)
@@ -52,10 +58,6 @@ QPoint Node::getPosition() const
 	return _position;
 }
 
-const QList<Setting*> Node::settings() const
-{
-    return _settings.values();
-}
 
 Project* Node::getProject() {
     return qobject_cast<Project *>(parent());
@@ -142,10 +144,12 @@ void Node::addPort(Port *port)
     if (port->isInput()) {
         Q_ASSERT(!_inputs.contains(port->name()));
         _inputs.insert(port->name(), (InputPort*) port);
+        port->setNumber(_num_inputs++);
     } else {
         Q_ASSERT(!_outputs.contains(port->name()));
         _outputs.insert(port->name(), (OutputPort*) port);
         ((OutputPort*) port)->setBlock(_block);
+        port->setNumber(_num_outputs++);
     }
 }
 
@@ -155,6 +159,7 @@ void Node::addSetting(Setting *setting)
         delete setting; //setting already exists (e.g. created from deserialization).
     } else {
         _settings.insert(setting->name(), setting);
+        setting->setNumber(_num_settings++);
     }
 }
 
@@ -213,6 +218,35 @@ bool Node::hasSettingsToDisplayInNode() const
     return false;
 }
 
+template<typename T>
+QList<T> merge(QList<T> a, QList<T> b)
+{
+    QList<T> m;
+    while (!a.isEmpty() || !b.isEmpty()) {
+        if (b.isEmpty() || a.isEmpty()) {
+            m.append(b);
+            m.append(a);
+            break;
+        }
+        if (a.first()->number() < b.first()->number()) {
+            m.append(a.takeFirst());
+        } else {
+            m.append(b.takeFirst());
+        }
+    }
+    return m;
+}
+
+template<typename T>
+QList<T> Node::sort(QList<T> list)
+{
+    if (list.size() <= 1)
+        return list;
+
+    QList<T> left  = sort(list.mid(0, list.length() / 2));
+    QList<T> right = sort(list.mid(list.length() / 2));
+    return merge(left, right);
+}
 
 
 

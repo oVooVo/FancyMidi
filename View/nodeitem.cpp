@@ -53,7 +53,7 @@ NodeItem::NodeItem(Node* node, bool selectable, QGraphicsScene *scene, QGraphics
     setFlag(ItemSendsGeometryChanges); //tell me position changes
     _pwidth = width;
     _pheight = height;
-    p.addRoundedRect(0, 0, width, height, 5, 5);
+    p.addRoundedRect(0, 0, width, height, 2, 2);
     setPath(p);
 
     if (node->hasSettingsToDisplayInNode()) {
@@ -91,7 +91,7 @@ Node* NodeItem::node()
 void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     QPen pen;
-    pen.setColor(Qt::darkGray);
+    pen.setColor(Qt::lightGray);
     pen.setWidth(2);
     if (isSelected()) {
         if (_settingsItem)  _settingsItem->show();
@@ -120,7 +120,7 @@ void NodeItem::addPort(Port* port, const QString &name, bool isOutput, int flags
     height += h;
 
     QPainterPath p;
-    p.addRoundedRect(0, 0, width, height, 5, 5);
+    p.addRoundedRect(0, 0, width, height, 2, 2);
 
     int y = vertMargin + portItem->radius();
 

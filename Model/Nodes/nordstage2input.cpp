@@ -11,9 +11,23 @@ NordStage2Input::NordStage2Input(QDataStream& stream)
     addPort(new OutputPort(this, "Channel", "", Port::Scalar));
     addPort(new OutputPort(this, "Category", "", Port::Scalar));
     addPort(new OutputPort(this, "Property", "", Port::Scalar));
+    addPort(new OutputPort(this, "Type", "", Port::Scalar));
     addPort(new OutputPort(this, "Value", "", Port::Scalar));
 
     addSetting(new MidiFilterSetting(this, "Midi Filter", ""));
+
+    connect(setting<MidiFilterSetting>("Midi Filter"), &MidiFilterSetting::channelChanged, [this](int channel) {
+        outputPort("Channel")->sendData(channel);
+    });
+    connect(setting<MidiFilterSetting>("Midi Filter"), &MidiFilterSetting::categoryChanged, [this](int category) {
+        outputPort("Category")->sendData(category);
+    });
+    connect(setting<MidiFilterSetting>("Midi Filter"), &MidiFilterSetting::propertyChanged, [this](int property) {
+        outputPort("Property")->sendData(property);
+    });
+    connect(setting<MidiFilterSetting>("Midi Filter"), &MidiFilterSetting::typeChanged, [this](int type) {
+        outputPort("Type")->sendData(type);
+    });
 
     for (int i = 0; i < Keyboard::NUM_MIDI_CHANNELS; i++) {
         connect(NordStage2::channel(i), SIGNAL(midiInput(int,MidiKey,QVariant)),

@@ -20,6 +20,11 @@ public:
 private:
     Ui::MidiFilterSettingWidget *ui;
 
+signals:
+    void categoryChanged(int);
+    void propertyChanged(int);
+    void typeChanged(int);
+
 private slots:
     void updateVisibility();
     void reset();

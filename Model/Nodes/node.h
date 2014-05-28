@@ -8,6 +8,7 @@
 #include <QChildEvent>
 #include <QCoreApplication>
 #include <QDebug>
+#include "numbered.h"
 
 class InputPort;
 class OutputPort;
@@ -164,6 +165,12 @@ private:
     QString _infoText;
     QSizeF _size;
     bool _block = false;
+    int _num_outputs = 0;
+    int _num_inputs = 0;
+    int _num_settings = 0;
+
+    template<typename T>
+    static QList<T> sort(QList<T> setting);
 
 signals:
     void newLogMessage(QString);

@@ -7,6 +7,7 @@
 #include "Model/Nodes/node.h"
 #include "Model/port.h"
 #include <QByteArray>
+#include "numbered.h"
 
 class SettingWidget;
 
@@ -17,8 +18,7 @@ template<typename T> Setting *createSetting(QDataStream& data) { return new T(da
 /**
  * @brief The Setting class is the abstract model of handling preferences
  */
-class Setting:
-	public QObject
+class Setting : public QObject, public Numbered
 {
 Q_OBJECT
 
@@ -54,7 +54,6 @@ public:
     virtual void connectPort(Port* port) { Q_UNUSED(port); }
 
     bool showInNode() const { return _showInNode; }
-
 
 signals:
 

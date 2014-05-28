@@ -39,6 +39,7 @@ void MidiFilterSetting::setCategoryIndex(int category)
     _propertyIndex = 0;
 
     emitChanged();
+    emit categoryChanged(category);
 }
 
 void MidiFilterSetting::setPropertyIndex(int property)
@@ -48,6 +49,7 @@ void MidiFilterSetting::setPropertyIndex(int property)
 
     _propertyIndex = qBound(0, property, NordStage2::properties(_categoryIndex).length() - 1);
     emitChanged();
+    emit propertyChanged(property);
 }
 
 void MidiFilterSetting::setChannel(int channel)
@@ -56,7 +58,8 @@ void MidiFilterSetting::setChannel(int channel)
         return;
 
     _channel = qBound(0, channel, Keyboard::NUM_MIDI_CHANNELS - 1);
-    emit changed();
+    emitChanged();
+    emit channelChanged(channel);
 }
 
 void MidiFilterSetting::setTypeIndex(int type)
@@ -65,7 +68,8 @@ void MidiFilterSetting::setTypeIndex(int type)
         return;
 
     _typeIndex = qBound(0, type, 6);
-    emit changed();
+    emitChanged();
+    emit typeChanged(type);
 }
 
 void MidiFilterSetting::setFilterCategory(bool filter)
@@ -74,7 +78,7 @@ void MidiFilterSetting::setFilterCategory(bool filter)
         return;
 
     _filterCategory = filter;
-    emit changed();
+    emitChanged();
 }
 
 void MidiFilterSetting::setFilterProperty(bool filter)
@@ -83,7 +87,7 @@ void MidiFilterSetting::setFilterProperty(bool filter)
         return;
 
     _filterProperty = filter;
-    emit changed();
+    emitChanged();
 }
 
 void MidiFilterSetting::setFilterChannel(bool filter)
@@ -92,7 +96,7 @@ void MidiFilterSetting::setFilterChannel(bool filter)
         return;
 
     _filterChannel = filter;
-    emit changed();
+    emitChanged();
 }
 
 void MidiFilterSetting::setFilterType(bool filter)
@@ -101,7 +105,7 @@ void MidiFilterSetting::setFilterType(bool filter)
         return;
 
     _filterType = filter;
-    emit changed();
+    emitChanged();
 }
 
 MidiKey::MidiType MidiFilterSetting::type() const

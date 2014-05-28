@@ -3,11 +3,12 @@
 #include <QSharedPointer>
 #include "Nodes/node.h"
 #include "packet.h"
+#include "numbered.h"
 
 /**
  * @brief The Port class is a abstract class to have common method shared between input and output port
  */
-class Port : public QObject
+class Port : public QObject, public Numbered
 {
     Q_OBJECT
 public:
@@ -51,6 +52,7 @@ public:
     Type type() const { return _type; }
 
     static bool canConnect(const Port *port1, const Port *port2);
+
 
 private:
     Node* _node;

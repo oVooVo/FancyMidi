@@ -73,7 +73,8 @@ SOURCES += main.cpp\
     Model/minimapgraphscene.cpp \
     View/minimapview.cpp \
     View/nodewidget.cpp \
-    View/graphicsproxywidget.cpp
+    View/graphicsproxywidget.cpp \
+    numbered.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -136,7 +137,8 @@ HEADERS  +=  \
     Model/minimapgraphscene.h \
     View/minimapview.h \
     View/nodewidget.h \
-    View/graphicsproxywidget.h
+    View/graphicsproxywidget.h \
+    numbered.h
 
 FORMS += \
     mainwindow.ui \

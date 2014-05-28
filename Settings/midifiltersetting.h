@@ -40,6 +40,12 @@ public slots:
     void setFilterChannel(bool filter);
     void setFilterType(bool filter);
 
+signals:
+    void categoryChanged(int);
+    void propertyChanged(int);
+    void typeChanged(int);
+    void channelChanged(int);
+
 
 private:
     int _channel = 0;
