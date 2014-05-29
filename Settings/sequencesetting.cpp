@@ -78,7 +78,6 @@ bool SequenceSetting::setSequence(QString seq)
         _notes.append(decode(noteValue(note),
                              accidental.isEmpty() ? 0 : accidental == FLAT ? -1 : 1,
                              (octave.startsWith(OCTAVE_UP) ? -1 : 1) * octave.length()));
-        qDebug() << "set value " << _notes.last();
     }
 
     emit changed();

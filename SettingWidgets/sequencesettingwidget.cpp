@@ -14,19 +14,20 @@ SequenceSettingWidget::SequenceSettingWidget(Setting* set, QWidget *parent) :
     layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);
     _sequenceEdit->setPlaceholderText("Type Sequence ...");
-    connect(_sequenceEdit, &QLineEdit::editingFinished, [this](){
-        QString replaced = _sequenceEdit->text();
+    connect(_sequenceEdit, &QLineEdit::textChanged, [this](const QString& text){
+        int  cursorPosition = _sequenceEdit->cursorPosition();
+        QString replaced = text;
         replaced.replace(QRegExp("\\+|#|(IS)|(is)"), SequenceSetting::SHARP);
         replaced.replace(QRegExp("-|p|s"), SequenceSetting::FLAT);
         replaced.replace(QRegExp("´|`"), SequenceSetting::OCTAVE_UP);
         replaced.replace(QRegExp("\\."), SequenceSetting::OCTAVE_DOWN);
-        replaced = replaced.toUpper();
-        _sequenceEdit->setText(replaced);
         if (setting<SequenceSetting>()->setSequence(replaced)) {
             _sequenceEdit->setStyleSheet("QLineEdit { background-color: white }");
         } else {
             _sequenceEdit->setStyleSheet("QLineEdit { background-color: #FF8888 }");
         }
+        _sequenceEdit->setText(replaced.toUpper());
+        _sequenceEdit->setCursorPosition(cursorPosition);
     });
     reset();
 }
