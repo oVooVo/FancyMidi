@@ -9,6 +9,7 @@ class Switch : public Node
 public:
     Switch(QDataStream& stream);
 
+    QString category() const { return "Logic"; }
 
 
     REGISTER_DECL_NODETYPE(Switch);

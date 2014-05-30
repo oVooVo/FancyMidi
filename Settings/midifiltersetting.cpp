@@ -116,6 +116,7 @@ MidiKey::MidiType MidiFilterSetting::type() const
     case 2: return MidiKey::ControlChange;
     case 3: return MidiKey::ProgramChange;
     case 4: return MidiKey::PitchBend;
+    case 5: return MidiKey::Aftertouch;
     default:
         return MidiKey::Unknown;
     }

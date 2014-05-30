@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include "logger.h"
+#include "keyboard.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,6 +22,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->graphicsView, SIGNAL(viewRectangleChanged(QRectF)), this, SLOT(updateMinimap()));
     ui->minimapView->installEventFilter(this); //recognize resizing due to redraw
+
+    connect(ui->actionStartStop, SIGNAL(toggled(bool)), this, SLOT(startStopSimulation(bool)));
+    connect(ui->actionSend_All_Notes_Off, SIGNAL(triggered()), this, SLOT(allNotesOff()));
+    connect(ui->actionConnect_Device, &QAction::triggered, [](){
+       MidiHandler::connectMidiDevice();
+    });
 
     readSettings();
 }
@@ -40,6 +47,7 @@ void MainWindow::setProject(Project *project)
         delete _minimapScene;
 
     _project = project;
+    _project->stop();
     _scene = new GraphScene(_project, this, this);
     _minimapScene = new MinimapGraphScene(this, _project, this);
     ui->graphicsView->setScene(_scene);
@@ -239,4 +247,20 @@ void MainWindow::writeSettings()
     settings.setValue("Geometry", saveGeometry());
     settings.setValue("State", saveState());
     settings.endGroup();
+}
+
+void MainWindow::allNotesOff()
+{
+    Keyboard::allNotesOff();
+}
+
+void MainWindow::startStopSimulation(bool stop)
+{
+    if (stop) {
+        _project->stop();
+        ui->actionStartStop->setText("&Start");
+    } else {
+        _project->start();
+        ui->actionStartStop->setText("&Stop");
+    }
 }

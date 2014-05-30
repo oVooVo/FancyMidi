@@ -7,7 +7,7 @@
 #include <QTimer>
 #include "logger.h"
 
-#define PHANTOM       // does not really sends midi commands thus no need for connection to midi device.
+//#define PHANTOM       // does not really sends midi commands thus no need for connection to midi device.
 
 MidiHandler* MidiHandler::_singleton = 0;
 
@@ -52,6 +52,7 @@ bool MidiHandler::disconnectMidiDevice_Private()
         close(_notifier->socket());
         delete _notifier;
         _notifier = 0;
+        _valid = false;
         return true;
     } else {
         return false;
@@ -63,6 +64,7 @@ void MidiHandler::readyRead()
 #ifdef PHNATOM
     return;
 #endif
+
     quint8 buffer[3] = {0,0,0};
     read(_notifier->socket(), &buffer, 3);
 

@@ -9,6 +9,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include "numbered.h"
+#include <QTimer>
 
 class InputPort;
 class OutputPort;
@@ -134,9 +135,14 @@ public:
 
     bool hasSettingsToDisplayInNode() const;
 
+public slots:
+    void start();
+    void stop();
+
 protected:
     void addPort(Port* port);
     void addSetting(Setting* setting);
+    void registerTimer(QTimer* timer);
     InputPort* inputPort(QString key) const;
     OutputPort* outputPort(QString key) const;
     template<typename T> T* setting(QString key) const
@@ -160,6 +166,7 @@ private:
     QMap<QString, InputPort*> _inputs;
     QMap<QString, OutputPort*> _outputs;
     QMap<QString, Setting*> _settings;
+    QList<QTimer*> _timer;              // timers that can be startet and stopped via Node::start() and Node::stop()
     QPoint _position;
     QString _name;
     QString _infoText;
@@ -189,7 +196,7 @@ struct NodeRegister : Node
 
 #define REGISTER_DECL_NODETYPE(CLASSNAME) \
 private:    \
-	static NodeRegister<CLASSNAME> reg
+    static NodeRegister<CLASSNAME> reg
 
 #define REGISTER_DEFN_NODETYPE(CLASSNAME) \
 	NodeRegister<CLASSNAME> CLASSNAME::reg(#CLASSNAME)

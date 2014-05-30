@@ -168,3 +168,17 @@ QString Project::name() const
 
     return _projectPath->fileName();
 }
+
+void Project::stop()
+{
+    for (Node* node : _nodes) {
+        node->stop();
+    }
+}
+
+void Project::start()
+{
+    for (Node* node : _nodes) {
+        node->start();
+    }
+}

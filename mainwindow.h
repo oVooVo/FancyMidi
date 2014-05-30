@@ -49,6 +49,8 @@ private slots:
     void updateMinimapDelayed();
     void updateMinimap();
     void centerOn(QPointF center);
+    void startStopSimulation(bool stop);
+    void allNotesOff();
 };
 
 #endif // MAINWINDOW_H

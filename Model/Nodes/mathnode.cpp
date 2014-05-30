@@ -17,13 +17,13 @@ MathNode::MathNode(QDataStream& stream)
     addSetting(new DoubleSetting(this, "B", "", 0, 0));
 
     addSetting(new SelectSetting(this, "Operator", "", 0, QStringList()
-                                 << "+" << "-" << "*" << "/" << "own", 0));
+                                 << "+" << "-" << "*" << "/" << "%" << "own", 0));
 
     setting<DoubleSetting>("A")->connectPort(inputPort("A"));
     setting<DoubleSetting>("B")->connectPort(inputPort("B"));
 
-    connect(setting<DoubleSetting>("A"), SIGNAL(changed()), this, SLOT(calculate()));
-    connect(setting<DoubleSetting>("B"), SIGNAL(changed()), this, SLOT(calculate()));
+    connect(inputPort("A"), SIGNAL(receivedData(QVariant)), this, SLOT(calculate()));
+    connect(inputPort("B"), SIGNAL(receivedData(QVariant)), this, SLOT(calculate()));
 }
 
 void MathNode::calculate()
@@ -50,6 +50,9 @@ void MathNode::calculate()
         result = a / b;
         break;
     case 4:
+        result = fmod(a, b);
+        break;
+    case 5:
         //TODO result = Parser::parse(setting<StringSetting>("term")->value(), map);
         result = 0;
         break;

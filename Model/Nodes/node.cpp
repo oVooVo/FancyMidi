@@ -65,6 +65,8 @@ Project* Node::getProject() {
 
 QString Node::name() const
 {
+    if (_name.isEmpty())
+        return metaObject()->className();
     return _name;
 }
 
@@ -246,6 +248,23 @@ QList<T> Node::sort(QList<T> list)
     QList<T> left  = sort(list.mid(0, list.length() / 2));
     QList<T> right = sort(list.mid(list.length() / 2));
     return merge(left, right);
+}
+
+void Node::start()
+{
+    for (QTimer* timer : _timer)
+        timer->start();
+}
+
+void Node::stop()
+{
+    for (QTimer* timer : _timer)
+        timer->stop();
+}
+
+void Node::registerTimer(QTimer *timer)
+{
+    _timer.append(timer);
 }
 
 

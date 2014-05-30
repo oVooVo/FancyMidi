@@ -7,9 +7,11 @@ SequenceSettingWidget::SequenceSettingWidget(Setting* set, QWidget *parent) :
     SettingWidget(set, parent)
 {
     Q_ASSERT(QString(set->metaObject()->className()) == QString(SequenceSetting::staticMetaObject.className()));
-    QHBoxLayout* layout = new QHBoxLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
     _sequenceEdit = new QLineEdit(this);
+    _lengthLabel = new QLabel(this);
     layout->addWidget(_sequenceEdit);
+    layout->addWidget(_lengthLabel);
     setLayout(layout);
     layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);
@@ -28,6 +30,8 @@ SequenceSettingWidget::SequenceSettingWidget(Setting* set, QWidget *parent) :
         }
         _sequenceEdit->setText(replaced.toUpper());
         _sequenceEdit->setCursorPosition(cursorPosition);
+        _lengthLabel->setText(QString("Length: %1").arg(
+                                  setting<SequenceSetting>()->length()));
     });
     reset();
 }
@@ -35,4 +39,6 @@ SequenceSettingWidget::SequenceSettingWidget(Setting* set, QWidget *parent) :
 void SequenceSettingWidget::reset()
 {
     _sequenceEdit->setText(setting<SequenceSetting>()->sequence());
+    _lengthLabel->setText(QString("Length: %1").arg(
+                              setting<SequenceSetting>()->length()));
 }

@@ -227,9 +227,10 @@ void NordStage2::installReceiver(int myChannel)
             break;
         case MidiKey::NoteOn:
         case MidiKey::NoteOff:
-            emit midiInput(myChannel, key, data);
+            emit midiInput(myChannel, key, data/127.0);
             break;
         case MidiKey::Aftertouch:
+            emit midiInput(myChannel, key, data /* == 0 */);
             break;
         case MidiKey::PitchBend:
             emit midiInput(myChannel, key, Domains::decodePitch(key, data));

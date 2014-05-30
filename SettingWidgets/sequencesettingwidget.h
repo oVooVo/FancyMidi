@@ -14,6 +14,7 @@ public:
 
 private:
     QLineEdit* _sequenceEdit;
+    QLabel* _lengthLabel;
     REGISTER_DECL_SETTINGWIDGETTYPE(SequenceSettingWidget);
 
 public slots:

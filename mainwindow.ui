@@ -31,7 +31,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -41,7 +41,23 @@
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menuTimer">
+    <property name="title">
+     <string>&amp;Simulation</string>
+    </property>
+    <addaction name="actionStartStop"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuMidi">
+    <property name="title">
+     <string>Midi</string>
+    </property>
+    <addaction name="actionSend_All_Notes_Off"/>
+    <addaction name="actionConnect_Device"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuTimer"/>
+   <addaction name="menuMidi"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="addNodeWidget">
@@ -127,7 +143,7 @@
              <x>0</x>
              <y>0</y>
              <width>224</width>
-             <height>349</height>
+             <height>264</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -340,7 +356,7 @@
   </widget>
   <action name="actionNew">
    <property name="text">
-    <string>New</string>
+    <string>&amp;New</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -348,7 +364,7 @@
   </action>
   <action name="actionSave_As">
    <property name="text">
-    <string>Save As ...</string>
+    <string>Save &amp;As ...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
@@ -356,7 +372,7 @@
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -364,7 +380,7 @@
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open ...</string>
+    <string>&amp;Open ...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -372,10 +388,39 @@
   </action>
   <action name="actionQuit">
    <property name="text">
-    <string>Quit</string>
+    <string>&amp;Quit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionStartStop">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Space</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="text">
+    <string>S&amp;tart</string>
+   </property>
+  </action>
+  <action name="actionSend_All_Notes_Off">
+   <property name="text">
+    <string>All Notes &amp;Off</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionConnect_Device">
+   <property name="text">
+    <string>Connect Device</string>
    </property>
   </action>
  </widget>

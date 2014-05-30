@@ -9,6 +9,16 @@ class SequenceNode : public Node
 public:
     SequenceNode(QDataStream& stream);
 
+    QString category() const { return "Notes"; }
+
+private:
+    int note(int key);
+    int makeAbsolute(double relative);
+    int overallLength();
+
+private slots:
+    void updateOverallLength();
+
     REGISTER_DECL_NODETYPE(SequenceNode);
 };
 

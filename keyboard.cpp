@@ -21,3 +21,14 @@ void Keyboard::sendMidiCommand(MidiKey key, quint8 data)
     MidiHandler::singleton()->sendMidiCommand(key, channel(), data);
 }
 
+void Keyboard::allNotesOff(int channel)
+{
+    for (int c = 0; c < NUM_MIDI_CHANNELS; c++) {
+        if (channel < 0 || channel == c) {
+            for (int note = 0; note < 127; note++) {
+                MidiHandler::singleton()->sendMidiCommand(MidiKey(MidiKey::NoteOff, note), c, 127);
+            }
+        }
+    }
+}
+

@@ -17,10 +17,10 @@ public:
                   bool showInNode = true)
         : Setting(parent, name, tooltip, showInNode)
     {
-        _default = defaultValue;
-        _value = currentValue;
         _min = min;
         _max = max;
+        _default = qBound(_min, defaultValue, _max);
+        _value = qBound(_min, currentValue, _max);
         _hasBounds = true;
     }
 

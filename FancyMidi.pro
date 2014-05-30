@@ -78,7 +78,13 @@ SOURCES += main.cpp\
     Settings/sequencesetting.cpp \
     Model/Nodes/sequencenode.cpp \
     SettingWidgets/sequencesettingwidget.cpp \
-    Model/Nodes/switch.cpp
+    Model/Nodes/switch.cpp \
+    Model/Nodes/rangenode.cpp \
+    Model/Nodes/counternode.cpp \
+    Settings/infosetting.cpp \
+    SettingWidgets/infosettingwidget.cpp \
+    Model/Nodes/passonlychanges.cpp \
+    Model/Nodes/passnnode.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -146,7 +152,13 @@ HEADERS  +=  \
     Settings/sequencesetting.h \
     Model/Nodes/sequencenode.h \
     SettingWidgets/sequencesettingwidget.h \
-    Model/Nodes/switch.h
+    Model/Nodes/switch.h \
+    Model/Nodes/rangenode.h \
+    Model/Nodes/counternode.h \
+    Settings/infosetting.h \
+    SettingWidgets/infosettingwidget.h \
+    Model/Nodes/passonlychanges.h \
+    Model/Nodes/passnnode.h
 
 FORMS += \
     mainwindow.ui \

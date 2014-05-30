@@ -14,7 +14,7 @@ public:
 
     bool contains(int key) const { return key < _notes.size(); }
     int note(int key) const;
-    int size() const { return _notes.length(); }
+    int length() const { return _notes.length(); }
     bool setSequence(QString seq);
     QString sequence() const { return _sequence; }
     bool valid() const { return _valid; }

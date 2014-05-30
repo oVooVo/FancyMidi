@@ -9,6 +9,7 @@ TimerNode::TimerNode(QDataStream &stream)
     : EnableableNode(stream)
 {
     setName("Timer");
+    registerTimer(&_timer);
     addSetting(new IntegerSetting(this, "Duration", "Interval", 0, 10000, 1000, 1000));
     addSetting(new IntegerSetting(this, "Intervall", "Interval", 0, 10000, 1000, 1000));
     addPort(new OutputPort(this, "Timeout", "", Port::Trigger));

@@ -38,16 +38,23 @@ NordStage2Input::NordStage2Input(QDataStream& stream)
 void NordStage2Input::filter(int channel, MidiKey key, QVariant data)
 {
     if (setting<MidiFilterSetting>("Midi Filter")->filterChannel()
-            &&    channel != setting<MidiFilterSetting>("Midi Filter")->channel()) return;
+            &&    channel != setting<MidiFilterSetting>("Midi Filter")->channel()) {
+        return;
+    }
     if (setting<MidiFilterSetting>("Midi Filter")->filterType()
-            && key.type() != setting<MidiFilterSetting>("Midi Filter")->type()) return;
+            && key.type() != setting<MidiFilterSetting>("Midi Filter")->type())  {
+        return;
+    }
     if (setting<MidiFilterSetting>("Midi Filter")->filterCategory()
             && setting<MidiFilterSetting>("Midi Filter")->type() == MidiKey::ControlChange
-            && NordStage2::categoryIndex(key) != setting<MidiFilterSetting>("Midi Filter")->categoryIndex()) return;
+            && NordStage2::categoryIndex(key) != setting<MidiFilterSetting>("Midi Filter")->categoryIndex()) {
+        return;
+    }
     if (setting<MidiFilterSetting>("Midi Filter")->filterProperty()
             && setting<MidiFilterSetting>("Midi Filter")->type() == MidiKey::ControlChange
-            && NordStage2::propertyIndex(key) != setting<MidiFilterSetting>("Midi Filter")->propertyIndex()) return;
-
+            && NordStage2::propertyIndex(key) != setting<MidiFilterSetting>("Midi Filter")->propertyIndex()) {
+        return;
+    }
     int categoryIndex = NordStage2::categoryIndex(key);
     int propertyIndex = NordStage2::propertyIndex(key);
     outputPort("Channel")->send(channel);
@@ -55,5 +62,9 @@ void NordStage2Input::filter(int channel, MidiKey key, QVariant data)
         outputPort("Category")->send(NordStage2::categories()[categoryIndex]);
         outputPort("Property")->send(NordStage2::properties(categoryIndex)[propertyIndex]);
     }
-    outputPort("Value")->send(data);
+    if (key.type() == MidiKey::Aftertouch) {
+        outputPort("Value")->send(key.code() / 127.0);  // map aftertouch from 0..127 to 0..1
+    } else {
+        outputPort("Value")->send(data);
+    }
 }

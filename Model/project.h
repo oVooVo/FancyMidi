@@ -72,6 +72,9 @@ public slots:
      */
     void popularizeNodesChange(QList<InputPort *> inputs = QList<InputPort*>());
 
+    void stop();
+    void start();
+
 signals:
     /**
      * @brief modelChanged signalizes changing of this project.
