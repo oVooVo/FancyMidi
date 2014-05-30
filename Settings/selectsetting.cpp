@@ -7,7 +7,7 @@ REGISTER_DEFN_SETTINGTYPE(SelectSetting);
 
 SelectSetting::SelectSetting(Node *parent, QString name, QString tooltip, int currentIndex,
                              QList<QString> values, int defaultIndex, bool showInNode)
-    : ScalarSetting<int>(parent, name, tooltip, 0, values.length(), 0, 0, showInNode)
+    : ScalarSetting<int>(parent, name, tooltip, 0, values.length() - 1, currentIndex, defaultIndex, showInNode)
 {
     _values = values;
 }

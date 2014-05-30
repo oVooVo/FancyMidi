@@ -21,6 +21,7 @@ protected:
 private:
     REGISTER_DECL_NODETYPE(MathNode);
     void calculate() const;
+
 };
 
 #endif // MATHNODE_H

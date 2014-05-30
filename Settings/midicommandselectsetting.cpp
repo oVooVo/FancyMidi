@@ -103,7 +103,7 @@ QStringList MidiCommandSelectSetting::items() const
 void MidiCommandSelectSetting::setCategoryIndex(int i)
 {
     _currentCategory = qBound(0, i, NordStage2::categories().length() - 1);
-    _currentProperty = 0;
+    _currentProperty = qBound(0, _currentProperty, NordStage2::properties(_currentCategory).length() - 1);
 
     updateDomain();
     emitChanged();
@@ -112,7 +112,6 @@ void MidiCommandSelectSetting::setCategoryIndex(int i)
 void MidiCommandSelectSetting::setPropertyIndex(int i)
 {
     _currentProperty = qBound(0, i, NordStage2::properties(_currentCategory).length() - 1);
-
     updateDomain();
     emitChanged();
 }

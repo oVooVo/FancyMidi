@@ -102,7 +102,7 @@ public:
      * @brief getInfoText Returns a text describing this node
      * @return Returns a text describing this node
      */
-    QString getInfoText() const;
+    QString tooltip() const;
 
     /**
      * @brief createInstance creates a new instance of a node with given classname.
@@ -110,10 +110,8 @@ public:
      * @return a new instance of a node with given classname.
      */
     static Node *createInstance(QString className); // for drag & drop
-    static Node *createInstance(QString className, QDataStream &stream);    // for deserialization
+    static Node *createInstance(QString className, QDataStream &stream); // for deserialization
     static QList<QString> nodeClassnames();
-
-    virtual void clear();
 
     /**
      * @brief getSize returns the size of this node.
@@ -184,7 +182,7 @@ private:
     QList<QTimer*> _timer;              // timers that can be startet and stopped via Node::start() and Node::stop()
     QPoint _position;
     QString _name;
-    QString _infoText;
+    QString _tooltip;
     QSizeF _size;
     bool _block = false;
     int _num_outputs = 0;

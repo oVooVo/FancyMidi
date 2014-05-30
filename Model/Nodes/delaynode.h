@@ -1,16 +1,20 @@
 #ifndef DELAYNODE_H
 #define DELAYNODE_H
 
-#include "enableablenode.h"
-#include "Settings/integersetting.h"
+#include "Settings/boolsetting.h"
+#include "../triggerinputport.h"
+#include "../datainputport.h"
 
-class DelayNode : public EnableableNode
+class DelayNode : public Node
 {
     Q_OBJECT
 public:
     DelayNode(QDataStream& stream);
 
     QString category() const { return "Time"; }
+
+    void trigger(const TriggerInputPort *in);
+    void notify(const DataInputPort *in, const QVariant &data);
 
     REGISTER_DECL_NODETYPE(DelayNode);
 };

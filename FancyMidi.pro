@@ -66,22 +66,22 @@ SOURCES += main.cpp\
     Model/Nodes/node.cpp \
     Model/Nodes/nordstage2input.cpp \
     Model/Nodes/nordstage2controlout.cpp \
-#    Model/Nodes/nordstage2noteout.cpp \
+    Model/Nodes/nordstage2noteout.cpp \
     Model/Nodes/midichannelnode.cpp \
 #    Model/Nodes/enableablenode.cpp \
-#    Model/Nodes/delaynode.cpp \
+    Model/Nodes/delaynode.cpp \
     Model/Nodes/mathnode.cpp \
-#    Model/Nodes/nordstage2noteinput.cpp \
+    Model/Nodes/nordstage2noteinput.cpp \
     Model/Nodes/timernode.cpp \
-#    Model/Nodes/pitchbendinput.cpp \
+    Model/Nodes/pitchbendinput.cpp \
 #    Model/Nodes/tointegernode.cpp \
-#    Model/Nodes/pitchbendoutput.cpp \
+    Model/Nodes/pitchbendoutput.cpp \
 #    Model/Nodes/memorymapnode.cpp \
 #    Model/Nodes/memorynode.cpp \
 #    Model/Nodes/conditionnode.cpp \
-#    Model/Nodes/sequencenode.cpp \
+    Model/Nodes/sequencenode.cpp \
 #    Model/Nodes/switch.cpp \
-#    Model/Nodes/rangenode.cpp \
+    Model/Nodes/rangenode.cpp \
     Model/Nodes/counternode.cpp \
 #    Model/Nodes/passonlychanges.cpp \
 #    Model/Nodes/passnnode.cpp
@@ -150,22 +150,22 @@ HEADERS  +=  \
     Model/Nodes/node.h \
     Model/Nodes/nordstage2input.h \
     Model/Nodes/nordstage2controlout.h \
-#   Model/Nodes/nordstage2noteout.h \
+   Model/Nodes/nordstage2noteout.h \
     Model/Nodes/midichannelnode.h \
 #    Model/Nodes/enableablenode.h \
-#    Model/Nodes/delaynode.h \
+    Model/Nodes/delaynode.h \
     Model/Nodes/mathnode.h \
-#    Model/Nodes/nordstage2noteinput.h \
+    Model/Nodes/nordstage2noteinput.h \
     Model/Nodes/timernode.h \
-#    Model/Nodes/pitchbendinput.h \
+    Model/Nodes/pitchbendinput.h \
 #    Model/Nodes/tointegernode.h \
-#    Model/Nodes/pitchbendoutput.h \
+    Model/Nodes/pitchbendoutput.h \
 #    Model/Nodes/memorymapnode.h \
 #    Model/Nodes/memorynode.h \
 #    Model/Nodes/conditionnode.h \
-#    Model/Nodes/sequencenode.h \
+    Model/Nodes/sequencenode.h \
 #    Model/Nodes/switch.h \
-#    Model/Nodes/rangenode.h \
+    Model/Nodes/rangenode.h \
     Model/Nodes/counternode.h \
 #    Model/Nodes/passonlychanges.h \
 #    Model/Nodes/passnnode.h

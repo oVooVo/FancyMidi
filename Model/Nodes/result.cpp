@@ -16,12 +16,16 @@ Result::Result(QDataStream& stream) : Node(stream)
 
 void Result::trigger(const TriggerInputPort *port)
 {
-    Q_ASSERT(port == triggerInputPort("Update"));
-    setting<InfoSetting>("Info")->setString(dataInputPort("Data")->data().toString());
+    if (port == triggerInputPort("Update"))
+        setting<InfoSetting>("Info")->setString(dataInputPort("Data")->data().toString());
+    else
+        UNKNOWN_PORT;
 }
 
 void Result::notify(const DataInputPort *port, const QVariant &data)
 {
-    Q_ASSERT(port == dataInputPort("Data"));
-    setting<InfoSetting>("Info")->setString(data.toString());
+    if (port == dataInputPort("Data"))
+        setting<InfoSetting>("Info")->setString(data.toString());
+    else
+        UNKNOWN_PORT;
 }

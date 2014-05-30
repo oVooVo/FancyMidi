@@ -393,10 +393,10 @@ Domain* Domains::Domains::Domain_1_128(MidiKey midiKey, QString name) {
 
 double Domains::decodePitch(MidiKey key, quint8 value)
 {
-    double v = value +  key.code() / 128.0;     // in [0, 127.5]
-    v /= 127.5;                                 // in [0, 1]
+    double v = value +  key.code() / 128.0;     // in [0, 127.75]
+    v /= 127.75;                                // in [0, 1]
     v *= 4;
-    return v - 2;
+    return v - 2;                               // in [-2,2]
 }
 
 QPair<MidiKey, quint8> Domains::encodePitch(double value)
@@ -404,12 +404,12 @@ QPair<MidiKey, quint8> Domains::encodePitch(double value)
     value = qBound(-2.0, value, 2.0);
     value /= 2;
     value += 1;         // in [0,1];
-    value *= 127.5;     // in [0, 127.5];
-    quint8 data = (quint8) value;   // 0, 1, ..., 127
-    value -= data;
-    value = qRound(value * 4)/4.0;
-    quint8 code = value * 128;
-    return qMakePair(MidiKey(MidiKey::PitchBend, code), data);
+    value *= 127.75;    // in [0, 127.5];
+    quint8 ival = (quint8) value;
+    quint8 code = qRound((value - ival) * 128);
+
+
+    return qMakePair(MidiKey(MidiKey::PitchBend, code), ival);
 }
 
 

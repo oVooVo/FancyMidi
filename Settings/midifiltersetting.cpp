@@ -42,6 +42,7 @@ void MidiFilterSetting::setCategoryIndex(int category)
 void MidiFilterSetting::setPropertyIndex(int property)
 {
     _propertyIndex = qBound(0, property, NordStage2::properties(_categoryIndex).length() - 1);
+
     emitChanged();
     emit propertyChanged(property);
 }

@@ -2,6 +2,7 @@
 #include "Nodes/node.h"
 #include <QDebug>
 #include "datainputport.h"
+#include "triggerinputport.h"
 
 DataOutputPort::DataOutputPort(Node* node, QString name, QString tooltip) : OutputPort(node, name, tooltip, Port::Data)
 {
@@ -9,10 +10,15 @@ DataOutputPort::DataOutputPort(Node* node, QString name, QString tooltip) : Outp
 
 void DataOutputPort::setData(QVariant data)
 {
+    if (_data == data)
+        return;
+
     _data = data;
     for (InputPort* in : targets()) {
-        Q_ASSERT(in->type() == Data);
-        ((DataInputPort*) in)->notify(data);
+        if (in->type() == Data)
+            ((DataInputPort*) in)->notify(data);
+        else
+            ((TriggerInputPort*) in)->trigger();
     }
 }
 

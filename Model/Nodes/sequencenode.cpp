@@ -4,6 +4,7 @@
 #include "../outputport.h"
 #include "Settings/integersetting.h"
 #include "Settings/infosetting.h"
+#include "../dataoutputport.h"
 
 REGISTER_DEFN_NODETYPE(SequenceNode);
 
@@ -16,10 +17,11 @@ SequenceNode::SequenceNode(QDataStream &stream) : Node(stream)
     addSetting(new IntegerSetting(this, "Octave" , "", 0, 48, 12, 12, true));
     addSetting(new InfoSetting(this, "Overall Length", "", "", true));
 
-    addPort(new InputPort(this, "Absolute Key", "", Port::Scalar));
-    addPort(new InputPort(this, "Relative Key", "", Port::Scalar));
-    addPort(new OutputPort(this, "Note", "", Port::Scalar));
-    connect(inputPort("Absolute Key"), &InputPort::receivedData, [this](QVariant data) {
+    addPort(new DataOutputPort(this, "Absolute Key", ""));
+    addPort(new DataOutputPort(this, "Relative Key", ""));
+    addPort(new DataOutputPort(this, "Note", ""));
+    /*
+    connect(dataInputPort("Absolute Key"), &DataInputPort::receivedData, [this](QVariant data) {
         if (!data.canConvert<int>()) return;
 
         int key = data.value<int>();
@@ -33,7 +35,7 @@ SequenceNode::SequenceNode(QDataStream &stream) : Node(stream)
         double key = data.value<double>();
         if (setting<SequenceSetting>("Sequence")->length() > 0)
             outputPort("Note")->send(note(makeAbsolute(key)));
-    });
+    });*/
 
     connect(setting<IntegerSetting>("Octave Range"), SIGNAL(changed()), this, SLOT(updateOverallLength()));
     connect(setting<IntegerSetting>("Octave Shift"), SIGNAL(changed()), this, SLOT(updateOverallLength()));

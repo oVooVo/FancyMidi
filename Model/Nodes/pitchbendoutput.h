@@ -2,6 +2,7 @@
 #define PITCHBENDOUTPUT_H
 
 #include "midichannelnode.h"
+#include "../triggerinputport.h"
 
 class PitchBendOutput : public MidiChannelNode
 {
@@ -10,6 +11,8 @@ public:
     PitchBendOutput(QDataStream &stream);
 
     QString category() const { return "Midi Out"; }
+
+    void trigger(const TriggerInputPort *in);
 
     REGISTER_DECL_NODETYPE(PitchBendOutput);
 };

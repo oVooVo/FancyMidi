@@ -85,7 +85,7 @@ void MainWindow::updateSettingTable(QList<Node*> nodes)
         ui->noNodeSelectedHint->hide();
         ui->nodePropertyHead->show();
         ui->nodeName->setText(node->name());
-        ui->nodeInfoText->setText(node->getInfoText());
+        ui->nodeInfoText->setText(node->tooltip());
         foreach (Setting* s, node->settings()) {
             SettingWidget* settingWidget = SettingWidget::createNewSettingWidget(s, ui->settingFrame);
             ui->settingFrame->layout()->addWidget(settingWidget);

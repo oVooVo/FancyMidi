@@ -10,6 +10,10 @@ public:
     RangeNode(QDataStream& stream);
 
     QString category() const { return "Math"; }
+    void notify(const DataInputPort *in, const QVariant &);
+
+private:
+    void calculate() const;
 
     REGISTER_DECL_NODETYPE(RangeNode);
 };

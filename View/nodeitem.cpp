@@ -20,7 +20,7 @@ NodeItem::NodeItem(Node* node, bool selectable, QGraphicsScene *scene, QGraphics
 {
     if (!parent)
         scene->addItem(this);
-    setToolTip(node->getInfoText());
+    setToolTip(node->tooltip());
     _node = node;
     _portCount = 0;
     _portItemRadius = -1;

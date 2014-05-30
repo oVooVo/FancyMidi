@@ -29,5 +29,7 @@ void CounterNode::trigger(const TriggerInputPort* in)
     } else if (in == triggerInputPort("Reset")) {
         _currentCount = 0;
         dataOutputPort("Count")->setData(0);
+    } else {
+        UNKNOWN_PORT;
     }
 }

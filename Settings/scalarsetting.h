@@ -59,14 +59,14 @@ public:
             port->setFallback(value());
         });
         connect(port, &DataInputPort::dataChanged, [this, port]() {
-            setValue(port->data().value<int>());
+            setValue(port->data().value<T>());
         });
         connect(port, &DataInputPort::connectionToggled, [this](bool connected) {
             setEnabled(!connected);
         });
         connect(port, &DataInputPort::connectionToggled, [this, port](bool connected) {
             if (connected) {
-                setValue(port->data().value<int>());
+                setValue(port->data().value<T>());
             }
         });
     }

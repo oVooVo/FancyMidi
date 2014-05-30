@@ -4,19 +4,21 @@
 #include "../Nodes/midichannelnode.h"
 #include "Settings/integersetting.h"
 #include "Settings/doublesetting.h"
+#include "../triggerinputport.h"
 
-class NordStage2NoteOut : public Node
+
+class NordStage2NoteOut : public MidiChannelNode
 {
     Q_OBJECT
 public:
     NordStage2NoteOut(QDataStream &stream);
-    QString category() const { return "Midi Out"; }
+    QString category() const { return "Midi"; }
+
+    void trigger(const TriggerInputPort *in);
 
 
 
 private:
-    IntegerSetting* _note;
-    IntegerSetting* _velocity;
     REGISTER_DECL_NODETYPE(NordStage2NoteOut);
 
 public slots:

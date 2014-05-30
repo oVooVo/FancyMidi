@@ -11,7 +11,7 @@ public:
     NordStage2NoteInput(QDataStream& stream);
 
 
-    QString category() const { return "Midi In"; }
+    QString category() const { return "Midi"; }
 
 private slots:
     void receiveMidiCommand(int channel, MidiKey key, QVariant data);

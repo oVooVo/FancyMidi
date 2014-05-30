@@ -3,19 +3,20 @@
 #include "../outputport.h"
 #include "Settings/doublesetting.h"
 #include "Settings/boolsetting.h"
+#include "../dataoutputport.h"
 
 REGISTER_DEFN_NODETYPE(RangeNode);
 
 RangeNode::RangeNode(QDataStream &stream) : Node(stream)
 {
     setName("Range");
-    addPort(new InputPort(this, "Value", "", Port::Scalar));
-    addPort(new InputPort(this, "Min Input", "", Port::Scalar));
-    addPort(new InputPort(this, "Max Input", "", Port::Scalar));
-    addPort(new InputPort(this, "Min Output", "", Port::Scalar));
-    addPort(new InputPort(this, "Max Output", "", Port::Scalar));
-    addPort(new InputPort(this, "Trunc", "", Port::Scalar));
-    addPort(new OutputPort(this, "Value", "", Port::Scalar));
+    addPort(new DataInputPort(this, "Value", ""));
+    addPort(new DataInputPort(this, "Min Input", ""));
+    addPort(new DataInputPort(this, "Max Input", ""));
+    addPort(new DataInputPort(this, "Min Output", ""));
+    addPort(new DataInputPort(this, "Max Output", ""));
+    addPort(new DataInputPort(this, "Trunc", ""));
+    addPort(new DataOutputPort(this, "Value", ""));
 
     addSetting(new DoubleSetting(this, "Value", "", 0, 0, false));
     addSetting(new DoubleSetting(this, "Min Input", "", 0, 0, true));
@@ -24,28 +25,38 @@ RangeNode::RangeNode(QDataStream &stream) : Node(stream)
     addSetting(new DoubleSetting(this, "Max Output", "", 1, 1, true));
     addSetting(new BoolSetting(this, "Trunc", "", false, false, true));
 
-    setting<DoubleSetting>("Value")->connectPort(inputPort("Value"));
-    setting<DoubleSetting>("Min Input")->connectPort(inputPort("Min Input"));
-    setting<DoubleSetting>("Max Input")->connectPort(inputPort("Max Input"));
-    setting<DoubleSetting>("Min Output")->connectPort(inputPort("Min Output"));
-    setting<DoubleSetting>("Max Output")->connectPort(inputPort("Max Output"));
-    setting<BoolSetting>("Trunc")->connectPort(inputPort("Trunc"));
+    setting<DoubleSetting>("Value")->connectPort(dataInputPort("Value"));
+    setting<DoubleSetting>("Min Input")->connectPort(dataInputPort("Min Input"));
+    setting<DoubleSetting>("Max Input")->connectPort(dataInputPort("Max Input"));
+    setting<DoubleSetting>("Min Output")->connectPort(dataInputPort("Min Output"));
+    setting<DoubleSetting>("Max Output")->connectPort(dataInputPort("Max Output"));
+    setting<BoolSetting>("Trunc")->connectPort(dataInputPort("Trunc"));
+}
 
-    connect(inputPort("Value"), &InputPort::receivedData, [this](QVariant data) {
-        if (!data.canConvert<double>())
-            return;
-        double mii = setting<DoubleSetting>("Min Input")->value();
-        double mai = setting<DoubleSetting>("Max Input")->value();
-        double mio = setting<DoubleSetting>("Min Output")->value();
-        double mao = setting<DoubleSetting>("Max Output")->value();
-        bool trunc = setting<BoolSetting>("Trunc")->value();
-        double value = data.value<double>();
-        value -= mii;
-        value /= (mai - mii);
-        value *= (mao - mio);
-        value += mio;
-        if (trunc)
-            value = qBound(mio, value, mao);
-        outputPort("Value")->send(value);
-    });
+void RangeNode::notify(const DataInputPort *in, const QVariant &)
+{
+    if (in == dataInputPort("Min Input") || in == dataInputPort("Max Input")
+            || in == dataInputPort("Min Output") || in == dataInputPort("Max Output")
+            || in == dataInputPort("Trunc") || in == dataInputPort("Value")) {
+        calculate();
+    } else {
+        UNKNOWN_PORT;
+    }
+}
+
+void RangeNode::calculate() const
+{
+    double mii = dataInputPort("Min Input")->data().value<double>();
+    double mai = dataInputPort("Max Input")->data().value<double>();
+    double mio = dataInputPort("Min Output")->data().value<double>();
+    double mao = dataInputPort("Max Output")->data().value<double>();
+    bool trunc = dataInputPort("Trunc")->data().value<bool>();
+    double value = dataInputPort("Value")->data().value<double>();
+    value -= mii;
+    value /= (mai - mii);
+    value *= (mao - mio);
+    value += mio;
+    if (trunc)
+        value = qBound(mio, value, mao);
+    dataOutputPort("Value")->setData(value);
 }

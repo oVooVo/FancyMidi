@@ -5,6 +5,10 @@
 #include "packet.h"
 #include "numbered.h"
 
+#define UNKNOWN_PORT Q_ASSERT_X(false, \
+    QString("In line %1 (%2)").arg(__LINE__).arg(__FILE__).toStdString().c_str(), \
+    "unknown port idenifier")
+
 /**
  * @brief The Port class is a abstract class to have common method shared between input and output port
  */

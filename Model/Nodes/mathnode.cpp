@@ -38,8 +38,11 @@ void MathNode::updateData(const DataOutputPort *port) const
 
 void MathNode::notify(const DataInputPort *in, const QVariant &)
 {
-    Q_ASSERT(in == dataInputPort("A") || in == dataInputPort("B"));
-    calculate();
+    if (in == dataInputPort("A") || in == dataInputPort("B")) {
+        calculate();
+    } else {
+        UNKNOWN_PORT;
+    }
 }
 
 void MathNode::calculate() const

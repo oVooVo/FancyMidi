@@ -33,7 +33,7 @@ void NordStage2ControlOut::trigger(const TriggerInputPort *in)
                     mcss.domain()->encode()
                     );
     } else {
-        Q_ASSERT(false);
+        UNKNOWN_PORT;
     }
 }
 

@@ -16,13 +16,13 @@ QMap<QString, Node* (*)(QDataStream&)> *Node::_creatorMap = 0;
 Node::Node(QDataStream &stream)
 {
     QList<Setting*> settings;
-    stream >> _position >> _size >> _name >> _infoText >> settings;
+    stream >> _position >> _size >> _name >> _tooltip >> settings;
     setSettings(settings);
 }
 
 void Node::writeToStream(QDataStream &stream) const
 {
-    stream << _position << _size << _name << _infoText << _settings.values();
+    stream << _position << _size << _name << _tooltip << _settings.values();
 }
 
 Node::~Node()
@@ -71,9 +71,9 @@ QString Node::name() const
     return _name;
 }
 
-QString Node::getInfoText() const
+QString Node::tooltip() const
 {
-    return _infoText;
+    return _tooltip;
 }
 
 void Node::polish()
@@ -121,12 +121,6 @@ void Node::setSettings(QList<Setting *> settings)
         _settings.insert(setting->name(), setting);
         setting->setParent(this);
     }
-}
-
-void Node::clear()
-{
-	Q_ASSERT_X(QThreadPool::globalInstance()->activeThreadCount() == 0, "Node::clear()", "Called clear() while running.");
-	Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(), "Node::clear()", "Called clear() from an other thread then the main thread.");
 }
 
 QSizeF Node::getSize() const
