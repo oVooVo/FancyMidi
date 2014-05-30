@@ -3,12 +3,13 @@
 #include <QString>
 #include <QList>
 #include "setting.h"
+#include "scalarsetting.h"
 
 /**
  * @brief The SelectSetting class is the model of handling selecting based preferences
  * @see Setting
  */
-class SelectSetting : public Setting
+class SelectSetting : public ScalarSetting<int>
 {
     Q_OBJECT
 
@@ -30,18 +31,6 @@ public:
     ~SelectSetting();
 
     /**
-     * @brief getCurrentIndex Get the value representing the current setting
-     * @return Returns the value representing the current setting
-     */
-    int currentIndex() const;
-
-    /**
-     * @brief getDefaultIndex Get the value representing the default setting
-     * @return Returns the value representing the default setting
-     */
-    int defaultIndex() const;
-
-    /**
      * @brief getList Get the list containing all entries
      * @return Returns the list containing all entries
      */
@@ -53,12 +42,10 @@ public slots:
      * @warning If the given index is not in the list nothing is done
      * @param index The given entry
      */
-    void setCurrentIndex(int index);
+    void setValue(int index) { ScalarSetting::setValue(index); }
 
 private:
     QList<QString> _values;
-    int _currentIndex;
-    int _defaultIndex;
 
     REGISTER_DECL_SETTINGTYPE(SelectSetting);
 };

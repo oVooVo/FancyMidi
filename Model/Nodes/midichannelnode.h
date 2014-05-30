@@ -1,15 +1,15 @@
 #ifndef MIDICHANNELNODE_H
 #define MIDICHANNELNODE_H
 
-#include "../Nodes/enableablenode.h"
+#include "../Nodes/node.h"
 #include "Settings/integersetting.h"
 
-class MidiChannelNode : public EnableableNode
+class MidiChannelNode : public Node
 {
+    Q_OBJECT
 public:
     MidiChannelNode(QDataStream& stream);
-    void setChannel(int channel);
-    int channel() const { return setting<IntegerSetting>("Channel")->value(); }
+    int channel() const;
 };
 
 #endif // MIDICHANNELNODE_H

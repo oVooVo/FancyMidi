@@ -16,6 +16,10 @@ TimerNode::TimerNode(QDataStream &stream)
     addPort(new TriggerInputPort(this, "Start", "Starts the timer"));
     addPort(new DataInputPort(this, "Interval", ""));
 
+    addSetting(new IntegerSetting(this, "Interval", "", 1, 10000));
+
+    setting<IntegerSetting>("Interval")->connectPort(dataInputPort("Interval"));
+
     connect(&_timer, &QTimer::timeout, [this]() {
         triggerOutputPort("Timeout")->trigger();
     });

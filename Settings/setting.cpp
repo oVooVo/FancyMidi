@@ -83,3 +83,9 @@ void Setting::emitChanged()
         node()->getProject()->setSaved(false);
     emit changed();
 }
+
+void Setting::setEnabled(bool enabled)
+{
+    _isEnabled = enabled;
+    emit enabledChanged(enabled);
+}

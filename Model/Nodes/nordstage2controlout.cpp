@@ -9,11 +9,10 @@
 REGISTER_DEFN_NODETYPE(NordStage2ControlOut);
 
 NordStage2ControlOut::NordStage2ControlOut(QDataStream& stream) :
-    Node(stream)
+    MidiChannelNode(stream)
 {
-    setName("Control Out");
+    setName("Control Output");
     addPort(new TriggerInputPort(this, "Trigger", ""));
-    addPort(new DataInputPort(this, "Channel", ""));
     addPort(new DataInputPort(this, "Category", ""));
     addPort(new DataInputPort(this, "Property", ""));
     addPort(new DataInputPort(this, "Data", ""));

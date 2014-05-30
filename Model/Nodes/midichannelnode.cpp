@@ -2,21 +2,21 @@
 #include "../inputport.h"
 #include "keyboard.h"
 #include <QDebug>
+#include "../datainputport.h"
 
 MidiChannelNode::MidiChannelNode(QDataStream& stream)
-    : EnableableNode(stream)
+    : Node(stream)
 {
-    addPort(new InputPort(this, "Channel", "midi channel", Port::Scalar));
-    addSetting(new IntegerSetting(this, "Channel", "", 0, Keyboard::NUM_MIDI_CHANNELS - 1, 0, 0));
+    addPort(new DataInputPort(this, "Channel", ""));
+    addSetting(new IntegerSetting(this, "Channel", "", 0, 15, 0, 0, true));
 
-    connect(inputPort("Channel"), &InputPort::receivedData, [this](QVariant data) {
-        if (!data.canConvert(QVariant::Int)) return;
 
-        setting<IntegerSetting>("Channel")->setValue(data.value<int>());
-    });
+
+    setting<IntegerSetting>("Channel")->connectPort(dataInputPort("Channel"));
+
 }
 
-void MidiChannelNode::setChannel(int channel)
+int MidiChannelNode::channel() const
 {
-    setting<IntegerSetting>("Channel")->setValue(channel);
+    return dataInputPort("Channel")->data().value<int>();
 }

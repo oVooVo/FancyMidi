@@ -17,7 +17,7 @@ SelectSettingWidget::SelectSettingWidget(Setting* set, QWidget* parent) : Settin
 	}
 
     _comboBox->setEditable(false);
-    _comboBox->setCurrentIndex(setting<SelectSetting>()->currentIndex());
+    _comboBox->setCurrentIndex(setting<SelectSetting>()->value());
     _comboBox->setToolTip(setting<SelectSetting>()->tooltip());
 
     connect(_comboBox, SIGNAL(activated(int)), SettingWidget::setting<SelectSetting>(), SLOT(setCurrentIndex(int)));
@@ -27,5 +27,5 @@ SelectSettingWidget::SelectSettingWidget(Setting* set, QWidget* parent) : Settin
 
 void SelectSettingWidget::reset()
 {
-    _comboBox->setCurrentIndex(setting<SelectSetting>()->currentIndex());
+    _comboBox->setCurrentIndex(setting<SelectSetting>()->value());
 }

@@ -11,7 +11,7 @@ class ConstantNode : public Node
 public:
     ConstantNode(QDataStream& stream);
 
-    QString category() { return "General"; }
+    QString category() const { return "General"; }
 
     REGISTER_DECL_NODETYPE(ConstantNode);
 };

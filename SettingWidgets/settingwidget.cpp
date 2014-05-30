@@ -15,6 +15,8 @@ SettingWidget::SettingWidget(Setting *setting, QWidget* parent) : QWidget(parent
     _initMode = false;
 	_setting = setting;
     connect(setting, SIGNAL(changed()), this, SLOT(reset()));
+    connect(setting, SIGNAL(enabledChanged(bool)), this, SLOT(setEnabled(bool)));
+    setEnabled(_setting->isEnabled());
 }
 
 SETTINGWIDGET_CREATOR_MAP_TYPE *SettingWidget::_creatorMap = 0;

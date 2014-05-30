@@ -7,7 +7,7 @@
 #include "../triggerinputport.h"
 
 
-class NordStage2ControlOut : public Node    //TODO derive from midichannelnode
+class NordStage2ControlOut : public MidiChannelNode
 {
     Q_OBJECT
 public:

@@ -15,21 +15,20 @@ MidiCommandSelectSetting::MidiCommandSelectSetting(Node *parent, QString name, Q
     Q_ASSERT_X(QApplication::instance()->thread() == QThread::currentThread(),
                "constructor", "called from a thread other than the main thread");
     _currentCategory = 0;
-
     updateDomain();
 }
 
 MidiCommandSelectSetting::MidiCommandSelectSetting(QDataStream &stream)
     : Setting(stream)
 {
-    stream >> _currentCategory >> _currentProperty;
+    stream >> _currentCategory >> _currentProperty >> _value;
     updateDomain();
 }
 
 void MidiCommandSelectSetting::writeToStream(QDataStream &stream) const
 {
     Setting::writeToStream(stream);
-    stream << _currentCategory << _currentProperty;
+    stream << _currentCategory << _currentProperty << _value;
 }
 
 void MidiCommandSelectSetting::updateDomain()
@@ -103,9 +102,6 @@ QStringList MidiCommandSelectSetting::items() const
 
 void MidiCommandSelectSetting::setCategoryIndex(int i)
 {
-    if (i == _currentCategory)
-        return;
-
     _currentCategory = qBound(0, i, NordStage2::categories().length() - 1);
     _currentProperty = 0;
 
@@ -115,9 +111,6 @@ void MidiCommandSelectSetting::setCategoryIndex(int i)
 
 void MidiCommandSelectSetting::setPropertyIndex(int i)
 {
-    if (i == _currentProperty)
-        return;
-
     _currentProperty = qBound(0, i, NordStage2::properties(_currentCategory).length() - 1);
 
     updateDomain();

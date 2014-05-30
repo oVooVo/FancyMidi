@@ -9,10 +9,11 @@ DataInputPort::DataInputPort(Node* node, QString name, QString tooltip) : InputP
 QVariant DataInputPort::data() const
 {
     if (!source()) {
-        return QVariant();
+        return _fallback;
     }
 
     Q_ASSERT(source()->type() == Data);
+
     return ((DataOutputPort*) source())->data();
 }
 
@@ -22,7 +23,17 @@ bool DataInputPort::hasData(QVariant &data) const
     return data.isValid();
 }
 
-void DataInputPort::notify(const QVariant &data) const
+void DataInputPort::notify(const QVariant &data)
 {
     node()->notify(this, data);
+    emit dataChanged(data);
+}
+
+void DataInputPort::setFallback(QVariant fallback)
+{
+    if (_fallback == fallback)
+        return;
+
+    _fallback = fallback;
+    notify(_fallback);
 }

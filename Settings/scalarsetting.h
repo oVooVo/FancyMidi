@@ -7,6 +7,7 @@
 #include "Model/inputport.h"
 #include "Model/outputport.h"
 #include <qdebug.h>
+#include "Model/datainputport.h"
 
 template<typename T>
 class ScalarSetting : public Setting
@@ -49,6 +50,26 @@ public:
     T max() const { return _max; }
     T defaultValue() const { return _default; }
     bool hasBounds() const { return _hasBounds; }
+
+    void connectPort(DataInputPort* port)
+    {
+        port->setFallback(value());
+
+        connect(this, &Setting::changed, [port, this](){
+            port->setFallback(value());
+        });
+        connect(port, &DataInputPort::dataChanged, [this, port]() {
+            setValue(port->data().value<int>());
+        });
+        connect(port, &DataInputPort::connectionToggled, [this](bool connected) {
+            setEnabled(!connected);
+        });
+        connect(port, &DataInputPort::connectionToggled, [this, port](bool connected) {
+            if (connected) {
+                setValue(port->data().value<int>());
+            }
+        });
+    }
 
 
 protected:

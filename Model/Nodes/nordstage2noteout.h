@@ -5,7 +5,7 @@
 #include "Settings/integersetting.h"
 #include "Settings/doublesetting.h"
 
-class NordStage2NoteOut : public MidiChannelNode
+class NordStage2NoteOut : public Node
 {
     Q_OBJECT
 public:

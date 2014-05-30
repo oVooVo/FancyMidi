@@ -67,7 +67,7 @@ SOURCES += main.cpp\
     Model/Nodes/nordstage2input.cpp \
     Model/Nodes/nordstage2controlout.cpp \
 #    Model/Nodes/nordstage2noteout.cpp \
-#    Model/Nodes/midichannelnode.cpp \
+    Model/Nodes/midichannelnode.cpp \
 #    Model/Nodes/enableablenode.cpp \
 #    Model/Nodes/delaynode.cpp \
     Model/Nodes/mathnode.cpp \
@@ -150,8 +150,8 @@ HEADERS  +=  \
     Model/Nodes/node.h \
     Model/Nodes/nordstage2input.h \
     Model/Nodes/nordstage2controlout.h \
-#    Model/Nodes/nordstage2noteout.h \
-#    Model/Nodes/midichannelnode.h \
+#   Model/Nodes/nordstage2noteout.h \
+    Model/Nodes/midichannelnode.h \
 #    Model/Nodes/enableablenode.h \
 #    Model/Nodes/delaynode.h \
     Model/Nodes/mathnode.h \

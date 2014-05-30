@@ -76,6 +76,7 @@ void MidiFilterSettingWidget::reset()
         ui->category->setCurrentIndex(setting<MidiFilterSetting>()->categoryIndex());
     }
     if (ui->property->currentIndex() != setting<MidiFilterSetting>()->propertyIndex()) {
+        qDebug() << "set property box index " << setting<MidiFilterSetting>()->propertyIndex();
         ui->property->setCurrentIndex(setting<MidiFilterSetting>()->propertyIndex());
     }
     if (ui->type->currentIndex() != setting<MidiFilterSetting>()->typeIndex()) {

@@ -46,6 +46,8 @@ void MainWindow::setProject(Project *project)
     if (_minimapScene)
         delete _minimapScene;
 
+    updateSettingTable(QList<Node*>());
+
     _project = project;
     _project->stop();
     _scene = new GraphScene(_project, this, this);

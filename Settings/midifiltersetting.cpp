@@ -32,9 +32,6 @@ void MidiFilterSetting::writeToStream(QDataStream &stream) const
 
 void MidiFilterSetting::setCategoryIndex(int category)
 {
-    if (category == _categoryIndex)
-        return;
-
     _categoryIndex = qBound(0, category, NordStage2::categories().length() - 1);
     _propertyIndex = 0;
 
@@ -44,9 +41,6 @@ void MidiFilterSetting::setCategoryIndex(int category)
 
 void MidiFilterSetting::setPropertyIndex(int property)
 {
-    if (property == _propertyIndex)
-        return;
-
     _propertyIndex = qBound(0, property, NordStage2::properties(_categoryIndex).length() - 1);
     emitChanged();
     emit propertyChanged(property);
@@ -54,9 +48,6 @@ void MidiFilterSetting::setPropertyIndex(int property)
 
 void MidiFilterSetting::setChannel(int channel)
 {
-    if (channel == _channel)
-        return;
-
     _channel = qBound(0, channel, Keyboard::NUM_MIDI_CHANNELS - 1);
     emitChanged();
     emit channelChanged(channel);
@@ -64,9 +55,6 @@ void MidiFilterSetting::setChannel(int channel)
 
 void MidiFilterSetting::setTypeIndex(int type)
 {
-    if (type == _typeIndex)
-        return;
-
     _typeIndex = qBound(0, type, 6);
     emitChanged();
     emit typeChanged(type);
@@ -74,34 +62,25 @@ void MidiFilterSetting::setTypeIndex(int type)
 
 void MidiFilterSetting::setFilterCategory(bool filter)
 {
-    if (_filterCategory == filter)
-        return;
-
     _filterCategory = filter;
     emitChanged();
 }
 
 void MidiFilterSetting::setFilterProperty(bool filter)
 {
-    if (_filterProperty == filter)
-        return;
-
     _filterProperty = filter;
     emitChanged();
 }
 
 void MidiFilterSetting::setFilterChannel(bool filter)
 {
-    if (_filterChannel == filter)
-        return;
-
     _filterChannel = filter;
     emitChanged();
 }
 
 void MidiFilterSetting::setFilterType(bool filter)
 {
-    if (_filterType == filter)
+    if (_filterType == filter || !isEnabled())
         return;
 
     _filterType = filter;

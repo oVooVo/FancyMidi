@@ -53,12 +53,20 @@ public:
 
     bool showInNode() const { return _showInNode; }
 
+    bool isEnabled() const { return _isEnabled; }
+
+    virtual void connectPort(DataInputPort*) {}
+
+public slots:
+    void setEnabled(bool enabled);
+
 signals:
 
     /**
      * @brief changed is emitted when any value of this setting changes.
      */
     void changed();
+    void enabledChanged(bool enabled);
 
 protected:
     const Node* constNode() const { return (const Node*) parent(); }
@@ -72,6 +80,7 @@ private:
     QString _name;
     QString _tooltip;
     bool _showInNode;
+    bool _isEnabled = true;
 
     friend QDataStream &operator<<(QDataStream &out, const Setting *setting);
     friend QDataStream &operator>>(QDataStream &in, Setting *&setting);

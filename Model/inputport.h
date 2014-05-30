@@ -52,6 +52,9 @@ protected:
      * @brief _source the OutputPorts that are connected to this InputPort.
      */
     OutputPort* _source;
+
+signals:
+    void connectionToggled(bool);
 };
 
 

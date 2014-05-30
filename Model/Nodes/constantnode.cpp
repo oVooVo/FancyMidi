@@ -5,6 +5,7 @@ REGISTER_DEFN_NODETYPE(ConstantNode);
 
 ConstantNode::ConstantNode(QDataStream &stream) : Node(stream)
 {
+    setName("Constant");
     addPort(new DataOutputPort(this, "Value", ""));
     addSetting(new DoubleSetting(this, "Value", "", 0, 0, true));
 

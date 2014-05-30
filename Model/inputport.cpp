@@ -21,7 +21,7 @@ bool InputPort::connect(Port* port)
         if (_source) {
             _source->disconnect(this);
             _source = NULL;
-
+            emit connectionToggled(false);
             return true;
         } else {
             return false;
@@ -33,6 +33,8 @@ bool InputPort::connect(Port* port)
             disconnect();
 
             _source = (OutputPort*) port;
+
+            emit connectionToggled(true);
             return port->connect(this);
         }
     }

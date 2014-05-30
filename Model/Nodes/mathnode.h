@@ -2,6 +2,8 @@
 #define MATHNODE_H
 
 #include "node.h"
+#include "../datainputport.h"
+#include "../dataoutputport.h"
 
 class MathNode : public Node
 {
@@ -13,8 +15,12 @@ public:
 
 protected:
     void updateData(const DataOutputPort *port) const;
+    void notify(const DataInputPort *in, const QVariant &);
 
+
+private:
     REGISTER_DECL_NODETYPE(MathNode);
+    void calculate() const;
 };
 
 #endif // MATHNODE_H

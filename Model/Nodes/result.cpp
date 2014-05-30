@@ -8,6 +8,7 @@ REGISTER_DEFN_NODETYPE(Result);
 
 Result::Result(QDataStream& stream) : Node(stream)
 {
+    setName("Result");
     addPort(new TriggerInputPort(this, "Update", ""));
     addPort(new DataInputPort(this, "Data", ""));
     addSetting(new InfoSetting(this, "Info", "", ""));

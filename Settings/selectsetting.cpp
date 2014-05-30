@@ -7,23 +7,21 @@ REGISTER_DEFN_SETTINGTYPE(SelectSetting);
 
 SelectSetting::SelectSetting(Node *parent, QString name, QString tooltip, int currentIndex,
                              QList<QString> values, int defaultIndex, bool showInNode)
-    : Setting(parent, name, tooltip, showInNode)
+    : ScalarSetting<int>(parent, name, tooltip, 0, values.length(), 0, 0, showInNode)
 {
-	_values = values;
-	_currentIndex = currentIndex;
-	_defaultIndex = defaultIndex;
+    _values = values;
 }
 
 SelectSetting::SelectSetting(QDataStream& stream)
-    : Setting(stream)
+    : ScalarSetting(stream)
 {
-    stream >> _values >> _currentIndex >> _defaultIndex;
+    stream >> _values;
 }
 
 void SelectSetting::writeToStream(QDataStream &stream) const
 {
-    Setting::writeToStream(stream);
-    stream << _values << _currentIndex << _defaultIndex;
+    ScalarSetting::writeToStream(stream);
+    stream << _values;
 }
 
 SelectSetting::~SelectSetting()
@@ -33,23 +31,4 @@ SelectSetting::~SelectSetting()
 const QList<QString> SelectSetting::values() const
 {
 	return _values;
-}
-
-int SelectSetting::currentIndex() const
-{
-	return _currentIndex;
-}
-
-int SelectSetting::defaultIndex() const
-{
-	return _currentIndex;
-}
-
-void SelectSetting::setCurrentIndex(int index)
-{
-    if((_values.length() > index) && (index >= 0) && _currentIndex != index)
-    {
-        _currentIndex = index;
-        emitChanged();
-    }
 }

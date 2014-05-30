@@ -12,6 +12,9 @@ CounterNode::CounterNode(QDataStream& stream) : Node(stream)
     addPort(new TriggerOutputPort(this, "Overflow", ""));
     addPort(new DataInputPort(this, "Count to", ""));
     addPort(new DataOutputPort(this, "Count", ""));
+
+    addSetting(new IntegerSetting(this, "Count to", "", 1, 10000, 5, 5, true));
+    setting<IntegerSetting>("Count to")->connectPort(dataInputPort("Count to"));
 }
 
 void CounterNode::trigger(const TriggerInputPort* in)

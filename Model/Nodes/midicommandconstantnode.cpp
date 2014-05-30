@@ -5,6 +5,7 @@ REGISTER_DEFN_NODETYPE(MidiCommandConstantNode);
 
 MidiCommandConstantNode::MidiCommandConstantNode(QDataStream &stream) : Node(stream)
 {
+    setName("Midi Command");
     addSetting(new MidiCommandSelectSetting(this, "Command", ""));
     addPort(new DataOutputPort(this, "Category", ""));
     addPort(new DataOutputPort(this, "Property", ""));
