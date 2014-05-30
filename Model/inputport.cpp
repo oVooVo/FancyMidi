@@ -53,19 +53,6 @@ OutputPort* InputPort::source() const
     return _source;
 }
 
-void InputPort::emitReceivedDate()
-{
-    emit receivedData(QVariant());
-}
-
-void InputPort::receive(QVariant data)
-{
-    if (type() == Trigger)
-        QTimer::singleShot(DELAY_TRIGGER, this, SLOT(emitReceivedDate()));
-    else
-        emit receivedData(data);
-}
-
 
 
 

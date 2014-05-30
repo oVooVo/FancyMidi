@@ -4,59 +4,37 @@
 #include "Settings/midicommandselectsetting.h"
 #include <QDebug>
 #include "nordstage2.h"
+#include "../datainputport.h"
 
 REGISTER_DEFN_NODETYPE(NordStage2ControlOut);
 
 NordStage2ControlOut::NordStage2ControlOut(QDataStream& stream) :
-    MidiChannelNode(stream)
+    Node(stream)
 {
     setName("Control Out");
-    addPort(new InputPort(this, "Trigger", "set the specified value", Port::Trigger));
-    addPort(new InputPort(this, "Category", "category", Port::Scalar));
-    addPort(new InputPort(this, "Property", "property", Port::Scalar));
-    addPort(new InputPort(this, "Data", "set the data", Port::Scalar));
-
-    addSetting(new MidiCommandSelectSetting(this, "Midi Command", "Sets the midi command that is fired when the trigger input is triggered"));
-
-    connect(setting<MidiCommandSelectSetting>("Midi Command"), SIGNAL(sendMidi()), this, SLOT(sendMidi()));
-
-    connect(inputPort("Trigger"), SIGNAL(receivedData(QVariant)), this, SLOT(sendMidi()));
+    addPort(new TriggerInputPort(this, "Trigger", ""));
+    addPort(new DataInputPort(this, "Channel", ""));
+    addPort(new DataInputPort(this, "Category", ""));
+    addPort(new DataInputPort(this, "Property", ""));
+    addPort(new DataInputPort(this, "Data", ""));
 
 
-    connect(inputPort("Category"), &InputPort::receivedData, [this](QVariant data) {
-        if (!data.canConvert(QVariant::Int)) return;
-        setting<MidiCommandSelectSetting>("Midi Command")->setCategoryIndex(data.value<int>());
-    });
-    connect(inputPort("Property"), &InputPort::receivedData, [this](QVariant data) {
-        if (!data.canConvert(QVariant::Int)) return;
-        setting<MidiCommandSelectSetting>("Midi Command")->setPropertyIndex(data.value<int>());
-    });
-
-    connect(inputPort("Data"), &InputPort::receivedData, [this](QVariant data) {
-        switch (setting<MidiCommandSelectSetting>("Midi Command")->domainType()) {
-        case Domain::Discrete:
-            if (data.canConvert(QVariant::Int))
-                setting<MidiCommandSelectSetting>("Midi Command")->setIndex(data.value<int>());
-            break;
-        case Domain::Integer:
-            if (data.canConvert(QVariant::Int)) {
-                setting<MidiCommandSelectSetting>("Midi Command")->setInt(data.value<int>());
-            }
-            break;
-        case Domain::Double:
-            if (data.canConvert(QVariant::Double))
-                setting<MidiCommandSelectSetting>("Midi Command")->setDouble(data.value<double>());
-            break;
-        }
-    });
 }
 
-void NordStage2ControlOut::sendMidi()
+void NordStage2ControlOut::trigger(const TriggerInputPort *in)
 {
-    NordStage2::channel(setting<IntegerSetting>("Channel")->value())->
-            sendMidiCommand(
-                setting<MidiCommandSelectSetting>("Midi Command")->domain()->midiKey(),
-                setting<MidiCommandSelectSetting>("Midi Command")->domain()->encode()
-                );
+    if (in == triggerInputPort("Trigger")) {
+        MidiCommandSelectSetting mcss(this, "", "", false);
+        mcss.setCategoryIndex(dataInputPort("Category")->data().value<int>());
+        mcss.setPropertyIndex(dataInputPort("Property")->data().value<int>());
+        mcss.setValue(dataInputPort("Data")->data());
+        NordStage2::channel(dataInputPort("Channel")->data().value<int>())->
+                sendMidiCommand(
+                    mcss.domain()->midiKey(),
+                    mcss.domain()->encode()
+                    );
+    } else {
+        Q_ASSERT(false);
+    }
 }
 

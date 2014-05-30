@@ -3,13 +3,13 @@
 #include "../Nodes/enableablenode.h"
 #include "Settings/midifiltersetting.h"
 
-class NordStage2Input : public EnableableNode
+class NordStage2Input : public Node
 {
     Q_OBJECT
 public:
     NordStage2Input(QDataStream& stream);
 
-    QString category() const { return "Midi In"; }
+    QString category() const { return "Midi"; }
 
 private:
     REGISTER_DECL_NODETYPE(NordStage2Input);

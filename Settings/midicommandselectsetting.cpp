@@ -22,14 +22,14 @@ MidiCommandSelectSetting::MidiCommandSelectSetting(Node *parent, QString name, Q
 MidiCommandSelectSetting::MidiCommandSelectSetting(QDataStream &stream)
     : Setting(stream)
 {
-    stream >> _currentCategory >> _currentProperty >> _currentChannel;
+    stream >> _currentCategory >> _currentProperty;
     updateDomain();
 }
 
 void MidiCommandSelectSetting::writeToStream(QDataStream &stream) const
 {
     Setting::writeToStream(stream);
-    stream << _currentCategory << _currentProperty << _currentChannel;
+    stream << _currentCategory << _currentProperty;
 }
 
 void MidiCommandSelectSetting::updateDomain()
@@ -38,6 +38,7 @@ void MidiCommandSelectSetting::updateDomain()
         delete _domain;
 
     _domain = NordStage2::DOMAINS[midiKey()]->copy(NordStage2::channel(0));
+    setValue(_value);
 }
 
 
@@ -48,31 +49,21 @@ MidiCommandSelectSetting::~MidiCommandSelectSetting()
                "destructor", "called from a thread other than the main thread");
 }
 
-void MidiCommandSelectSetting::setDouble(double d)
+void MidiCommandSelectSetting::setValue(QVariant v)
 {
-    Q_ASSERT(domainType() == Domain::Double);
-    if (qFuzzyCompare(((DoubleDomain*) domain())->value(), d)) return;
+    _value = v;
+    switch (domain()->type()) {
+    case Domain::Discrete:
+        ((DiscreteDomain*) domain())->setIndex(v.value<int>());
+        break;
+    case Domain::Integer:
+        ((IntegerDomain*) domain())->setValue(v.value<int>());
+        break;
+    case Domain::Double:
+        ((DoubleDomain*) domain())->setValue(v.value<double>());
+        break;
+    }
 
-    ((DoubleDomain*) domain())->setValue(d);
-    emitChanged();
-}
-
-void MidiCommandSelectSetting::setInt(int i)
-{
-    Q_ASSERT(domainType() == Domain::Integer);
-    if (((IntegerDomain*) domain())->value() == i) return;
-
-    ((IntegerDomain*) domain())->setValue(i);
-    emitChanged();
-}
-
-void MidiCommandSelectSetting::setIndex(int i)
-{
-    Q_ASSERT(domainType() == Domain::Discrete);
-    if (((DiscreteDomain*) domain())->index() == i) return;
-
-    ((DiscreteDomain*) domain())->setIndex(i);
-    emitChanged();
 }
 
 double MidiCommandSelectSetting::min() const
@@ -133,16 +124,6 @@ void MidiCommandSelectSetting::setPropertyIndex(int i)
     emitChanged();
 }
 
-void MidiCommandSelectSetting::setChannel(int i)
-{
-    if (i == _currentChannel)
-        return;
-
-    updateDomain();
-    _currentChannel = qBound(0, i, Keyboard::NUM_MIDI_CHANNELS - 1);
-    emit changed();
-}
-
 
 MidiKey MidiCommandSelectSetting::midiKey() const
 {
@@ -159,13 +140,13 @@ Domain::Type MidiCommandSelectSetting::domainType() const
 
 double MidiCommandSelectSetting::value() const
 {
-    Q_ASSERT(domainType() == Domain::Double || domainType() == Domain::Integer);
-
     switch (domainType()) {
     case Domain::Double:
         return ((DoubleDomain*) domain())->value();
     case Domain::Integer:
         return ((IntegerDomain*) domain())->value();
+    case Domain::Discrete:
+        return ((DiscreteDomain*) domain())->index();
     default:
         return 0;
     }

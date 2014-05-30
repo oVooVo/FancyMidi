@@ -12,14 +12,16 @@
 class InputPort : public Port
 {
     Q_OBJECT
-public:
     /**
      * @brief InputPort Creates a InputPort for a specific node
      * @param node The specific node
      * @param name Name of the input port
      * @param infoText Text for the information about the input port
      */
+protected:
     InputPort(Node* node, QString name, QString infoText, Type type);
+
+public:
     ~InputPort();
 
     /**
@@ -44,18 +46,6 @@ public:
      * @return the OutputPort this port is connected with.
      */
     OutputPort* source() const;
-
-
-    void receive(QVariant data);
-
-
-signals:
-    void receivedData(QVariant data);
-private slots:
-    void emitReceivedDate();
-
-private:
-    static const int DELAY_TRIGGER = 0;
 
 protected:
     /**

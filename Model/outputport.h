@@ -46,14 +46,10 @@ public:
      */
     bool isInput() const;
 
-    void send(QVariant data = QVariant());
     void setBlock(bool block);
     bool block() const { return _block; }
 
     bool closesCycle(const InputPort *in) const;
-
-signals:
-    void sendData(QVariant data);
 
 private:
     bool _block;

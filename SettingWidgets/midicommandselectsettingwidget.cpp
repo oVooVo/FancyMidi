@@ -27,19 +27,23 @@ MidiCommandSelectSettingWidget::MidiCommandSelectSettingWidget(Setting* set, QWi
     connect(ui->category, SIGNAL(currentIndexChanged(int)),
             this, SLOT(updatePropertyBox()));
 
-    connect(ui->doubleSpinBox, SIGNAL(valueChanged(double)),
-            setting<MidiCommandSelectSetting>(), SLOT(setDouble(double)));
-    connect(ui->spinBox, SIGNAL(valueChanged(int)),
-            setting<MidiCommandSelectSetting>(), SLOT(setInt(int)));
-    connect(ui->comboBox, SIGNAL(currentIndexChanged(int)),
-            setting<MidiCommandSelectSetting>(), SLOT(setIndex(int)));
-    connect(ui->pushButton, SIGNAL(clicked()),
-            setting<MidiCommandSelectSetting>(), SIGNAL(sendMidi()));
-    connect(ui->channelSlider, SIGNAL(valueChanged(int)),
-            setting<MidiCommandSelectSetting>(), SLOT(setChannel(int)));
+    connect(ui->doubleSpinBox,
+            static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            [this](double value) {
+        setting<MidiCommandSelectSetting>()->setValue(value);
+    });
+    connect(ui->spinBox,
+            static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            [this](int value) {
+        setting<MidiCommandSelectSetting>()->setValue(value);
+    });
+    connect(ui->comboBox,
+            static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            [this](int value) {
+        setting<MidiCommandSelectSetting>()->setValue(value);
+    });
 
     ui->spinBox->setRange(0, Keyboard::NUM_MIDI_CHANNELS);
-    ui->channelSlider->setRange(0, Keyboard::NUM_MIDI_CHANNELS);
     updatePropertyBox();
     reset();
 }
@@ -71,11 +75,6 @@ void MidiCommandSelectSettingWidget::reset()
     ui->comboBox->blockSignals(true);
     ui->spinBox->blockSignals(true);
     ui->doubleSpinBox->blockSignals(true);
-    ui->channelSlider->blockSignals(true);
-    ui->spinBox->blockSignals(true);
-
-    ui->channelSlider->setValue(setting<MidiCommandSelectSetting>()->channel());
-    ui->spinBox->setValue(setting<MidiCommandSelectSetting>()->channel());
 
     switch (setting<MidiCommandSelectSetting>()->domainType()) {
     case Domain::Discrete:

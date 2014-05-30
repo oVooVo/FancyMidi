@@ -23,7 +23,6 @@ SOURCES += main.cpp\
     Domain/doubledomain.cpp \
     Domain/domains.cpp \
     mainwindow.cpp \
-    Model/Nodes/node.cpp \
     Model/port.cpp \
     Model/inputport.cpp \
     Model/outputport.cpp \
@@ -47,28 +46,13 @@ SOURCES += main.cpp\
     View/nodetree.cpp \
     Settings/doublesetting.cpp \
     SettingWidgets/doublesettingwidget.cpp \
-    Model/Nodes/nordstage2input.cpp \
     SettingWidgets/midifiltersettingwidget.cpp \
     Settings/midifiltersetting.cpp \
     midihandler.cpp \
     midikey.cpp \
-    Model/Nodes/nordstage2controlout.cpp \
-    Model/Nodes/nordstage2noteout.cpp \
-    Model/Nodes/midichannelnode.cpp \
-    Model/Nodes/enableablenode.cpp \
     Settings/boolsetting.cpp \
     SettingWidgets/boolsettingwidget.cpp \
     Settings/scalarsetting.cpp \
-    Model/Nodes/delaynode.cpp \
-    Model/Nodes/mathnode.cpp \
-    Model/Nodes/nordstage2noteinput.cpp \
-    Model/Nodes/timernode.cpp \
-    Model/Nodes/pitchbendinput.cpp \
-    Model/Nodes/tointegernode.cpp \
-    Model/Nodes/pitchbendoutput.cpp \
-    Model/Nodes/memorymapnode.cpp \
-    Model/Nodes/memorynode.cpp \
-    Model/Nodes/conditionnode.cpp \
     logger.cpp \
     Model/minimapgraphscene.cpp \
     View/minimapview.cpp \
@@ -76,15 +60,41 @@ SOURCES += main.cpp\
     View/graphicsproxywidget.cpp \
     numbered.cpp \
     Settings/sequencesetting.cpp \
-    Model/Nodes/sequencenode.cpp \
     SettingWidgets/sequencesettingwidget.cpp \
-    Model/Nodes/switch.cpp \
-    Model/Nodes/rangenode.cpp \
-    Model/Nodes/counternode.cpp \
     Settings/infosetting.cpp \
     SettingWidgets/infosettingwidget.cpp \
-    Model/Nodes/passonlychanges.cpp \
-    Model/Nodes/passnnode.cpp
+    Model/Nodes/node.cpp \
+    Model/Nodes/nordstage2input.cpp \
+    Model/Nodes/nordstage2controlout.cpp \
+#    Model/Nodes/nordstage2noteout.cpp \
+#    Model/Nodes/midichannelnode.cpp \
+#    Model/Nodes/enableablenode.cpp \
+#    Model/Nodes/delaynode.cpp \
+    Model/Nodes/mathnode.cpp \
+#    Model/Nodes/nordstage2noteinput.cpp \
+    Model/Nodes/timernode.cpp \
+#    Model/Nodes/pitchbendinput.cpp \
+#    Model/Nodes/tointegernode.cpp \
+#    Model/Nodes/pitchbendoutput.cpp \
+#    Model/Nodes/memorymapnode.cpp \
+#    Model/Nodes/memorynode.cpp \
+#    Model/Nodes/conditionnode.cpp \
+#    Model/Nodes/sequencenode.cpp \
+#    Model/Nodes/switch.cpp \
+#    Model/Nodes/rangenode.cpp \
+    Model/Nodes/counternode.cpp \
+#    Model/Nodes/passonlychanges.cpp \
+#    Model/Nodes/passnnode.cpp
+    Model/dataoutputport.cpp \
+    Model/datainputport.cpp \
+    Model/triggeroutputport.cpp \
+    Model/triggerinputport.cpp \
+    Model/Nodes/result.cpp \
+    Model/Nodes/constantnode.cpp \
+    Model/Nodes/midicommandconstantnode.cpp \
+    Model/Nodes/triggernode.cpp \
+    Settings/triggersetting.cpp \
+    SettingWidgets/triggersettingwidget.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -96,7 +106,6 @@ HEADERS  +=  \
     Domain/doubledomain.h \
     Domain/domains.h \
     mainwindow.h \
-    Model/Nodes/node.h \
     Model/port.h \
     Model/inputport.h \
     Model/outputport.h \
@@ -121,28 +130,13 @@ HEADERS  +=  \
     View/nodetree.h \
     Settings/doublesetting.h \
     SettingWidgets/doublesettingwidget.h \
-    Model/Nodes/nordstage2input.h \
     Settings/midifiltersetting.h \
     SettingWidgets/midifiltersettingwidget.h \
     midihandler.h \
     midikey.h \
-    Model/Nodes/nordstage2controlout.h \
-    Model/Nodes/nordstage2noteout.h \
-    Model/Nodes/midichannelnode.h \
-    Model/Nodes/enableablenode.h \
     Settings/boolsetting.h \
     SettingWidgets/boolsettingwidget.h \
     Settings/scalarsetting.h \
-    Model/Nodes/delaynode.h \
-    Model/Nodes/mathnode.h \
-    Model/Nodes/nordstage2noteinput.h \
-    Model/Nodes/timernode.h \
-    Model/Nodes/pitchbendinput.h \
-    Model/Nodes/tointegernode.h \
-    Model/Nodes/pitchbendoutput.h \
-    Model/Nodes/memorymapnode.h \
-    Model/Nodes/memorynode.h \
-    Model/Nodes/conditionnode.h \
     logger.h \
     Model/minimapgraphscene.h \
     View/minimapview.h \
@@ -150,15 +144,41 @@ HEADERS  +=  \
     View/graphicsproxywidget.h \
     numbered.h \
     Settings/sequencesetting.h \
-    Model/Nodes/sequencenode.h \
     SettingWidgets/sequencesettingwidget.h \
-    Model/Nodes/switch.h \
-    Model/Nodes/rangenode.h \
-    Model/Nodes/counternode.h \
     Settings/infosetting.h \
     SettingWidgets/infosettingwidget.h \
-    Model/Nodes/passonlychanges.h \
-    Model/Nodes/passnnode.h
+    Model/Nodes/node.h \
+    Model/Nodes/nordstage2input.h \
+    Model/Nodes/nordstage2controlout.h \
+#    Model/Nodes/nordstage2noteout.h \
+#    Model/Nodes/midichannelnode.h \
+#    Model/Nodes/enableablenode.h \
+#    Model/Nodes/delaynode.h \
+    Model/Nodes/mathnode.h \
+#    Model/Nodes/nordstage2noteinput.h \
+    Model/Nodes/timernode.h \
+#    Model/Nodes/pitchbendinput.h \
+#    Model/Nodes/tointegernode.h \
+#    Model/Nodes/pitchbendoutput.h \
+#    Model/Nodes/memorymapnode.h \
+#    Model/Nodes/memorynode.h \
+#    Model/Nodes/conditionnode.h \
+#    Model/Nodes/sequencenode.h \
+#    Model/Nodes/switch.h \
+#    Model/Nodes/rangenode.h \
+    Model/Nodes/counternode.h \
+#    Model/Nodes/passonlychanges.h \
+#    Model/Nodes/passnnode.h
+    Model/dataoutputport.h \
+    Model/datainputport.h \
+    Model/triggeroutputport.h \
+    Model/triggerinputport.h \
+    Model/Nodes/result.h \
+    Model/Nodes/constantnode.h \
+    Model/Nodes/midicommandconstantnode.h \
+    Model/Nodes/triggernode.h \
+    Settings/triggersetting.h \
+    SettingWidgets/triggersettingwidget.h
 
 FORMS += \
     mainwindow.ui \

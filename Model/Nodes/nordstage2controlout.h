@@ -4,20 +4,19 @@
 #include "../Nodes/midichannelnode.h"
 #include "Settings/integersetting.h"
 #include "Settings/midicommandselectsetting.h"
+#include "../triggerinputport.h"
 
-class NordStage2ControlOut : public MidiChannelNode
+
+class NordStage2ControlOut : public Node    //TODO derive from midichannelnode
 {
     Q_OBJECT
 public:
     NordStage2ControlOut(QDataStream& stream);
-    QString category() const { return "Midi Out"; }
+    QString category() const { return "Midi"; }
+    void trigger(const TriggerInputPort *);
 
 private:
     REGISTER_DECL_NODETYPE(NordStage2ControlOut);
-
-
-public slots:
-    void sendMidi();
 
 
 };

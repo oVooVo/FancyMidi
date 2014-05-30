@@ -34,6 +34,9 @@ QString Port::infoText() const
 
 bool Port::canConnect(const Port *port1, const Port *port2)
 {
+    if (port1->type() != port2->type())
+        return false;
+
     const OutputPort* out = (const OutputPort*) (port1->isInput() ? port2 : port1);
     const InputPort*  in  = (const InputPort*)  (port1->isInput() ? port1 : port2);
     return !out->closesCycle(in);

@@ -9,6 +9,7 @@
 #include "../project.h"
 #include <QCoreApplication>
 #include "Settings/setting.h"
+#include "../datainputport.h"
 
 QMap<QString, Node* (*)(QDataStream&)> *Node::_creatorMap = 0;
 
@@ -179,11 +180,36 @@ InputPort* Node::inputPort(QString key) const
     return _inputs[key];
 }
 
+DataInputPort* Node::dataInputPort(QString key) const
+{
+    Q_ASSERT(inputPort(key)->type() == Port::Data);
+    return (DataInputPort*) inputPort(key);
+}
+
+TriggerInputPort* Node::triggerInputPort(QString key) const
+{
+    Q_ASSERT(inputPort(key)->type() == Port::Trigger);
+    return (TriggerInputPort*) inputPort(key);
+}
+
 OutputPort* Node::outputPort(QString key) const
 {
     Q_ASSERT(_outputs.contains(key));
     return _outputs[key];
 }
+
+DataOutputPort *Node::dataOutputPort(QString key) const
+{
+    Q_ASSERT(outputPort(key)->type() == Port::Data);
+    return (DataOutputPort*) outputPort(key);
+}
+
+TriggerOutputPort *Node::triggerOutputPort(QString key) const
+{
+    Q_ASSERT(outputPort(key)->type() == Port::Trigger);
+    return (TriggerOutputPort*) outputPort(key);
+}
+
 
 void Node::setName(QString name)
 {

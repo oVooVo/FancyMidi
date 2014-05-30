@@ -13,6 +13,10 @@
 
 class InputPort;
 class OutputPort;
+class DataOutputPort;
+class DataInputPort;
+class TriggerOutputPort;
+class TriggerInputPort;
 class Project;
 class Setting;
 class Port;
@@ -135,6 +139,11 @@ public:
 
     bool hasSettingsToDisplayInNode() const;
 
+
+    virtual void updateData(const DataOutputPort*) const {} // is called when port requests data
+    virtual void notify(const DataInputPort*, const QVariant&) {} // is called when port's data changed.
+    virtual void trigger(const TriggerInputPort*) {}    // is called when port is triggered
+
 public slots:
     void start();
     void stop();
@@ -143,8 +152,11 @@ protected:
     void addPort(Port* port);
     void addSetting(Setting* setting);
     void registerTimer(QTimer* timer);
-    InputPort* inputPort(QString key) const;
-    OutputPort* outputPort(QString key) const;
+    DataOutputPort* dataOutputPort(QString key) const;
+    DataInputPort* dataInputPort(QString key) const;
+    TriggerOutputPort* triggerOutputPort(QString key) const;
+    TriggerInputPort* triggerInputPort(QString key) const;
+
     template<typename T> T* setting(QString key) const
     {
         Q_ASSERT(_settings.contains(key));
@@ -162,7 +174,10 @@ protected:
     void setBlock(bool block);
     bool block() const { return _block; }
 
+
 private:
+    InputPort* inputPort(QString key) const;
+    OutputPort* outputPort(QString key) const;
     QMap<QString, InputPort*> _inputs;
     QMap<QString, OutputPort*> _outputs;
     QMap<QString, Setting*> _settings;

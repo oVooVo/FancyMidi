@@ -32,7 +32,7 @@ bool MidiHandler::connectMidiDevice_Private()
         else return false;
     };
     if (openfailed("/dev/midi0") && openfailed("/dev/midi1")) {
-        qDebug() << "Cannot find midi-device. Make sure this device is not used by any other program.";
+        qWarning() << "Cannot find midi-device. Make sure this device is not used by any other program.";
         return false;
     }
 

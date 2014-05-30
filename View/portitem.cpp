@@ -33,7 +33,7 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
         switch (_port->type()) {
         case Port::Trigger:
             break;
-        case Port::Scalar:
+        case Port::Data:
             _brushColor = QColor(Qt::darkRed);
             break;
         case Port::Other:
@@ -43,26 +43,6 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
         }
 
         setBrush(_brushColor);
-
-        //connect animation stuff
-        QObject::connect(&_timer, &QTimer::timeout, [this, scene]() {
-            _time++;
-            if (_time >= _duration) {
-                _time = 0;
-                _timer.stop();
-            }
-            adjustColor();
-        });
-
-        if (_port->isInput()) {
-            QObject::connect((InputPort*) _port, &InputPort::receivedData, [this]() {
-                _timer.start(30);
-            });
-        } else {
-            QObject::connect((OutputPort*) _port, &OutputPort::sendData, [this]() {
-                _timer.start(30);
-            });
-        }
     }
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
     _portFlags = 0;

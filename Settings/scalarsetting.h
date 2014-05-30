@@ -50,19 +50,6 @@ public:
     T defaultValue() const { return _default; }
     bool hasBounds() const { return _hasBounds; }
 
-    virtual void connectPort(Port* port)
-    {
-        if (port->isInput()) {
-            QObject::connect((InputPort*) port, &InputPort::receivedData, [this](QVariant data) {
-                if (!data.canConvert<T>()) return;
-                setValue(data.value<T>());
-            });
-        } else {
-            QObject::connect(this, &Setting::changed, [this, port]() {
-                ((OutputPort*) port)->send(value());
-            });
-        }
-    }
 
 protected:
     virtual void setValue(T value)

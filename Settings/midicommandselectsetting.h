@@ -31,21 +31,16 @@ public:
 
     int currentCategory() const { return _currentCategory; }
     int currentProperty() const { return _currentProperty; }
-    int channel() const { return _currentChannel; }
-
 
 public slots:
-    void setDouble(double d);
-    void setInt(int i);
-    void setIndex(int i);
+    void setValue(QVariant v);
+
     void setCategoryIndex(int i);
     void setPropertyIndex(int i);
-    void setChannel(int i);
 
 private:
     int _currentCategory = 0;
     int _currentProperty = 0;
-    int _currentChannel = 0;
     QString key() const {
         return QString("%1.%2")
                 .arg(NordStage2::categories()[_currentCategory])
@@ -53,6 +48,7 @@ private:
     MidiKey midiKey() const;
     Domain* _domain = 0;
     void updateDomain();
+    QVariant _value;
 
 
 signals:

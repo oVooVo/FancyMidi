@@ -6,51 +6,39 @@
 REGISTER_DEFN_NODETYPE(TimerNode);
 
 TimerNode::TimerNode(QDataStream &stream)
-    : EnableableNode(stream)
+    : Node(stream)
 {
     setName("Timer");
     registerTimer(&_timer);
-    addSetting(new IntegerSetting(this, "Duration", "Interval", 0, 10000, 1000, 1000));
-    addSetting(new IntegerSetting(this, "Intervall", "Interval", 0, 10000, 1000, 1000));
-    addPort(new OutputPort(this, "Timeout", "", Port::Trigger));
-    addPort(new OutputPort(this, "Time", "", Port::Scalar));
-    addPort(new InputPort(this, "Stop", "Stops the timer", Port::Trigger));
-    addPort(new InputPort(this, "Start", "Starts the timer", Port::Trigger));
-    addPort(new InputPort(this, "Reset", "Synchronizes the timer", Port::Trigger));
-    addPort(new InputPort(this, "Duration", "", Port::Scalar));
-    addPort(new InputPort(this, "Intervall", "", Port::Scalar));
 
-    setting<IntegerSetting>("Duration")->connectPort(inputPort("Duration"));
-    setting<IntegerSetting>("Intervall")->connectPort(inputPort("Intervall"));
-
-
-    connect(setting<IntegerSetting>("Intervall"), &IntegerSetting::changed, [this]() {
-        _timer.setInterval(setting<IntegerSetting>("Intervall")->value());
-    });
+    addPort(new TriggerOutputPort(this, "Timeout", ""));
+    addPort(new TriggerInputPort(this, "Stop", "Stops the timer"));
+    addPort(new TriggerInputPort(this, "Start", "Starts the timer"));
+    addPort(new DataInputPort(this, "Interval", ""));
 
     connect(&_timer, &QTimer::timeout, [this]() {
-       outputPort("Time")->send(_time);
-       _time++;
-       if (_time >= setting<IntegerSetting>("Duration")->value()) {
-           _time = 0;
-           outputPort("Timeout")->send();
-       }
+        triggerOutputPort("Timeout")->trigger();
     });
+}
 
-    connect(inputPort("Stop"), &InputPort::receivedData, [this]() {
+void TimerNode::trigger(const TriggerInputPort *in)
+{
+    if (in == triggerInputPort("Stop"))
         _timer.stop();
-    });
+    else if (in == triggerInputPort("Start")) {
+        _timer.start(dataInputPort("Interval")->data().value<int>());
+    }
+    else
+        Q_ASSERT(false);
+}
 
-    connect(inputPort("Start"), &InputPort::receivedData, [this]() {
-        if (!_timer.isActive())
-            _timer.start();
-    });
-
-    connect(inputPort("Reset"), &InputPort::receivedData, [this]() {
-        _time = 0;
-    });
-
-    _timer.start(setting<IntegerSetting>("Intervall")->value());
+void TimerNode::notify(const DataInputPort *in, const QVariant& data)
+{
+    if (in == dataInputPort("Interval")) {
+        _timer.setInterval(data.value<int>());
+    } else {
+        Q_ASSERT(false);
+    }
 }
 
 

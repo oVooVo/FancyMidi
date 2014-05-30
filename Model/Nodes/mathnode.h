@@ -1,9 +1,9 @@
 #ifndef MATHNODE_H
 #define MATHNODE_H
 
-#include "enableablenode.h"
+#include "node.h"
 
-class MathNode : public EnableableNode
+class MathNode : public Node
 {
     Q_OBJECT
 public:
@@ -11,10 +11,10 @@ public:
 
     QString category() const { return "Math"; }
 
-    REGISTER_DECL_NODETYPE(MathNode);
+protected:
+    void updateData(const DataOutputPort *port) const;
 
-private slots:
-    void calculate();
+    REGISTER_DECL_NODETYPE(MathNode);
 };
 
 #endif // MATHNODE_H

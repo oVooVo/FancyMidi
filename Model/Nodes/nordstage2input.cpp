@@ -1,32 +1,36 @@
 #include "nordstage2input.h"
 #include "../outputport.h"
 #include "nordstage2.h"
+#include "../datainputport.h"
+#include "../dataoutputport.h"
+#include "../triggeroutputport.h"
 
 REGISTER_DEFN_NODETYPE(NordStage2Input);
 
 NordStage2Input::NordStage2Input(QDataStream& stream)
-    : EnableableNode(stream)
+    : Node(stream)
 {
     setName("Control Input");
-    addPort(new OutputPort(this, "Channel", "", Port::Scalar));
-    addPort(new OutputPort(this, "Category", "", Port::Scalar));
-    addPort(new OutputPort(this, "Property", "", Port::Scalar));
-    addPort(new OutputPort(this, "Type", "", Port::Scalar));
-    addPort(new OutputPort(this, "Value", "", Port::Scalar));
+    addPort(new DataOutputPort(this, "Channel", ""));
+    addPort(new DataOutputPort(this, "Category", ""));
+    addPort(new DataOutputPort(this, "Property", ""));
+    addPort(new DataOutputPort(this, "Type", ""));
+    addPort(new DataOutputPort(this, "Value", ""));
+    addPort(new TriggerOutputPort(this, "Trigger", ""));
 
     addSetting(new MidiFilterSetting(this, "Midi Filter", ""));
 
     connect(setting<MidiFilterSetting>("Midi Filter"), &MidiFilterSetting::channelChanged, [this](int channel) {
-        outputPort("Channel")->sendData(channel);
+        dataOutputPort("Channel")->setData(channel);
     });
     connect(setting<MidiFilterSetting>("Midi Filter"), &MidiFilterSetting::categoryChanged, [this](int category) {
-        outputPort("Category")->sendData(category);
+        dataOutputPort("Category")->setData(category);
     });
     connect(setting<MidiFilterSetting>("Midi Filter"), &MidiFilterSetting::propertyChanged, [this](int property) {
-        outputPort("Property")->sendData(property);
+        dataOutputPort("Property")->setData(property);
     });
     connect(setting<MidiFilterSetting>("Midi Filter"), &MidiFilterSetting::typeChanged, [this](int type) {
-        outputPort("Type")->sendData(type);
+        dataOutputPort("Type")->setData(type);
     });
 
     for (int i = 0; i < Keyboard::NUM_MIDI_CHANNELS; i++) {
@@ -57,14 +61,15 @@ void NordStage2Input::filter(int channel, MidiKey key, QVariant data)
     }
     int categoryIndex = NordStage2::categoryIndex(key);
     int propertyIndex = NordStage2::propertyIndex(key);
-    outputPort("Channel")->send(channel);
+    dataOutputPort("Channel")->setData(channel);
     if (key.type() == MidiKey::ControlChange) {
-        outputPort("Category")->send(NordStage2::categories()[categoryIndex]);
-        outputPort("Property")->send(NordStage2::properties(categoryIndex)[propertyIndex]);
+        dataOutputPort("Category")->setData(NordStage2::categories()[categoryIndex]);
+        dataOutputPort("Property")->setData(NordStage2::properties(categoryIndex)[propertyIndex]);
     }
     if (key.type() == MidiKey::Aftertouch) {
-        outputPort("Value")->send(key.code() / 127.0);  // map aftertouch from 0..127 to 0..1
+        dataOutputPort("Value")->setData(key.code() / 127.0);  // map aftertouch from 0..127 to 0..1
     } else {
-        outputPort("Value")->send(data);
+        dataOutputPort("Value")->setData(data);
     }
+    triggerOutputPort("Trigger")->trigger();
 }

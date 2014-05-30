@@ -54,15 +54,6 @@ bool OutputPort::isInput() const
     return false;
 }
 
-void OutputPort::send(QVariant data)
-{
-    if (_block) return;
-    emit sendData(data);
-    for (InputPort* ip : _targets) {
-        ip->receive(data);
-    }
-}
-
 void OutputPort::setBlock(bool block)
 {
     _block = block;

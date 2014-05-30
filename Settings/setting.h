@@ -51,8 +51,6 @@ public:
      */
     void emitChanged();
 
-    virtual void connectPort(Port* port) { Q_UNUSED(port); }
-
     bool showInNode() const { return _showInNode; }
 
 signals:
