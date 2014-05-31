@@ -16,7 +16,6 @@ NordStage2Input::NordStage2Input(QDataStream& stream)
     addPort(new DataOutputPort(this, "Property", ""));
     addPort(new DataOutputPort(this, "Type", ""));
     addPort(new DataOutputPort(this, "Value", ""));
-    addPort(new TriggerOutputPort(this, "Trigger", ""));
 
     addSetting(new MidiFilterSetting(this, "Midi Filter", ""));
 
@@ -65,11 +64,12 @@ void NordStage2Input::filter(int channel, MidiKey key, QVariant data)
     if (key.type() == MidiKey::ControlChange) {
         dataOutputPort("Category")->setData(NordStage2::categories()[categoryIndex]);
         dataOutputPort("Property")->setData(NordStage2::properties(categoryIndex)[propertyIndex]);
-    }
-    if (key.type() == MidiKey::Aftertouch) {
+        dataOutputPort("Value")->setData(data);
+    } else if (key.type() == MidiKey::NoteOn || key.type() == MidiKey::NoteOff) {
+        dataOutputPort("Value")->setData(key.code());
+    } else if (key.type() == MidiKey::Aftertouch) {
         dataOutputPort("Value")->setData(key.code() / 127.0);  // map aftertouch from 0..127 to 0..1
     } else {
         dataOutputPort("Value")->setData(data);
     }
-    triggerOutputPort("Trigger")->trigger();
 }

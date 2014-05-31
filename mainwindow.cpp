@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include "logger.h"
 #include "keyboard.h"
+#include <QScrollBar>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,8 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSave_As, SIGNAL(triggered()), this, SLOT(saveAs()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newProject()));
-    connect(Logger::singleton(), SIGNAL(newLogMessage(QString)), ui->textEdit, SLOT(append(QString)));
-
+    connect(Logger::singleton(), &Logger::newLogMessage,[this](QString log) {
+            QString newLogMessage = ui->textEdit->toPlainText().append(log);
+            ui->textEdit->setPlainText(newLogMessage.right(1000));
+            ui->textEdit->verticalScrollBar()->setValue(ui->textEdit->verticalScrollBar()->maximum());
+    });
     connect(ui->graphicsView, SIGNAL(viewRectangleChanged(QRectF)), this, SLOT(updateMinimap()));
     ui->minimapView->installEventFilter(this); //recognize resizing due to redraw
 
@@ -61,9 +65,7 @@ void MainWindow::setProject(Project *project)
     connect(_project, SIGNAL(isSaveStatusChanged(bool)), this, SLOT(updateWindowTitle()));
     connect(_project, SIGNAL(nodesChanged()), this, SLOT(updateMinimap()));
     connect(_project, SIGNAL(modelChanged()), this, SLOT(updateMinimap()));
-    connect(_project, &Project::newLogMessage, [this](QString log) {
-        ui->textEdit->append(log);
-    });
+
 
     centerOn(ui->minimapView->mapToScene(ui->minimapView->viewport()->rect().center()));
 

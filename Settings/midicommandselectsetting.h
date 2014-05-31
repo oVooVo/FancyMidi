@@ -32,11 +32,22 @@ public:
     int currentCategory() const { return _currentCategory; }
     int currentProperty() const { return _currentProperty; }
 
+    void connectPort(DataInputPort *category, DataInputPort *property, DataInputPort* value);
+
+    bool categoryEnabled() const { return _categoryEnabled; }
+    bool propertyEnabled() const { return _propertyEnabled; }
+    bool valueEnabled() const { return _valueEnabled; }
+
+
 public slots:
     void setValue(QVariant v);
-
     void setCategoryIndex(int i);
     void setPropertyIndex(int i);
+
+    void setCategoryEnabled(bool enabled);
+    void setPropertyEnabled(bool enabled);
+    void setValueEnabled(bool enabled);
+
 
 private:
     int _currentCategory = 0;
@@ -50,9 +61,15 @@ private:
     void updateDomain();
     QVariant _value;
 
+    bool _categoryEnabled = true;
+    bool _propertyEnabled = true;
+    bool _valueEnabled = true;
 
 signals:
     void sendMidi();
+    void categoryEnabledChanged(bool);
+    void propertyEnabledChanged(bool);
+    void valueEnabledChanged(bool);
 
     REGISTER_DECL_SETTINGTYPE(MidiCommandSelectSetting);
 };

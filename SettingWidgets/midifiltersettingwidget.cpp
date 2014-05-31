@@ -28,6 +28,7 @@ MidiFilterSettingWidget::MidiFilterSettingWidget(Setting *set, QWidget *parent) 
         updateVisibility();
     });
 
+
     connect(ui->category, SIGNAL(currentIndexChanged(int)),
             setting<MidiFilterSetting>(), SLOT(setCategoryIndex(int)));
 
@@ -51,7 +52,7 @@ MidiFilterSettingWidget::MidiFilterSettingWidget(Setting *set, QWidget *parent) 
             setting<MidiFilterSetting>(), SLOT(setFilterChannel(bool)));
     connect(ui->filterProperty, SIGNAL(toggled(bool)),
             setting<MidiFilterSetting>(), SLOT(setFilterProperty(bool)));
-    updatePropertyBox();
+
     reset();
 }
 
@@ -71,12 +72,14 @@ MidiFilterSettingWidget::~MidiFilterSettingWidget()
 
 void MidiFilterSettingWidget::reset()
 {
+    ui->category->blockSignals(true);
+    ui->property->blockSignals(true);
+    ui->type->blockSignals(true);
     if (ui->category->currentIndex() != setting<MidiFilterSetting>()->categoryIndex()) {
         updatePropertyBox();
         ui->category->setCurrentIndex(setting<MidiFilterSetting>()->categoryIndex());
     }
     if (ui->property->currentIndex() != setting<MidiFilterSetting>()->propertyIndex()) {
-        qDebug() << "set property box index " << setting<MidiFilterSetting>()->propertyIndex();
         ui->property->setCurrentIndex(setting<MidiFilterSetting>()->propertyIndex());
     }
     if (ui->type->currentIndex() != setting<MidiFilterSetting>()->typeIndex()) {
@@ -98,6 +101,9 @@ void MidiFilterSettingWidget::reset()
         ui->filterProperty->setChecked(setting<MidiFilterSetting>()->filterProperty());
     }
     updateVisibility();
+    ui->category->blockSignals(false);
+    ui->property->blockSignals(false);
+    ui->type->blockSignals(false);
 }
 
 void MidiFilterSettingWidget::updatePropertyBox()

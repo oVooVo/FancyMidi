@@ -2,7 +2,8 @@
 #include "dataoutputport.h"
 #include <QDebug>
 
-DataInputPort::DataInputPort(Node* node, QString name, QString tooltip) : InputPort(node, name, tooltip, Port::Data)
+DataInputPort::DataInputPort(Node* node, QString name, QString tooltip, bool canNotify)
+    : InputPort(node, name, tooltip, Port::Data, canNotify)
 {
 }
 
@@ -25,8 +26,12 @@ bool DataInputPort::hasData(QVariant &data) const
 
 void DataInputPort::notify(const QVariant &data)
 {
-    node()->notify(this, data);
+    if (notifies())
+        node()->notify(this, data);
+
+    // notify settings
     emit dataChanged(data);
+    emit blink();
 }
 
 void DataInputPort::setFallback(QVariant fallback)
@@ -36,4 +41,12 @@ void DataInputPort::setFallback(QVariant fallback)
 
     _fallback = fallback;
     notify(_fallback);
+}
+
+void DataInputPort::on_connect(Port *port)
+{
+    Q_ASSERT(port->type() == Data && !port->isInput());
+    DataOutputPort* input = (DataOutputPort*) port;
+
+    notify(input->data());
 }

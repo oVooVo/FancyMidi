@@ -17,5 +17,4 @@ void Logger::log(QString message)
     qDebug() << message;
 #endif
     singleton()->emitNewLogMessage(message);
-
 }

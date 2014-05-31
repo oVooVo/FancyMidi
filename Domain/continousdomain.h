@@ -34,9 +34,11 @@ public:
         _min = min;
         _max = max;
         _value = qBound(min, value, max);
+#ifdef VERBOSE
         if (_value != value) {
             qWarning() << "Expected value to be between" << min << "and" << max << ".";
         }
+#endif
     }
 
     virtual ~ContinousDomain() {}
@@ -48,9 +50,11 @@ public:
     void setValue(T value)
     {
         _value = qBound(min(), value, max());
+#ifdef VERBOSE
         if (_value != value) {
             qWarning() << "Expected value to be between" << min() << "and" << max() << ".";
         }
+#endif
     }
 
     bool setCode(quint8 code)

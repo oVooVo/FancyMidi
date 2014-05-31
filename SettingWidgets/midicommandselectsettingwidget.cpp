@@ -43,6 +43,23 @@ MidiCommandSelectSettingWidget::MidiCommandSelectSettingWidget(Setting* set, QWi
         setting<MidiCommandSelectSetting>()->setValue(value);
     });
 
+    connect(setting<MidiCommandSelectSetting>(), SIGNAL(categoryEnabledChanged(bool)),
+            ui->category, SLOT(setEnabled(bool)));
+    connect(setting<MidiCommandSelectSetting>(), SIGNAL(propertyEnabledChanged(bool)),
+            ui->property, SLOT(setEnabled(bool)));
+    connect(setting<MidiCommandSelectSetting>(), SIGNAL(valueEnabledChanged(bool)),
+            ui->spinBox, SLOT(setEnabled(bool)));
+    connect(setting<MidiCommandSelectSetting>(), SIGNAL(valueEnabledChanged(bool)),
+            ui->doubleSpinBox, SLOT(setEnabled(bool)));
+    connect(setting<MidiCommandSelectSetting>(), SIGNAL(valueEnabledChanged(bool)),
+            ui->comboBox, SLOT(setEnabled(bool)));
+    ui->category->setEnabled(setting<MidiCommandSelectSetting>()->categoryEnabled());
+    ui->property->setEnabled(setting<MidiCommandSelectSetting>()->propertyEnabled());
+    ui->spinBox->setEnabled(setting<MidiCommandSelectSetting>()->valueEnabled());
+    ui->doubleSpinBox->setEnabled(setting<MidiCommandSelectSetting>()->valueEnabled());
+    ui->comboBox->setEnabled(setting<MidiCommandSelectSetting>()->valueEnabled());
+
+
     ui->spinBox->setRange(0, Keyboard::NUM_MIDI_CHANNELS);
     updatePropertyBox();
     reset();

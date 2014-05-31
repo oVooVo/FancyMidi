@@ -14,7 +14,6 @@ public:
     QString category() const { return "Math"; }
 
 protected:
-    void updateData(const DataOutputPort *port) const;
     void notify(const DataInputPort *in, const QVariant &);
 
 

@@ -17,29 +17,19 @@ SequenceNode::SequenceNode(QDataStream &stream) : Node(stream)
     addSetting(new IntegerSetting(this, "Octave" , "", 0, 48, 12, 12, true));
     addSetting(new InfoSetting(this, "Overall Length", "", "", true));
 
-    addPort(new DataOutputPort(this, "Absolute Key", ""));
-    addPort(new DataOutputPort(this, "Relative Key", ""));
+    addPort(new DataInputPort(this, "Absolute Key", ""));
+    addPort(new DataInputPort(this, "Relative Key", ""));
+    addPort(new DataInputPort(this, "Octave Range", "", false));
+    addPort(new DataInputPort(this, "Octave Shift", "", false));
+    addPort(new DataInputPort(this, "Octave", "", false));
     addPort(new DataOutputPort(this, "Note", ""));
-    /*
-    connect(dataInputPort("Absolute Key"), &DataInputPort::receivedData, [this](QVariant data) {
-        if (!data.canConvert<int>()) return;
 
-        int key = data.value<int>();
-        if (setting<SequenceSetting>("Sequence")->length() > 0)
-            outputPort("Note")->send(note(key));
-    });
 
-    connect(inputPort("Relative Key"), &InputPort::receivedData, [this](QVariant data) {
-        if (!data.canConvert<double>()) return;
 
-        double key = data.value<double>();
-        if (setting<SequenceSetting>("Sequence")->length() > 0)
-            outputPort("Note")->send(note(makeAbsolute(key)));
-    });*/
+    setting<SequenceSetting>("Octave Range")->connectPort(dataInputPort("Octave Range"));
+    setting<SequenceSetting>("Octave Shift")->connectPort(dataInputPort("Octave Shift"));
+    setting<SequenceSetting>("Octave")->connectPort(dataInputPort("Octave"));
 
-    connect(setting<IntegerSetting>("Octave Range"), SIGNAL(changed()), this, SLOT(updateOverallLength()));
-    connect(setting<IntegerSetting>("Octave Shift"), SIGNAL(changed()), this, SLOT(updateOverallLength()));
-    connect(setting<SequenceSetting>("Sequence"), SIGNAL(changed()), this, SLOT(updateOverallLength()));
     updateOverallLength();
 }
 
@@ -50,7 +40,8 @@ int SequenceNode::makeAbsolute(double relative)
 
 int SequenceNode::note(int key)
 {
-    int note = setting<SequenceSetting>("Sequence")->note(key % setting<SequenceSetting>("Sequence")->length());
+    int length = setting<SequenceSetting>("Sequence")->length();
+    int note = setting<SequenceSetting>("Sequence")->note(length == 0 ? 1 : length);
     int octave = key / setting<SequenceSetting>("Sequence")->length();
 
     octave %= setting<IntegerSetting>("Octave Range")->value();
@@ -67,4 +58,13 @@ int SequenceNode::overallLength()
 void SequenceNode::updateOverallLength()
 {
     setting<InfoSetting>("Overall Length")->setString(QString("Overall Length: %1").arg(overallLength()));
+}
+
+void SequenceNode::notify(const DataInputPort *in, const QVariant &data)
+{
+    if (in == dataInputPort("Absolute Key")) {
+        dataOutputPort("Note")->setData(note(data.value<int>()));
+    } else if (in == dataInputPort("Relative Key")) {
+        dataOutputPort("Note")->setData(note(makeAbsolute(data.value<double>())));
+    }
 }

@@ -7,7 +7,7 @@ class DataInputPort : public InputPort
 {
     Q_OBJECT
 public:
-    DataInputPort(Node *node, QString name, QString tooltip);
+    DataInputPort(Node *node, QString name, QString tooltip, bool canNotify = true);
 
     QVariant data() const;
     bool hasData(QVariant& data) const;
@@ -17,6 +17,8 @@ public:
 
     void setFallback(QVariant fallback);
     QVariant fallback() const { return _fallback; }
+
+    void on_connect(Port *port);
 
 signals:
     void dataChanged(const QVariant& data);   // this is only to update settings!

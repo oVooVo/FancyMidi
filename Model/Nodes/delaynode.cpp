@@ -15,7 +15,7 @@ DelayNode::DelayNode(QDataStream& stream)
     addPort(new DataInputPort(this, "Data", ""));
     addPort(new TriggerOutputPort(this, "Trigger", ""));
     addPort(new DataOutputPort(this, "Data", ""));
-    addPort(new DataInputPort(this, "Delay", ""));
+    addPort(new DataInputPort(this, "Delay", "", false));
 
     addSetting(new BoolSetting(this, "Synchronize", "", true, true));
     addSetting(new IntegerSetting(this, "Delay", "", 0, 10000, 500, 0));
@@ -54,11 +54,6 @@ void DelayNode::notify(const DataInputPort *in, const QVariant &data)
             timer->deleteLater();
         });
         timer->start(dataInputPort("Delay")->data().value<int>());
-    } else if (in == dataInputPort("Delay")) {
-        /* Ignore */
-    } else {
-        UNKNOWN_PORT;
     }
-
 }
 

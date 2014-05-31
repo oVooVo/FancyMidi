@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDebug>
 #include "nordstage2.h"
+#include "Model/datainputport.h"
 
 //TODO MidiCommandSelectSetting needs midi channel inside.
 
@@ -150,3 +151,96 @@ int MidiCommandSelectSetting::index() const
 
     return ((DiscreteDomain*) domain())->index();
 }
+
+void MidiCommandSelectSetting::connectPort(DataInputPort *category, DataInputPort *property, DataInputPort *value)
+{
+    category->setFallback(_currentCategory);
+    property->setFallback(_currentProperty);
+    value->setFallback(_value);
+
+    connect(this, &Setting::changed, [category, property, value, this]() {
+        category->setFallback(_currentCategory);
+        property->setFallback(_currentProperty);
+        value->setFallback(_value);
+    });
+
+    connect(category, &DataInputPort::dataChanged, [this, category]() {
+        setCategoryIndex(category->data().value<int>());
+    });
+    connect(property, &DataInputPort::dataChanged, [this, property]() {
+        setPropertyIndex(property->data().value<int>());
+    });
+    connect(value, &DataInputPort::dataChanged, [this, value]() {
+        setValue(value->data());
+    });
+
+    connect(category, &DataInputPort::connectionToggled, [this](bool connected) {
+        setCategoryEnabled(!connected);
+    });
+    connect(property, &DataInputPort::connectionToggled, [this](bool connected) {
+        setPropertyEnabled(!connected);
+    });
+    connect(value, &DataInputPort::connectionToggled, [this](bool connected) {
+        setValueEnabled(!connected);
+    });
+}
+
+
+void MidiCommandSelectSetting::setCategoryEnabled(bool enabled)
+{
+    if (_categoryEnabled == enabled)
+        return;
+
+    _categoryEnabled = enabled;
+    emit categoryEnabledChanged(enabled);
+}
+
+void MidiCommandSelectSetting::setPropertyEnabled(bool enabled)
+{
+
+    if (_propertyEnabled == enabled)
+        return;
+
+    _propertyEnabled = enabled;
+    emit propertyEnabledChanged(enabled);
+}
+
+void MidiCommandSelectSetting::setValueEnabled(bool enabled)
+{
+
+    if (_valueEnabled == enabled)
+        return;
+
+    _valueEnabled = enabled;
+    emit valueEnabledChanged(enabled);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

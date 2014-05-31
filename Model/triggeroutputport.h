@@ -7,7 +7,7 @@ class TriggerOutputPort : public OutputPort
 {
 public:
     TriggerOutputPort(Node *node, QString name, QString tooltip);
-    void trigger() const;
+    void trigger();
 
 };
 

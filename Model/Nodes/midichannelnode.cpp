@@ -10,8 +10,6 @@ MidiChannelNode::MidiChannelNode(QDataStream& stream)
     addPort(new DataInputPort(this, "Channel", ""));
     addSetting(new IntegerSetting(this, "Channel", "", 0, 15, 0, 0, true));
 
-
-
     setting<IntegerSetting>("Channel")->connectPort(dataInputPort("Channel"));
 
 }

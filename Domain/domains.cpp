@@ -86,7 +86,9 @@ auto encode_0_1 = [](double level, bool &ok)
     double l = qBound(0.0, level, 1.0);
     if (level != l) {
         ok = false;
+#ifdef VERBOSE
         qWarning() << "Limited value to" << l << "between 0 and 1 (was" << level << ").";
+#endif
     }
     return 127 * level;
 };
@@ -295,6 +297,16 @@ auto encodeDetune = [](int detune, bool& ok) -> quint8
     return (32 * d) - (d / 4);
 };
 
+auto decodeId = [](quint8 code, bool& ok)
+{
+    return code;
+};
+
+auto decodeIdp1 = [](quint8 code, bool& ok)
+{
+    return code + 1;
+};
+
 
 auto decode = [](quint8, bool& ok) {
     qWarning() << "Decoding is not supported!";
@@ -380,7 +392,7 @@ Domain* Domains::Domain_003_523(MidiKey midiKey, QString name) {
 Domain* Domains::Domain_m7_6(MidiKey midiKey, QString name) {
         return new IntegerDomain(midiKey, name, -7, 6, encodeOctaveShift, decode); }
 Domain* Domains::Domain_0_127(MidiKey midiKey, QString name) {
-        return new IntegerDomain(midiKey, name, 0, 127, encodeId, decode); }
+        return new IntegerDomain(midiKey, name, 0, 127, encodeId, decodeId); }
 Domain* Domains::Domain_1_52(MidiKey midiKey, QString name) {
         return new IntegerDomain(midiKey, name, 1, 52, encodePianoModel, decode); }
 Domain* Domains::Domain_0_4(MidiKey midiKey, QString name) {
@@ -388,7 +400,7 @@ Domain* Domains::Domain_0_4(MidiKey midiKey, QString name) {
 Domain* Domains::Domain_80_128x32(MidiKey midiKey, QString name) {
         return new IntegerDomain(midiKey, name, 80, 128*32, encodeRate, decode); }
 Domain* Domains::Domains::Domain_1_128(MidiKey midiKey, QString name) {
-        return new IntegerDomain(midiKey, name, 1, 128, encodeIdm1, decode); }
+        return new IntegerDomain(midiKey, name, 1, 128, encodeIdm1, decodeIdp1); }
 
 
 double Domains::decodePitch(MidiKey key, quint8 value)

@@ -86,6 +86,8 @@ void Setting::emitChanged()
 
 void Setting::setEnabled(bool enabled)
 {
+    if (_isEnabled == enabled)
+        return;
     _isEnabled = enabled;
     emit enabledChanged(enabled);
 }

@@ -22,15 +22,18 @@ bool MidiHandler::connectMidiDevice_Private()
     return true;
 #endif
 
-    if (_notifier) delete _notifier;
+    disconnectMidiDevice_Private();
 
     int fd = -1;
 
     auto openfailed = [&fd] (const char* filename) {
         fd = open(filename, O_NONBLOCK | O_RDWR);
-        if (fd <= 0) return true;
-        else return false;
+        if (fd <= 0)
+            return true;
+        else
+            return false;
     };
+
     if (openfailed("/dev/midi0") && openfailed("/dev/midi1")) {
         qWarning() << "Cannot find midi-device. Make sure this device is not used by any other program.";
         return false;
@@ -174,7 +177,9 @@ void MidiHandler::sendMidiCommand(MidiKey key, quint8 channel, quint8 data2) con
             .arg(getChannel(buffer[0])).arg(buffer[1]).arg(buffer[2])
             );
     } else {
+#ifdef VERBOSE
         qWarning() << "cannot send data to unconnected midi device.";
+#endif
     }
 }
 

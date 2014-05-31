@@ -77,7 +77,7 @@ bool SequenceSetting::setSequence(QString seq)
         take(seq, octave, QRegExp(QString("^(%1+|%2+)").arg(OCTAVE_UP).arg(OCTAVE_DOWN)));
         _notes.append(decode(noteValue(note),
                              accidental.isEmpty() ? 0 : accidental == FLAT ? -1 : 1,
-                             (octave.startsWith(OCTAVE_UP) ? -1 : 1) * octave.length()));
+                             (octave.startsWith(OCTAVE_UP) ? 1 : -1) * octave.length()));
     }
 
     emit changed();

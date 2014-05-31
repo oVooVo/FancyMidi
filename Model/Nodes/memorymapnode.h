@@ -11,16 +11,13 @@ public:
     MemoryMapNode(QPoint position, Project* parent);
     MemoryMapNode(QDataStream& stream);
 
+    void trigger(const TriggerInputPort *in);
+
 private:
     QMap<int, QVariant> _data;
     int _readKey = 0;
     int _writeKey = 0;
     QVariant _writeValue;
-
-private slots:
-    void write();
-    void read();
-
 
     REGISTER_DECL_NODETYPE(MemoryMapNode);
 };

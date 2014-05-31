@@ -12,6 +12,7 @@ public:
     QVariant data() const;
     bool hasData(QVariant& data) const;
 
+
 public slots:
     void setData(QVariant data);
     void clearData() { _data = QVariant(); }

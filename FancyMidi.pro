@@ -73,11 +73,10 @@ SOURCES += main.cpp\
     Model/Nodes/mathnode.cpp \
     Model/Nodes/nordstage2noteinput.cpp \
     Model/Nodes/timernode.cpp \
-    Model/Nodes/pitchbendinput.cpp \
 #    Model/Nodes/tointegernode.cpp \
     Model/Nodes/pitchbendoutput.cpp \
-#    Model/Nodes/memorymapnode.cpp \
-#    Model/Nodes/memorynode.cpp \
+    Model/Nodes/memorymapnode.cpp \
+    Model/Nodes/memorynode.cpp \
 #    Model/Nodes/conditionnode.cpp \
     Model/Nodes/sequencenode.cpp \
 #    Model/Nodes/switch.cpp \
@@ -91,10 +90,10 @@ SOURCES += main.cpp\
     Model/triggerinputport.cpp \
     Model/Nodes/result.cpp \
     Model/Nodes/constantnode.cpp \
-    Model/Nodes/midicommandconstantnode.cpp \
     Model/Nodes/triggernode.cpp \
     Settings/triggersetting.cpp \
-    SettingWidgets/triggersettingwidget.cpp
+    SettingWidgets/triggersettingwidget.cpp \
+    Model/Nodes/conditionalpass.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -157,11 +156,10 @@ HEADERS  +=  \
     Model/Nodes/mathnode.h \
     Model/Nodes/nordstage2noteinput.h \
     Model/Nodes/timernode.h \
-    Model/Nodes/pitchbendinput.h \
 #    Model/Nodes/tointegernode.h \
     Model/Nodes/pitchbendoutput.h \
-#    Model/Nodes/memorymapnode.h \
-#    Model/Nodes/memorynode.h \
+    Model/Nodes/memorymapnode.h \
+    Model/Nodes/memorynode.h \
 #    Model/Nodes/conditionnode.h \
     Model/Nodes/sequencenode.h \
 #    Model/Nodes/switch.h \
@@ -175,10 +173,10 @@ HEADERS  +=  \
     Model/triggerinputport.h \
     Model/Nodes/result.h \
     Model/Nodes/constantnode.h \
-    Model/Nodes/midicommandconstantnode.h \
     Model/Nodes/triggernode.h \
     Settings/triggersetting.h \
-    SettingWidgets/triggersettingwidget.h
+    SettingWidgets/triggersettingwidget.h \
+    Model/Nodes/conditionalpass.h
 
 FORMS += \
     mainwindow.ui \

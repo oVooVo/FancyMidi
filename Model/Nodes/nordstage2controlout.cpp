@@ -13,10 +13,14 @@ NordStage2ControlOut::NordStage2ControlOut(QDataStream& stream) :
 {
     setName("Control Output");
     addPort(new TriggerInputPort(this, "Trigger", ""));
-    addPort(new DataInputPort(this, "Category", ""));
-    addPort(new DataInputPort(this, "Property", ""));
-    addPort(new DataInputPort(this, "Data", ""));
+    addPort(new DataInputPort(this, "Category", "", false));
+    addPort(new DataInputPort(this, "Property", "", false));
+    addPort(new DataInputPort(this, "Data", "", false));
 
+    addSetting(new MidiCommandSelectSetting(this, "Midi Command", "", true));
+    setting<MidiCommandSelectSetting>("Midi Command")->connectPort(dataInputPort("Category"),
+                                                                   dataInputPort("Property"),
+                                                                   dataInputPort("Data"));
 
 }
 
@@ -32,8 +36,6 @@ void NordStage2ControlOut::trigger(const TriggerInputPort *in)
                     mcss.domain()->midiKey(),
                     mcss.domain()->encode()
                     );
-    } else {
-        UNKNOWN_PORT;
     }
 }
 

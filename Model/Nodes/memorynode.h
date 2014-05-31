@@ -2,6 +2,7 @@
 #define MEMORYNODE_H
 
 #include "node.h"
+#include <QQueue>
 
 class MemoryNode : public Node
 {
@@ -11,8 +12,10 @@ public:
 
     QString category() const { return "Memory"; }
 
+    void trigger(const TriggerInputPort *in);
+
 private:
-    QVariant _data;
+    QList<QVariant> _datas;
     REGISTER_DECL_NODETYPE(MemoryNode);
 };
 

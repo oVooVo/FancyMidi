@@ -11,8 +11,8 @@ NordStage2NoteOut::NordStage2NoteOut(QDataStream &stream)
 {
     addPort(new TriggerInputPort(this, "Note on", ""));
     addPort(new TriggerInputPort(this, "Note off", ""));
-    addPort(new DataInputPort(this, "Note", ""));
-    addPort(new DataInputPort(this, "Velocity", ""));
+    addPort(new DataInputPort(this, "Note", "", false));
+    addPort(new DataInputPort(this, "Velocity", "", false));
 
     addSetting(new IntegerSetting(this, "Note",     "", 0, 127, 60, 60));
     addSetting(new IntegerSetting(this, "Velocity", "", 0, 127, 60, 60));
@@ -30,8 +30,6 @@ void NordStage2NoteOut::trigger(const TriggerInputPort *in)
     } else if (in == triggerInputPort("Note off")) {
         sendNoteOff(dataInputPort("Note")->data().value<int>(),
                     dataInputPort("Velocity")->data().value<int>());
-    } else {
-        UNKNOWN_PORT;
     }
 }
 

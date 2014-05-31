@@ -32,16 +32,12 @@ void TimerNode::trigger(const TriggerInputPort *in)
     else if (in == triggerInputPort("Start")) {
         _timer.start(dataInputPort("Interval")->data().value<int>());
     }
-    else
-        UNKNOWN_PORT;
 }
 
 void TimerNode::notify(const DataInputPort *in, const QVariant& data)
 {
     if (in == dataInputPort("Interval")) {
         _timer.setInterval(data.value<int>());
-    } else {
-        UNKNOWN_PORT;
     }
 }
 

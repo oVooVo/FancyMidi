@@ -128,8 +128,7 @@ private:
     QTimer _timer;
     int _time = 0;
     int _duration = 5;
-    double time() const { return (double) _time / _duration; }
-    void adjustColor();
+    void startAnimation();
     QColor _brushColor;
 
 };

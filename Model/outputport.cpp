@@ -30,6 +30,7 @@ bool OutputPort::connect(Port* port)
             return false;
         } else {
             _targets.insert((InputPort*) port);
+            on_connect(port);
             ((InputPort*) port)->connect(this);
             return true;
         }
@@ -72,6 +73,8 @@ bool OutputPort::closesCycle(const InputPort *in) const
             continue;
 
         for (const InputPort* currentInput : currentNode->inputPorts()) {
+            if (!currentInput->notifies())
+                continue;
             if (currentInput == in)
                 return true;
             if (currentInput->source())

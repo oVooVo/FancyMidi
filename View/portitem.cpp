@@ -29,16 +29,20 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
 
     _brushColor = QColor(Qt::darkBlue);
     if (_port) {
-        //set color;
         switch (_port->type()) {
         case Port::Trigger:
+            _brushColor = QColor(Qt::blue).lighter();
             break;
         case Port::Data:
-            _brushColor = QColor(Qt::darkRed);
+            if (!port->isInput() || ((InputPort*) port)->notifies()) {
+                _brushColor = QColor(Qt::green).lighter();
+            } else {
+                _brushColor = QColor(Qt::green);
+            }
             break;
         case Port::Other:
         default:
-            _brushColor = QColor(Qt::green);
+            _brushColor = QColor(Qt::white);
             break;
         }
 
@@ -46,6 +50,12 @@ PortItem::PortItem(Port *port, QString name, QGraphicsScene *scene, NodeItem *pa
     }
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
     _portFlags = 0;
+
+    if (port) {
+        QObject::connect(port, &Port::blink, [this]() {
+            startAnimation();
+        });
+    }
 }
 
 PortItem::~PortItem()
@@ -90,8 +100,7 @@ void PortItem::setPortFlags(int f)
         font.setItalic(true);
         _label->setFont(font);
         setPath(QPainterPath());
-    } else if (_portFlags & NamePort)
-    {
+    } else if (_portFlags & NamePort) {
         QFont font(scene()->font());
         font.setBold(true);
         _label->setFont(font);
@@ -135,11 +144,13 @@ void PortItem::removeConnectionItem(ConnectionItem* connectionItem)
     }
 }
 
-void PortItem::adjustColor()
+void PortItem::startAnimation()
 {
-    double value = time() * qPow(1 - time(), 4);
-    value /= 0.08192;
-    // value is between 0, 1;
-    setBrush(_brushColor.lighter(100 + 300 * value));
-    update();
+    setBrush(Qt::white);
+    _timer.disconnect();
+    _timer.stop();
+    QTimer::connect(&_timer, &QTimer::timeout, [this]() {
+        setBrush(_brushColor);
+    });
+    _timer.start(50);
 }

@@ -19,7 +19,7 @@ class InputPort : public Port
      * @param infoText Text for the information about the input port
      */
 protected:
-    InputPort(Node* node, QString name, QString infoText, Type type);
+    InputPort(Node* node, QString name, QString infoText, Type type, bool canNotify = true);
 
 public:
     ~InputPort();
@@ -47,6 +47,12 @@ public:
      */
     OutputPort* source() const;
 
+    /**
+     * @brief notifies returns wether this port can notify or trigger its node.
+     * @return
+     */
+    virtual bool notifies() const { return _canNotify; }
+
 protected:
     /**
      * @brief _source the OutputPorts that are connected to this InputPort.
@@ -55,6 +61,9 @@ protected:
 
 signals:
     void connectionToggled(bool);
+
+private:
+    bool _canNotify;
 };
 
 

@@ -20,6 +20,7 @@ void DataOutputPort::setData(QVariant data)
         else
             ((TriggerInputPort*) in)->trigger();
     }
+    emit blink();
 }
 
 bool DataOutputPort::hasData(QVariant& data) const
@@ -30,6 +31,5 @@ bool DataOutputPort::hasData(QVariant& data) const
 
 QVariant DataOutputPort::data() const
 {
-    node()->updateData(this);
     return _data;
 }

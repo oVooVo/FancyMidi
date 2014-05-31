@@ -10,7 +10,9 @@ Keyboard::Keyboard(quint8 channel, QObject *parent) : QObject(parent)
 void Keyboard::setChannel(quint8 channel)
 {
     if (channel >= NUM_MIDI_CHANNELS) {
+#ifdef VERBOSE
         qWarning() << "expected channel to be between 0 and" << NUM_MIDI_CHANNELS - 1 << "but was " << channel;
+#endif
         channel = 0;
     }
     _channel = channel;

@@ -5,10 +5,6 @@
 #include "packet.h"
 #include "numbered.h"
 
-#define UNKNOWN_PORT Q_ASSERT_X(false, \
-    QString("In line %1 (%2)").arg(__LINE__).arg(__FILE__).toStdString().c_str(), \
-    "unknown port idenifier")
-
 /**
  * @brief The Port class is a abstract class to have common method shared between input and output port
  */
@@ -56,6 +52,11 @@ public:
     Type type() const { return _type; }
 
     static bool canConnect(const Port *port1, const Port *port2);
+
+    virtual void on_connect(Port*) {}
+
+signals:
+    void blink();
 
 
 private:

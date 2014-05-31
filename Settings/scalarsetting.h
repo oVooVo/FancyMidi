@@ -64,11 +64,6 @@ public:
         connect(port, &DataInputPort::connectionToggled, [this](bool connected) {
             setEnabled(!connected);
         });
-        connect(port, &DataInputPort::connectionToggled, [this, port](bool connected) {
-            if (connected) {
-                setValue(port->data().value<T>());
-            }
-        });
     }
 
 

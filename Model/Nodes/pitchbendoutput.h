@@ -10,7 +10,7 @@ class PitchBendOutput : public MidiChannelNode
 public:
     PitchBendOutput(QDataStream &stream);
 
-    QString category() const { return "Midi Out"; }
+    QString category() const { return "Midi"; }
 
     void trigger(const TriggerInputPort *in);
 

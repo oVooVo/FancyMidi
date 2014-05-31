@@ -39,8 +39,6 @@ void RangeNode::notify(const DataInputPort *in, const QVariant &)
             || in == dataInputPort("Min Output") || in == dataInputPort("Max Output")
             || in == dataInputPort("Trunc") || in == dataInputPort("Value")) {
         calculate();
-    } else {
-        UNKNOWN_PORT;
     }
 }
 

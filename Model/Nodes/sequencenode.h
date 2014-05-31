@@ -11,6 +11,8 @@ public:
 
     QString category() const { return "Notes"; }
 
+    void notify(const DataInputPort *in, const QVariant &data);
+
 private:
     int note(int key);
     int makeAbsolute(double relative);

@@ -138,9 +138,8 @@ public:
     bool hasSettingsToDisplayInNode() const;
 
 
-    virtual void updateData(const DataOutputPort*) const {} // is called when port requests data
-    virtual void notify(const DataInputPort*, const QVariant&) {} // is called when port's data changed.
-    virtual void trigger(const TriggerInputPort*) {}    // is called when port is triggered
+    virtual void notify(const DataInputPort*, const QVariant&) {}   // is called when port's data changed.
+    virtual void trigger(const TriggerInputPort*) {}                // is called when port is triggered
 
 public slots:
     void start();

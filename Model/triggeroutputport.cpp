@@ -6,10 +6,11 @@ TriggerOutputPort::TriggerOutputPort(Node* node, QString name, QString tooltip)
 {
 }
 
-void TriggerOutputPort::trigger() const
+void TriggerOutputPort::trigger()
 {
     for (InputPort* in : targets()) {
         Q_ASSERT(in->type() == Trigger);
         ((TriggerInputPort*) in)->trigger();
     }
+    emit blink();
 }

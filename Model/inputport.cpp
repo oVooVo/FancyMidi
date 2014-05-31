@@ -5,9 +5,10 @@
 #include "port.h"
 #include <QTimer>
 
-InputPort::InputPort(Node* node, QString name, QString infoText, Type type): Port(node, name, infoText, type)
+InputPort::InputPort(Node* node, QString name, QString infoText, Type type, bool canNotify): Port(node, name, infoText, type)
 {
 	_source = NULL;
+    _canNotify = canNotify;
 }
 
 InputPort::~InputPort()
@@ -33,7 +34,7 @@ bool InputPort::connect(Port* port)
             disconnect();
 
             _source = (OutputPort*) port;
-
+            on_connect(port);
             emit connectionToggled(true);
             return port->connect(this);
         }

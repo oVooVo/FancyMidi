@@ -57,7 +57,9 @@ quint8 DiscreteDomain::toCode(int index, bool &ok) const
         } break;
     }
     ok = false;
+#ifdef VERBOSE
     qWarning() << "Index" << index << "invalid.";
+#endif
     return 0;
 
 }
@@ -72,7 +74,9 @@ int DiscreteDomain::toIndex(quint8 code, bool &ok) const
         }
     }
     ok = false;
+#ifdef VERBOSE
     qWarning() << "Code" << code << "invalid.";
+#endif
     return 0;
 }
 
@@ -80,7 +84,9 @@ bool DiscreteDomain::setIndex(int index)
 {
     _index = qBound(0, index, _values.length() - 1);
     if (_index != index) {
+#ifdef VERBOSE
         qWarning() << "Index" << index << "invalid.";
+#endif
         return false;
     }
     return true;
