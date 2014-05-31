@@ -273,7 +273,9 @@ auto encodeRate = [](int rate, bool& ok) -> quint8
 
     double lower = RateSamples[index - 1];
     double upper = RateSamples[index];
-    return rate - lower < upper - rate ? index - 1 : index;
+    return qBound((uint) 0,
+                  rate - lower < upper - rate ? index - 1 : index - 1,
+                  (uint) 127);
 };
 
 auto encodeId = [](int i, bool& ok) -> quint8
@@ -299,11 +301,13 @@ auto encodeDetune = [](int detune, bool& ok) -> quint8
 
 auto decodeId = [](quint8 code, bool& ok)
 {
+    ok = (code < 128);
     return code;
 };
 
 auto decodeIdp1 = [](quint8 code, bool& ok)
 {
+    ok = (code < 128);
     return code + 1;
 };
 
@@ -398,7 +402,7 @@ Domain* Domains::Domain_1_52(MidiKey midiKey, QString name) {
 Domain* Domains::Domain_0_4(MidiKey midiKey, QString name) {
         return new IntegerDomain(midiKey, name, 0, 4, encodeDetune, decode); }
 Domain* Domains::Domain_80_128x32(MidiKey midiKey, QString name) {
-        return new IntegerDomain(midiKey, name, 80, 128*32, encodeRate, decode); }
+        return new IntegerDomain(midiKey, name, 80, 128*32/4, encodeRate, decode); }
 Domain* Domains::Domains::Domain_1_128(MidiKey midiKey, QString name) {
         return new IntegerDomain(midiKey, name, 1, 128, encodeIdm1, decodeIdp1); }
 

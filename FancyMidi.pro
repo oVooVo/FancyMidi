@@ -98,7 +98,7 @@ SOURCES += main.cpp\
 HEADERS  +=  \
     keyboard.h \
     nordstage2.h \
-    domain.h \
+    Domain/domain.h \
     Domain/discretedomain.h \
     Domain/continousdomain.h \
     Domain/integerdomain.h \

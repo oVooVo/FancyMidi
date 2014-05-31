@@ -34,9 +34,9 @@ void MidiCommandSelectSetting::writeToStream(QDataStream &stream) const
 
 void MidiCommandSelectSetting::updateDomain()
 {
-    if (_domain)
+    if (_domain) {
         delete _domain;
-
+    }
     _domain = NordStage2::DOMAINS[midiKey()]->copy(NordStage2::channel(0));
     setValue(_value);
 }
@@ -64,6 +64,7 @@ void MidiCommandSelectSetting::setValue(QVariant v)
         break;
     }
 
+    emitChanged();
 }
 
 double MidiCommandSelectSetting::min() const
@@ -213,6 +214,11 @@ void MidiCommandSelectSetting::setValueEnabled(bool enabled)
 
     _valueEnabled = enabled;
     emit valueEnabledChanged(enabled);
+}
+
+Domain* MidiCommandSelectSetting::domain() const
+{
+    return _domain;
 }
 
 

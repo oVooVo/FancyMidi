@@ -26,7 +26,7 @@ public:
     QStringList items() const;
 
     Domain::Type domainType() const;
-    Domain* domain() const { return _domain; }
+    Domain* domain() const;
 
 
     int currentCategory() const { return _currentCategory; }

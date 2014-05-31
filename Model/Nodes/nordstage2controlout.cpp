@@ -31,6 +31,7 @@ void NordStage2ControlOut::trigger(const TriggerInputPort *in)
         mcss.setCategoryIndex(dataInputPort("Category")->data().value<int>());
         mcss.setPropertyIndex(dataInputPort("Property")->data().value<int>());
         mcss.setValue(dataInputPort("Data")->data());
+
         NordStage2::channel(dataInputPort("Channel")->data().value<int>())->
                 sendMidiCommand(
                     mcss.domain()->midiKey(),

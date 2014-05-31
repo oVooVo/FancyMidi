@@ -7,7 +7,7 @@ REGISTER_DEFN_NODETYPE(PitchBendOutput);
 
 PitchBendOutput::PitchBendOutput(QDataStream& stream) : MidiChannelNode(stream)
 {
-    setName("Pitch Bend Output");
+    setName("Pitch Output");
     addPort(new DataInputPort(this, "Pitch", "", false));
     addPort(new TriggerInputPort(this, "Trigger", ""));
 

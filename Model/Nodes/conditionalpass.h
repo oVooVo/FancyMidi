@@ -12,6 +12,8 @@ class ConditionalPass : public Node
 public:
     ConditionalPass(QDataStream& stream);
 
+    QString category() const { return "Logic"; }
+
     void trigger(const TriggerInputPort *in);
     void notify(const DataInputPort *in, const QVariant &data);
 

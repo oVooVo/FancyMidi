@@ -93,6 +93,7 @@ void MidiCommandSelectSettingWidget::reset()
     ui->spinBox->blockSignals(true);
     ui->doubleSpinBox->blockSignals(true);
 
+
     switch (setting<MidiCommandSelectSetting>()->domainType()) {
     case Domain::Discrete:
         ui->spinBox->hide();
@@ -101,6 +102,7 @@ void MidiCommandSelectSettingWidget::reset()
         ui->comboBox->clear();
         ui->comboBox->addItems(setting<MidiCommandSelectSetting>()->items());
         ui->comboBox->setCurrentIndex(setting<MidiCommandSelectSetting>()->index());
+
         break;
     case Domain::Double:
         ui->spinBox->hide();
@@ -117,6 +119,7 @@ void MidiCommandSelectSettingWidget::reset()
         ui->spinBox->setRange(setting<MidiCommandSelectSetting>()->min(),
                               setting<MidiCommandSelectSetting>()->max());
         ui->spinBox->setValue(setting<MidiCommandSelectSetting>()->value());
+
         break;
     }
     ui->comboBox->blockSignals(false);

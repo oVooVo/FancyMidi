@@ -6,6 +6,7 @@ REGISTER_DEFN_NODETYPE(ConditionalPass);
 
 ConditionalPass::ConditionalPass(QDataStream &stream) : Node(stream)
 {
+    setName("Conditional Pass");
     addPort(new DataInputPort(this, "Condition", "", false));
     addPort(new TriggerInputPort(this, "Trigger", ""));
     addPort(new DataInputPort(this, "Data", ""));
