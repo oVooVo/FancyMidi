@@ -56,6 +56,8 @@ bool SequenceSetting::setSequence(QString seq)
             return 69;
         if (note == "H" || note == "B")
             return 71;
+        if (note == "_")
+            return -1;
         return 0;
     };
 
@@ -69,7 +71,7 @@ bool SequenceSetting::setSequence(QString seq)
     _valid = true;
     while (!seq.isEmpty()) {
         QString note, accidental, octave;
-        if (!take(seq, note, QRegExp("^[A-H]"))) {
+        if (!take(seq, note, QRegExp("^[A-H_]"))) {
             _valid = false;
             break;
         }
@@ -86,5 +88,8 @@ bool SequenceSetting::setSequence(QString seq)
 
 int SequenceSetting::note(int key) const
 {
-    return contains(key) ? _notes[key] : 0;
+    key %= _notes.length();
+    if (key < 0)
+        key += _notes.length();
+    return _notes[key];
 }

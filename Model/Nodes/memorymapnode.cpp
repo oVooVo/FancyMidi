@@ -17,6 +17,8 @@ MemoryMapNode::MemoryMapNode(QDataStream& stream)
     addPort(new DataInputPort(this, "Read Key", "", false));
     addPort(new TriggerInputPort(this, "Read", ""));
     addPort(new DataOutputPort(this, "Value", ""));
+    addPort(new TriggerInputPort(this, "Clear", ""));
+
 }
 
 void MemoryMapNode::trigger(const TriggerInputPort *in)
@@ -26,5 +28,7 @@ void MemoryMapNode::trigger(const TriggerInputPort *in)
                      dataInputPort("Write Value")->data());
     } else if (in == triggerInputPort("Read")) {
         dataOutputPort("Value")->setData(_data.value(dataInputPort("Read Key")->data().value<int>(), QVariant()));
+    } else if (in == triggerInputPort("Clear")) {
+        _data.clear();
     }
 }

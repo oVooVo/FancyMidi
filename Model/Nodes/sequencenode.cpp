@@ -22,14 +22,19 @@ SequenceNode::SequenceNode(QDataStream &stream) : Node(stream)
     addPort(new DataInputPort(this, "Octave Range", "", false));
     addPort(new DataInputPort(this, "Octave Shift", "", false));
     addPort(new DataInputPort(this, "Octave", "", false));
+
     addPort(new DataOutputPort(this, "Note", ""));
+    addPort(new DataOutputPort(this, "Length", ""));
 
 
 
-    setting<SequenceSetting>("Octave Range")->connectPort(dataInputPort("Octave Range"));
-    setting<SequenceSetting>("Octave Shift")->connectPort(dataInputPort("Octave Shift"));
-    setting<SequenceSetting>("Octave")->connectPort(dataInputPort("Octave"));
+    setting<IntegerSetting>("Octave Range")->connectPort(dataInputPort("Octave Range"));
+    setting<IntegerSetting>("Octave Shift")->connectPort(dataInputPort("Octave Shift"));
+    setting<IntegerSetting>("Octave")->connectPort(dataInputPort("Octave"));
 
+    connect(setting<IntegerSetting>("Octave Range"), &IntegerSetting::changed, [this]() {
+        updateOverallLength();
+    });
     updateOverallLength();
 }
 
@@ -40,13 +45,15 @@ int SequenceNode::makeAbsolute(double relative)
 
 int SequenceNode::note(int key)
 {
-    int length = setting<SequenceSetting>("Sequence")->length();
-    int note = setting<SequenceSetting>("Sequence")->note(length == 0 ? 1 : length);
-    int octave = key / setting<SequenceSetting>("Sequence")->length();
 
-    octave %= setting<IntegerSetting>("Octave Range")->value();
-    octave += setting<IntegerSetting>("Octave Shift")->value();
-    return note + octave * setting<IntegerSetting>("Octave")->value();
+    int length = setting<SequenceSetting>("Sequence")->length();
+    length = length == 0 ? 1 : length;
+    int note = setting<SequenceSetting>("Sequence")->note(key);
+    if (note < 0)
+        return note;        // pause
+    int o = key / length;
+    o += setting<IntegerSetting>("Octave Shift")->value();
+    return note + o * setting<IntegerSetting>("Octave")->value();
 }
 
 int SequenceNode::overallLength()
@@ -57,7 +64,9 @@ int SequenceNode::overallLength()
 
 void SequenceNode::updateOverallLength()
 {
-    setting<InfoSetting>("Overall Length")->setString(QString("Overall Length: %1").arg(overallLength()));
+    int length = overallLength();
+    setting<InfoSetting>("Overall Length")->setString(QString("Overall Length: %1").arg(length));
+    dataOutputPort("Length")->setData(length);
 }
 
 void SequenceNode::notify(const DataInputPort *in, const QVariant &data)

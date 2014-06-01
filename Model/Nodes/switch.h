@@ -11,6 +11,8 @@ public:
 
     QString category() const { return "Logic"; }
 
+    void trigger(const TriggerInputPort *);
+
 
     REGISTER_DECL_NODETYPE(Switch);
 };

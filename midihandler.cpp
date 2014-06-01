@@ -68,8 +68,8 @@ void MidiHandler::readyRead()
     return;
 #endif
 
-    quint8 buffer[3] = {0,0,0};
-    read(_notifier->socket(), &buffer, 3);
+    quint8 buffer[5] = {0,0,0,0,0};
+    read(_notifier->socket(), &buffer, 5);
 
     Logger::log(  QString("== RECV ==========\n"    \
                           "type = %1 (%2)\n"        \
@@ -83,8 +83,9 @@ void MidiHandler::readyRead()
     if (buffer[0] & 0x80)
         emit receivedMidiCommand(MidiKey(getType(buffer[0]), buffer[1]), getChannel(buffer[0]), buffer[2]);
     else {
-        qWarning() << "synchronization lost. disconnected device.";
-        disconnectMidiDevice_Private();
+        qDebug() << "expected first byte to be control byte. Ignore message!";
+        //qWarning() << "synchronization lost. disconnected device.";
+        //disconnectMidiDevice_Private();
     }
 }
 

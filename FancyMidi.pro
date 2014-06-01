@@ -79,7 +79,7 @@ SOURCES += main.cpp\
     Model/Nodes/memorynode.cpp \
 #    Model/Nodes/conditionnode.cpp \
     Model/Nodes/sequencenode.cpp \
-#    Model/Nodes/switch.cpp \
+    Model/Nodes/switch.cpp \
     Model/Nodes/rangenode.cpp \
     Model/Nodes/counternode.cpp \
 #    Model/Nodes/passonlychanges.cpp \
@@ -93,7 +93,9 @@ SOURCES += main.cpp\
     Model/Nodes/triggernode.cpp \
     Settings/triggersetting.cpp \
     SettingWidgets/triggersettingwidget.cpp \
-    Model/Nodes/conditionalpass.cpp
+    Model/Nodes/conditionalpass.cpp \
+    Model/Nodes/queuenode.cpp \
+    Model/Nodes/watcher.cpp
 
 HEADERS  +=  \
     keyboard.h \
@@ -162,7 +164,7 @@ HEADERS  +=  \
     Model/Nodes/memorynode.h \
 #    Model/Nodes/conditionnode.h \
     Model/Nodes/sequencenode.h \
-#    Model/Nodes/switch.h \
+    Model/Nodes/switch.h \
     Model/Nodes/rangenode.h \
     Model/Nodes/counternode.h \
 #    Model/Nodes/passonlychanges.h \
@@ -176,7 +178,9 @@ HEADERS  +=  \
     Model/Nodes/triggernode.h \
     Settings/triggersetting.h \
     SettingWidgets/triggersettingwidget.h \
-    Model/Nodes/conditionalpass.h
+    Model/Nodes/conditionalpass.h \
+    Model/Nodes/queuenode.h \
+    Model/Nodes/watcher.h
 
 FORMS += \
     mainwindow.ui \

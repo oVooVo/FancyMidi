@@ -1,7 +1,9 @@
 #include "switch.h"
-#include "../inputport.h"
-#include "../outputport.h"
+#include "../triggerinputport.h"
+#include "../dataoutputport.h"
+#include "../datainputport.h"
 #include "Settings/integersetting.h"
+#include "Settings/boolsetting.h"
 
 REGISTER_DEFN_NODETYPE(Switch);
 
@@ -10,18 +12,21 @@ const int num_inputs = 5;
 Switch::Switch(QDataStream& stream) : Node(stream)
 {
     setName("Switch");
-    addPort(new OutputPort(this, "Value", "", Port::Scalar));
-    addPort(new InputPort(this, "Key", "", Port::Scalar));
+    addPort(new DataOutputPort(this, "Value", ""));
+    addPort(new TriggerInputPort(this, "On", ""));
+    addPort(new TriggerInputPort(this, "Off", ""));
 
-    addSetting(new IntegerSetting(this, "Key", "", 0, num_inputs - 1, 0, 0, false));
-    setting<IntegerSetting>("Key")->connectPort(inputPort("Key"));
+    addSetting(new BoolSetting(this, "Value", "", false, false, true));
 
-    for (int i = 0; i < num_inputs; i++) {
-        InputPort* ip = new InputPort(this, QString("Input %1").arg(i), "", Port::Scalar);
-        addPort(ip);
-        connect(ip, &InputPort::receivedData, [this, i](QVariant data) {
-            if (i == setting<IntegerSetting>("Key")->value())
-                outputPort("Value")->send(data);
-        });
+}
+
+void Switch::trigger(const TriggerInputPort *in)
+{
+    if (in == triggerInputPort("On")) {
+        setting<BoolSetting>("Value")->setValue(true);
+        dataOutputPort("Value")->setData(true);
+    } else if (in == triggerInputPort("Off")) {
+        setting<BoolSetting>("Value")->setValue(false);
+        dataOutputPort("Value")->setData(false);
     }
 }
